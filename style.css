@@ -163,9 +163,16 @@ body {
   border-radius: 5px;
   z-index: 9999;
 }
+
+.show-menu2{
+  visibility: visible;
+}
+
 /* language switcher*/
+
 .language-switcher {
-  display: flex;
+  position: relative;
+
 }
 .language-switcher a {
   text-decoration: none;
@@ -176,19 +183,26 @@ body {
   border-radius: 5px;
   transition: 0.3s;
 }
-
-
-
-
-.show-menu2{
-  visibility: visible;
+.language-switcher a:hover {
+  background-color: #ffad00;
+  color: #05164d;
 }
+
+
+
+
+
+
 
 /* Media Query for Smaller Screens (max-width: 768px) */
 @media (max-width: 768px) {
   #mainav {
     justify-content: space-around;
     height: 5rem;
+  }
+   .hamburger-menu {
+    display:flex;
+    z-index: 999;
   }
 
   #mainav #main-nav-list {
@@ -221,10 +235,7 @@ body {
     display: flex;
   }
 
-    .hamburger-menu {
-    display:flex;
-    z-index: 999;
-  }
+ 
   #mainav li {
     font-size: 1rem;
     /* Further reduce font size for mobile screens */
@@ -245,6 +256,7 @@ body {
   font-size: small;
 }
 }
+
 
 /* Media Query for Mobile Screens (max-width: 480px) */
 @media (max-width: 480px) {
@@ -253,6 +265,7 @@ body {
     display:flex;
     z-index: 999;
   }
+
   #mainav li {
     font-size: 1rem;
     /* Further reduce font size for mobile screens */
@@ -281,19 +294,7 @@ body {
 
 
 
-/* Base tokens (colors roughly matching the dark, high-contrast feel) */
-:root{
-  --lp-navy: #001941;        /* deep midnight blue */
-  --lp-navy-2:#0b224f;
-  --lp-accent:#89D4FE;       /* bright cyan accent */
-  --lp-accent-2:#E8EEFC;     /* soft highlight */
-  --lp-text:#ffffff;
-  --lp-muted:#cfe3ff;
 
-  --container-max: 1200px;
-  --hero-height: clamp(70vh, 88vh, 100vh);
-  --overlay: linear-gradient(180deg, rgba(0,25,65,0.35) 0%, rgba(0,25,65,0.55) 40%, rgba(0,25,65,0.75) 100%);
-}
 
 /* =========================
    HERO BASE
@@ -305,7 +306,7 @@ body {
   color: #fff;
   overflow: hidden;
 }
-
+/* esconde os botões mas mantem funcional */
 .lp-hero input[type="radio"]{
   position: absolute;
   opacity: 0;
@@ -346,10 +347,8 @@ body {
   position: relative;
   z-index: 1;
   display: grid;
-  gap: 1.25rem;
-  justify-self: start;
   text-align: left;
-  padding-block: clamp(2rem, 5vw, 4rem);
+  padding: 0px 15px 0px 15px;
 }
 
 .lp-hero__eyebrow{
@@ -357,26 +356,19 @@ body {
   letter-spacing: .08em;
   font-weight: 700;
   color: #cfe3ff;
+  margin-block-end: .5rem;
 }
 
 .lp-hero__title{
   margin-left: 0;
   font-size: clamp(1.6rem, 4.8vw, 3.5rem);
-  line-height: 1.1;
-
-  white-space: nowrap;       /* ⬅️ force single line */
-  overflow: hidden;          /* ⬅️ prevent spill */
-  text-overflow: ellipsis;   /* ⬅️ safe cutoff */
-
   max-width: 100%;
+  margin-block: 0;           
+  margin-block-end: 1.75rem;
+
 }
 
 
-.lp-hero__subtitle{
-  margin: 0;
-  max-width: 55ch;
-  color: #e6f2ff;
-}
 
 /* Actions */
 .lp-hero__actions{
@@ -394,12 +386,13 @@ body {
   font-weight: 700; 
   text-decoration: none; 
   transition: transform .15s ease, 
-  box-shadow .15s ease; } 
+  box-shadow .15s ease;
+  margin-block-end: 4.5rem; } 
 
   .btn--primary{ 
-    background: var(--lp-accent); 
+    background:white; 
     color: #001941; 
-    box-shadow: 0 6px 20px rgba(137,212,254,.25); } 
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25); } 
 
     .btn--ghost{ background: transparent; 
       color: var(--lp-text); 
@@ -474,12 +467,19 @@ body {
     max-width: 92vw;
   }
   .lp-hero__slide{
-  padding-bottom: 5.5rem; /* reserve space for selector */
+  padding-bottom: 1.5rem; /* reserve space for selector */
   
 }
 .lp-hero__content{
     padding-bottom: 6.5rem; /* extra breathing room */
   }
+
+  .btn{
+    margin-block-end: 0rem;
+    max-width: 50vw;
+  }
+
+  
 }
 
 
@@ -498,6 +498,101 @@ body {
 }
 
 
+/* Partners */
+.partners-rail {
+  /* Layout: image | prev | viewport | next */
+  display: grid;
+  grid-template-columns: auto 40px 1fr 40px;
+  align-items: center;
+  column-gap: 12px;
+
+  /* Sizing constraints */
+  width: 70%;
+  height: 100px;
+  padding: 0 8px;          /* small inner padding */
+  background-color: #f4f8ff;
+  margin: 10px auto;
+  box-sizing: border-box;
+  overflow: hidden;        /* ensures nothing bleeds outside */
+}
+
+.partners-rail #partnersimg {
+  height: 100px;
+  width: auto;
+  object-fit: contain;     /* keeps the logo inside */
+  left: 0;
+}
+
+/* Buttons */
+.rail-btn {
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  background: #ffffff; border: 1px solid #ddd; border-radius: 999px;
+  font-size: 24px; line-height: 1; color: #222;
+  cursor: pointer;
+}
+.rail-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Viewport always matches container’s height */
+.rail-viewport {
+  overflow: hidden;
+  height: 100%;
+}
+
+/* Track uses flex so we can measure items better */
+.rail-track {
+  --gap: 24px;             /* JS will read this */
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+  list-style: none; margin: 0; padding: 0;
+  transform: translateX(0);
+  transition: transform 300ms ease;
+  height: 100%;            /* lock to container height */
+}
+
+/* Items are fixed-height and auto-width */
+.rail-item {
+  flex: 0 0 auto;
+  height: 100%;
+  display: flex;           /* center the card vertically */
+  align-items: center;
+}
+
+/* Card fills the item’s height */
+.partner-card {
+  display: grid; place-items: center;
+  background: #f8f8f8; border: 1px solid #eee; border-radius: 10px;
+  height: 80px;            /* inner card smaller than 100px rail */
+  width: 150px;            /* you can adjust card width */
+  box-sizing: border-box;
+}
+
+/* Images stay inside the card */
+.rail-item img {
+  max-width: auto;
+  max-height: 80px;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .partners-rail { width: 100%; height: 100px; }
+  .partner-card { width: 10px; height: 30px; }
+  .rail-item img {
+  max-width: auto;
+  max-height: 30px;
+  object-fit: contain;
+}
+}
+@media (max-width: 480px) {
+  .partners-rail { width: 100%; height: 100px; }
+  .partner-card { width: 40px; height: 30px; }
+  .rail-item img {
+  max-width: auto;
+  max-height: 30px;
+  object-fit: contain;
+}
+}
 
 .teamtext {
   font-size: 5rem;

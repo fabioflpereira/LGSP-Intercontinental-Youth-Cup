@@ -60,3 +60,65 @@ document.addEventListener("DOMContentLoaded", function () {
     speed: 800, // Transition duration in milliseconds (smooth transition)
   });
 });
+
+(function () {
+  const track = document.querySelector(".rail-track");
+  const viewport = document.querySelector(".rail-viewport");
+  const items = Array.from(document.querySelectorAll(".rail-item"));
+  const prev = document.querySelector(".rail-btn--prev");
+  const next = document.querySelector(".rail-btn--next");
+
+  // Read the CSS gap from the track (fallback to 24 if not found)
+  function getGap() {
+    const style = window.getComputedStyle(track);
+    const gap = parseFloat(style.gap || "24");
+    return Number.isFinite(gap) ? gap : 24;
+  }
+
+  // Measure one step (card width + gap). Uses the first card.
+  function getStep() {
+    const firstCard = items[0].querySelector(".partner-card");
+    const gap = getGap();
+    const cardWidth = firstCard.getBoundingClientRect().width;
+    return cardWidth + gap;
+  }
+
+  // How many items fit in viewport
+  function itemsPerView() {
+    const step = getStep();
+    const vpWidth = viewport.getBoundingClientRect().width;
+    // add a tiny epsilon to avoid fencepost issues
+    return Math.max(1, Math.floor((vpWidth + 0.5) / step));
+  }
+
+  let index = 0;
+
+  function update() {
+    const step = getStep();
+    const translate = -index * step;
+    track.style.transform = `translateX(${translate}px)`;
+
+    const maxIndex = Math.max(0, items.length - itemsPerView());
+    prev.disabled = index <= 0;
+    next.disabled = index >= maxIndex;
+  }
+
+  next.addEventListener("click", () => {
+    const maxIndex = Math.max(0, items.length - itemsPerView());
+    if (index < maxIndex) {
+      index += 1;
+      update();
+    }
+  });
+
+  prev.addEventListener("click", () => {
+    if (index > 0) {
+      index -= 1;
+      update();
+    }
+  });
+
+  // Recompute on resize to keep containment
+  window.addEventListener("resize", update);
+  update();
+})();

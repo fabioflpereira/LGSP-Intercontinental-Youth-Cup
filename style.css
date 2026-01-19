@@ -315,7 +315,7 @@ body {
 /* Slides container */
 .lp-hero__slides{
   position: relative;
-  height: clamp(70vh, 88vh, 100vh);
+  height: clamp(70vh, 88vh, 90vh);
 }
 
 /* Slide */
@@ -498,6 +498,25 @@ body {
 }
 
 
+.containermain  {
+  max-width: 80%; 
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+} 
+
+.subcontainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap : 30px; 
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+} 
+
+
 /* Partners */
 .partners-rail {
   /* Layout: image | prev | viewport | next */
@@ -505,13 +524,10 @@ body {
   grid-template-columns: auto 40px 1fr 40px;
   align-items: center;
   column-gap: 12px;
-
   /* Sizing constraints */
-  width: 70%;
   height: 100px;
-  padding: 0 8px;          /* small inner padding */
   background-color: #f4f8ff;
-  margin: 10px auto;
+  margin: 20px auto;
   box-sizing: border-box;
   overflow: hidden;        /* ensures nothing bleeds outside */
 }
@@ -609,18 +625,20 @@ body {
 /* Menu de equipas */
 
 .container-row {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  /* Space between containers */
+  display: grid;
+  grid-template-columns: repeat(5, minmax(150px, 1fr));
+  max-width: 100%;
+  object-fit: fill;
+  gap: 10px;
 }
+
 
 /* Hoverable container with background image */
 .hover-container {
-  width: 268px;
-  height: 160px;
+  width: auto;
+  height: 120px;
   border-radius: 10px;
-  background-color: #ffffff;
+  background-color: #f4f8ff;
   background-image: url('/images/Equipas/2025/botao.png');
   /* New background image */
   background-size: cover;
@@ -629,7 +647,6 @@ body {
   /* Center the background image */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
-  overflow: hidden;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -707,47 +724,17 @@ body {
 
 
 
-.container-row1 {
-  display: flex;
-  position: relative;
-  margin-top: 20px;
-  ;
-  justify-content: center;
-  gap: 20px;
-  /* Space between containers */
-}
-
-.container-row2 {
-  display: flex;
-  position: relative;
-  margin-top: 20px;
-  ;
-  justify-content: center;
-  gap: 20px;
-  /* Space between containers */
-}
-
-.container-row3 {
-  display: flex;
-  position: relative;
-  margin-top: 20px;
-  justify-content: center;
-  gap: 20px;
-  /* Space between containers */
-}
-
-.container-row4 {
-  display: flex;
-  position: relative;
-  margin-top: 20px;
-  justify-content: center;
-  gap: 20px;
-  /* Space between containers */
-  margin-bottom: 100px;
-}
-
 /* ====== MOBILE OPTIMIZATION ====== */
 @media (max-width: 600px) {
+  .subcontainer {
+  display: flex;
+  flex-direction: column;
+} 
+.container-row {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(150px, 1fr));
+
+}
   .hover-container {
     width: 160px;  /* Reduced size */
     height: 100px; /* Adjusted height */
@@ -784,138 +771,7 @@ body {
 }
 
 
-/* Fixtures */
-.containerfixture {
-  width: 100%;
-  margin: 20px auto;
-  background: #ffffff;
-  padding: 0;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
-  text-align: left;
-}
 
-
-
-.fixture {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  /* Alinha tudo à esquerda */
-  padding: 10px 0;
-  /* Aumentar o padding para mais espaçamento */
-  margin: 0 5%;
-  gap: 3vw;
-  /* Aumentar o gap entre os elementos */
-  width: 90%;
-  border-bottom: 1px solid #f0f0f0;
-  /* Linha de separação logo no início */
-}
-
-.containerfixture .group {
-  color: #05164d;
-  margin-left: 20px;
-}
-
-.fixture img {
-  width: 30px;
-  /* Aumentei o tamanho das logos para 30px */
-  height: 30px;
-  /* Garantir que a altura das logos seja consistente */
-  margin: 0;
-  object-fit: contain;
-  /* Garantir que as logos sejam dimensionadas corretamente */
-}
-
-/* Nome das equipes com a margem */
-.team {
-  display: inline-block;
-  font-size: 18px;
-  font-weight: 600;
-  margin-left: 20px;
-  /* Adiciona a margem no nome das equipes */
-  padding: 0;
-  width: 150px;
-  /* Defini uma largura fixa para o nome da equipe */
-  text-align: left;
-  /* Alinha os nomes das equipes à esquerda */
-}
-
-.time {
-  font-size: 16px;
-  color: #ffad00;
-  background: #fff;
-  padding: 3px 15px;
-  /* Aumentar padding para mais espaçamento */
-  border-radius: 5px;
-  font-weight: bold;
-  text-align: center;
-  min-width: 100px;
-  display: inline-flex;
-  justify-content: center;
-  border: 2px solid #ffad00;
-  margin: 0;
-}
-
-.fixture:hover .time {
-  cursor: pointer;
-  color: #05164d;
-  border: 2px solid #05164d;
-}
-
-.fixture:hover {
-  background-color: #ffad00;
-}
-
-/* Carousel Container */
-.carousel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  width: 100%;
-  margin: auto;
-  overflow: hidden;
-}
-
-/* Carousel Track */
-.carousel-track {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-  width: 20%;
-}
-
-/* Carousel Items */
-.carousel-item {
-  width: 100%;
-  flex: 0 0 20%;
-  object-fit: cover;
-}
-
-/* Carousel Buttons */
-.carousel-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  z-index: 1000;
-}
-
-.carousel-button.prev {
-  left: 10px;
-}
-
-.carousel-button.next {
-  right: 10px;
-}
-
-.carousel-button:hover {
-  background-color: rgba(0, 0, 0, 0.8);
-}
 
 
 
@@ -979,69 +835,98 @@ th {
   text-align: left;
 }
 
-/* Video Section */
 
-.latest-videos {
-  padding: 20px;
-  background-color: #f8f9fa;
-}
 
-.latest-videos h2 {
-  font-size: 24px;
-  margin-bottom: 15px;
-}
 
-.video-grid {
-  display: grid;
-  justify-content:center;
-  align-items: end;
-  grid-template-columns: repeat(auto-fill, 275px);
-  gap: 20px;
-}
 
-.video-card {
-  background: #fff;
-  border: 1px solid #ddd;
+/* Fixtures */
+.containerfixture {
+  width: 30%;
+  background: #ffffff;
+  padding: 0;
   border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+  text-align: left;
+  margin: 50px 0 0 0;
+}
+
+.abc {
+  width: 70%;
+  padding: 0;
+  border-radius: 8px;
+  text-align: left;
+  margin: 50px 0 0 0;
+}
+
+#titles {
+  height: 50px;
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  
+}
+
+.fixture {
+  background-color: #f4f8ff;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  /* Alinha tudo à esquerda */
+  padding: 10px 10px;
+  /* Aumentar o padding para mais espaçamento */
+  gap: 3vw;
+  /* Aumentar o gap entre os elementos */
+  border-bottom: 1px solid #f0f0f0;
+  /* Linha de separação logo no início */
+}
+
+.containerfixture .group {
+  color: #05164d;
+  margin-left: 20px;
+}
+
+
+
+.fixture img {
+  width: 15px;
+  /* Aumentei o tamanho das logos para 30px */
+  height: 15px;
+  /* Garantir que a altura das logos seja consistente */
+  margin: 0;
+  object-fit: contain;
+  /* Garantir que as logos sejam dimensionadas corretamente */
+}
+
+/* Nome das equipes com a margem */
+.team {
+  display: inline-block;
+  font-size: 15px;
+  /* Adiciona a margem no nome das equipes */
+  padding: 0;
+  width: 150px;
+  /* Defini uma largura fixa para o nome da equipe */
+}
+
+.time {
+  font-size: 10px;
+  background:#05164d;
+  color: #ffffff;
+  padding: 3px 15px;
+  /* Aumentar padding para mais espaçamento */
+  border-radius: 5px;
+  font-weight: bold;
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  height: 300px; /* Define uma altura fixa para uniformidade */
-  min-height: 300px;
-}
-
-.video-card:hover {
-  transform: translateY(-5px);
-}
-
-.video-card video {
-    width:100%;
-    height: max(60%);
-    object-fit: contain;
-}
-
-.video-card h3 {
-  font-size: 18px;
-  margin: 10px;
-  min-height: 40px; /* Garante que todos os títulos tenham o mesmo espaço */
-  display: flex;
-  align-items: center;
+  display: inline-flex;
   justify-content: center;
+  margin: 0;
 }
 
-.video-card p {
-  font-size: 14px;
-  color: #666;
-  margin: 0 10px 10px;
-  min-height: 40px; /* Garante que todas as descrições fiquem alinhadas */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
+
+.fixture:hover {
+  background-color:#cfe3ff;
 }
 
 /* FOOTER */
@@ -1097,132 +982,4 @@ footer .social-media a {
   font-size: 18px;
   text-decoration: none;
   transition: color 0.3s;
-}
-
-
-/* Sponsor */
-
-.partners-section {
-  background-color: #f3f3f3;
-  padding: 40px 20px;
-  text-align: center;
-}
-
-.section-title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 30px;
-}
-
-.partners-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 30px;
-  justify-content: center;
-  align-items: center;
-}
-
-.partner {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  max-width: 500px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.partner:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-.partner img {
-  width: 100px;
-  height: 100px;
-  border-radius: 5px;
-  flex-shrink: 0;
-  object-fit: contain;
-
-}
-
-.partner-name {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.partner-link {
-  font-size: 1rem;
-  color: #05164d;
-  text-decoration: none;
-  font-weight: 500;
-  border: 1px solid #05164d;
-  padding: 8px 15px;
-  border-radius: 5px;
-  display: inline-block;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.partner-link:hover {
-  background-color: #05164d;
-  color: #fff;
-}
-
-
-/* Contactos */
-
-.contact-section {
-  background-color: #f8f8f8;
-  padding: 20px;
-  text-align: center;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 100%;
-  margin: 20px auto;
-}
-
-.contact-info p {
-  font-size: 16px;
-  margin: 10px 0;
-  color: #333;
-}
-
-@media (max-width: 780px){
-    .containerfixture{
-        max-width:100%;
-    }
-    .fixture{
-        justify-content:space-around;
-        gap:7px;
-        margin:0 5%;
-    }
-    .fixture img {
-        min-width:20px;
-        min-height:20px;
-    }
-    .team{
-        margin-left:0;
-        font-size:12px;
-        max-width:70px;
-    }
-    .time {
-        padding:0;
-        min-width: 60px;
-        font-size:12px;
-    }
-    .stadium{
-        font-size:10px;
-    }
-}
-
-.stadium-icon {
-  font-size: 24px;
-  /* Ajuste o tamanho conforme necessário */
-  color: #000;
-  /* Defina a cor, por exemplo, preto */
-  margin-right: 8px;
-  /* Se você quiser um espaço entre o ícone e o nome do estádio */
 }

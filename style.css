@@ -20,10 +20,12 @@ body {
   
 }
 
-#mainav img {
+.mainimg {
   height: 60px;
   width: auto;
 }
+
+
 
 
 /* ========== Base Navigation ========== */
@@ -169,7 +171,23 @@ body {
   visibility: visible;
 }
 
-/* Container */
+
+/* Corporate league */
+.corporateleague {
+  height: 50px;
+  width: auto;
+  
+}
+
+
+.corporateleague:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+
+
+/* Language selector */
 .lang-selector {
   position: relative;
   display: inline-block;
@@ -385,7 +403,7 @@ body {
 }
 
 
-
+/* Containers para manter do tamanho certo */
 
 .containermain  {
   max-width: 80%; 
@@ -467,7 +485,7 @@ body {
 /* Card fills the item’s height */
 .partner-card {
   display: grid; place-items: center;
-  background: #f8f8f8; border: 1px solid #eee; border-radius: 10px;
+  background: #f4f8ff; 
   height: 80px;            /* inner card smaller than 100px rail */
   width: 150px;            /* you can adjust card width */
   box-sizing: border-box;
@@ -576,7 +594,7 @@ body {
   top: 10px;
   left: 10px;
   width: auto;
-  max-height: 80px;
+  max-height: 50px;
   object-fit: cover;
   border-radius: 5px;
 }
@@ -720,9 +738,9 @@ th {
 
 
 .fixture img {
-  width: 15px;
+  width: 30px;
   /* Aumentei o tamanho das logos para 30px */
-  height: 15px;
+  height: 30px;
   /* Garantir que a altura das logos seja consistente */
   margin: 0;
   object-fit: contain;
@@ -740,8 +758,9 @@ th {
 }
 
 .time {
-  font-size: 10px;
+  font-size: 12px;
   background:#05164d;
+  min-width: fit-content;
   color: #ffffff;
   padding: 3px 15px;
   /* Aumentar padding para mais espaçamento */
@@ -786,6 +805,65 @@ th {
 }
 
 
+/* =========================
+   Página about us
+========================= */
+#heroinfo{
+ display: flex;
+  height: 300px;
+}
+#heroinfo img{
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* CONTEÚDO */
+.content {
+  max-width: 1100px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.section {
+  margin-bottom: 60px;
+}
+
+.with-image {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.with-image.reverse {
+  flex-direction: row-reverse;
+}
+
+.with-image img {
+  width: 45%;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.with-image h2 {
+  color: #05164d;
+  margin-bottom: 15px;
+  font-size: 1.8rem;
+}
+
+.with-image p,
+.with-image li {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.with-image ul {
+  margin-left: 20px;
+}
+
+
+
+
 /* FOOTER */
 footer {
   
@@ -795,6 +873,7 @@ footer {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+ 
 }
 
 footer .footer-section {
@@ -905,6 +984,10 @@ footer .social-media a {
   font-size: small;
 }
 
+
+.corporateleague {
+  display: none;
+}
 /* Hero Section Responsivo */
  .lp-hero__slide{
   padding-bottom: 1.5rem; /* reserve space for selector */
@@ -967,16 +1050,50 @@ footer .social-media a {
   grid-template-columns: repeat(2, minmax(150px, 1fr));
 }
 
+/* Hero selector */
+.lp-hero__selector-item{
+
+  min-width: 80px;
 }
+  .lp-hero__selector-item .eyebrow{
+  font-size: .50rem;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+}
+
+.lp-hero__selector-item .title{
+  font-size: .8rem;
+  font-weight: 650;
+}
+
+ .with-image,
+  .with-image.reverse {
+    flex-direction: column;
+  }
+
+  .with-image img {
+    width: 100%;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+
+}
+
+
 
 
 /* Small devices (phones) */
 @media (max-width: 768px) { 
 .container-row {
   grid-template-columns: repeat(2, minmax(40px, 1fr));
-  gap: 10px;
+  gap: 5px;
   margin-top: 10px;
 }
+
+
 
 }
 

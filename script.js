@@ -122,31 +122,3 @@ document.addEventListener("DOMContentLoaded", function () {
   window.addEventListener("resize", update);
   update();
 })();
-
-
-  const form = document.getElementById('cardForm'); // Selects the form
-
-  form.addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevents the default form submission
-    const formData = new FormData(form);
-    fetch('formProcessingEngine.php', { // Replace with the path to your PHP script
-      method: 'POST',
-      body: formData
-    })
-      .then(response => response.text())
-      .then(result => {
-        if (result === 'success') {
-          alert("Message sent successfully!"); // Success message
-          form.reset(); // Optionally reset the form fields
-          setTimeout(() => {
-            window.location.href = '/'; // Redirect after a short delay
-          }, 2000); // Delay of 2 seconds (2000 milliseconds)
-        } else {
-          alert("An error occurred while sending the message.");
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert("An error occurred while sending the message.");
-      });
-  });

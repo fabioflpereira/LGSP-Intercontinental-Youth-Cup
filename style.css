@@ -861,7 +861,63 @@ th {
   margin-left: 20px;
 }
 
+/* =========================
+   Página teams
+========================= */
+.containermainclub {
+  max-width: 50%; 
+  margin: 0 auto;
+  margin-top: 50px;
+  margin-bottom: 50px;
 
+} 
+
+
+/* Formulário */
+* 
+
+
+.form-wrapper {
+    max-width: 500px;
+    margin: 50px auto;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+
+label {
+    display: block;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    margin-top: 6px;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #05164d;
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #084298;
+}
 
 
 /* FOOTER */

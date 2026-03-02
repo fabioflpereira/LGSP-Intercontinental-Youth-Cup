@@ -84,6 +84,7 @@ export const teamAPI = {
   delete: (id) => fetchAPI(`/teams/${id}`, "DELETE"),
 };
 
+// mudar no cPanel para url do site no ficheiro upload.php
 async function uploadToCpanel(file) {
   const formData = new FormData();
   formData.append("image", file);
@@ -167,3 +168,39 @@ if (form) {
       });
   });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.location.pathname === "/Pages/admin/listTeams.html") {
+    teamAPI
+      .getAll()
+      .then((teams) => {
+        console.log("Fetched teams:", teams);
+
+        const teamList = document.getElementById("teamList");
+        teamList.innerHTML = "";
+
+        teams.forEach((team) => {
+          teamList.innerHTML += `
+            <li>
+              ${team.name} (${team.country})
+              <div>
+                <button class="editTeamBtn">Editar Equipa</button>
+                <button class="deleteTeamBtn">Eliminar Equipa</button>
+              </div>
+              <ul>
+                ${team.players
+                  .map(
+                    (player) =>
+                      `<li>${player.number} - ${player.name} - ${player.position}</li>`,
+                  )
+                  .join("")}
+              </ul>
+            </li>
+          `;
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching teams:", error);
+      });
+  }
+});

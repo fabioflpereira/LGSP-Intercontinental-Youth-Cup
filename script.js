@@ -122,3 +122,8 @@ document.addEventListener("DOMContentLoaded", function () {
   window.addEventListener("resize", update);
   update();
 })();
+
+// Abre as fixtures
+function toggleFixture(fixture) {
+  fixture.classList.toggle("open");
+}

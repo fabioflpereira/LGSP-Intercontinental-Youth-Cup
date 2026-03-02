@@ -781,14 +781,14 @@ th {
 
 
 .successcases {
-  margin: 50px 0 0 250px;
+  margin: 50px 0 0 10px;
   
 }
 
 .casesgallery {
   margin-top: 20px;
   display: grid;
-  grid-template-columns: repeat(3, minmax(150px, 1fr));
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
   gap: 50px;
 }
 

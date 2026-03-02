@@ -988,6 +988,8 @@ button:hover {
   text-decoration: underline;
 }
 
+
+
 /* Hide when open */
 .expandable.open .expand-hint {
   display: none;

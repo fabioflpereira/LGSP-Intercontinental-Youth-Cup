@@ -119,42 +119,51 @@ async function sendContactForm(data) {
   return result;
 }
 
-document.getElementById("contactForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+const fifaCardForm = document.getElementById("contactForm");
 
-  const result = await sendContactForm({
-    name: `${e.target.name.value} ${e.target.surname.value}`,
-    email: e.target.email.value,
-    subject: `FIFA Card Submission: ${e.target.team.value} - ${e.target.playerPosition.value}`,
-    message: `Team: ${e.target.team.value}\nNationality: ${e.target.nationality.value}\nPosition: ${e.target.playerPosition.value}\nPace: ${e.target.pacePoints.value}\nShooting: ${e.target.shootingPoints.value}\nPassing: ${e.target.passingPoints.value}\nDribbling: ${e.target.dribblingPoints.value}\nDefence: ${e.target.defencePoints.value}\nPhysical: ${e.target.physicalPoints.value}`,
+if (fifaCardForm) {
+  fifaCardForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const result = await sendContactForm({
+      name: `${e.target.name.value} ${e.target.surname.value}`,
+      email: e.target.email.value,
+      subject: `FIFA Card Submission: ${e.target.team.value} - ${e.target.playerPosition.value}`,
+      message: `Team: ${e.target.team.value}\nNationality: ${e.target.nationality.value}\nPosition: ${e.target.playerPosition.value}\nPace: ${e.target.pacePoints.value}\nShooting: ${e.target.shootingPoints.value}\nPassing: ${e.target.passingPoints.value}\nDribbling: ${e.target.dribblingPoints.value}\nDefence: ${e.target.defencePoints.value}\nPhysical: ${e.target.physicalPoints.value}`,
+    });
+
+    if (result.success) {
+      alert("Mensagem enviada com sucesso!");
+      window.location.reload();
+    } else {
+      alert("Erro ao enviar: " + (result.message || ""));
+    }
   });
-
-  if (result.success) {
-    alert("Mensagem enviada com sucesso!");
-  } else {
-    alert("Erro ao enviar: " + (result.message || ""));
-  }
-});
+}
 
 const form = document.getElementById("addTeamForm");
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const upload = await uploadToCpanel(form.teamImage.files[0]);
-  console.log("image:", upload);
-  const teamData = {
-    name: form.teamName.value,
-    country: form.teamCountry.value,
-    image: upload.url,
-  };
-  console.log("Form data:", teamData);
-  if (!teamData) return console.log("Form data is empty or invalid.");
-  teamAPI
-    .create(teamData)
-    .then((response) => {
-      console.log("Team added successfully:", response);
-    })
-    .catch((error) => {
-      console.error("Error adding team:", error);
-    });
-});
+if (form) {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const upload = await uploadToCpanel(form.teamImage.files[0]);
+    console.log("image:", upload);
+    const teamData = {
+      name: form.teamName.value,
+      country: form.teamCountry.value,
+      image: upload.url,
+    };
+    console.log("Form data:", teamData);
+    if (!teamData) return console.log("Form data is empty or invalid.");
+    teamAPI
+      .create(teamData)
+      .then((response) => {
+        window.location.reload();
+        alert("Equipa adicionada com sucesso!");
+        console.log("Team added successfully:", response);
+      })
+      .catch((error) => {
+        console.error("Error adding team:", error);
+      });
+  });
+}

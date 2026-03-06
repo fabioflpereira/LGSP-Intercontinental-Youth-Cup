@@ -5,6 +5,13 @@ body {
   padding: 0;
   overflow-x: hidden;
   color: #05164d;
+
+}
+
+h3 {
+  color: #05164d;
+  font-size: small;
+  font-weight: light;
 }
 
 
@@ -715,6 +722,7 @@ th {
   align-items: center;
   justify-content: flex-start;
   margin-bottom: 20px;
+  margin-top: 20px;
 
   
 }
@@ -926,7 +934,7 @@ button:hover {
    ========================= */
 
 .expandable {
-  width: 100%;
+  width: 50%;
   margin: 20px auto;
   background: #ffffff;
   padding: 0;
@@ -938,7 +946,6 @@ button:hover {
   align-items: center;
     
 }
-
 
 
 .fixture-main {
@@ -953,16 +960,19 @@ button:hover {
   justify-items: center;
   padding: 12px 0;
   border-bottom: 1px solid #f0f0f0;
-  width: 90%;
-  max-width: 950px;
+
 }
+
+
 
 .fixture-main :nth-child(5) {
   justify-self: left;
+  font-weight: bold;
 }
 
 .fixture-main :first-child {
   justify-self: right;
+  font-weight: bold;
 }
 
 .timeresult {
@@ -980,6 +990,7 @@ button:hover {
 }
 
 .expand-hint {
+  display: flex;
   font-size: 0.6rem;
   color: #777;
   white-space: nowrap;
@@ -1000,9 +1011,7 @@ button:hover {
 /* Hidden by default */
 .fixture-details {
   display: none;
-  align-items: center;
-  padding: 10px 0;
-  max-width: 900px;
+  max-width: 90%;
   text-align:justify;
   font-size: small;
 }
@@ -1088,6 +1097,8 @@ footer .social-media a {
   text-decoration: none;
   transition: color 0.3s;
 }
+
+
 
 
 /* Extra small devices (phones) */

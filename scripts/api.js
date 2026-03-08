@@ -5,6 +5,11 @@ async function fetchAPI(endpoint, method = "GET", body = null) {
     "Content-Type": "application/json",
   };
 
+  const token = localStorage.getItem("authToken");
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   const options = {
     method,
     headers,
@@ -21,6 +26,36 @@ async function fetchAPI(endpoint, method = "GET", body = null) {
   }
 
   return response.json();
+}
+
+export function getCurrentUser() {
+  const user = localStorage.getItem("user");
+  return user ? JSON.parse(user) : null;
+}
+
+export function getAuthToken() {
+  return localStorage.getItem("authToken");
+}
+
+export function isAuthenticated() {
+  return !!getAuthToken();
+}
+
+export function isAdmin() {
+  const user = getCurrentUser();
+  return user?.role === "admin";
+}
+
+export function logout() {
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("user");
+  window.location.href = "/Pages/admin/login.html";
+}
+
+export function protectAdminPage() {
+  if (!isAuthenticated()) {
+    window.location.href = "/Pages/admin/login.html";
+  }
 }
 
 // Auth API
@@ -197,28 +232,87 @@ if (formEditTeam) {
 document.addEventListener("DOMContentLoaded", async () => {
   const path = window.location.pathname;
 
+  const adminPages = [
+    "/Pages/admin/editPlayer.html",
+    "/Pages/admin/editTeam.html",
+    "/Pages/admin/listPlayers.html",
+    "/Pages/admin/listTeams.html",
+    "/Pages/admin/addPlayer.html",
+    "/Pages/admin/addTeam.html",
+    "/Pages/admin/homeAdmin.html",
+  ];
+
+  if (adminPages.some((page) => path.endsWith(page))) {
+    protectAdminPage();
+  }
+
+  if (path.endsWith("/pages/admin/login.html")) {
+    if (localStorage.getItem("authToken")) {
+      window.location.href = "/Pages/admin/homeAdmin.html";
+    }
+
+    const loginForm = document.getElementById("loginForm");
+    const loginBtn = document.getElementById("loginBtn");
+    const errorMessage = document.getElementById("errorMessage");
+    const successMessage = document.getElementById("successMessage");
+
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.style.display = "block";
+      successMessage.style.display = "none";
+    }
+
+    function showSuccess(message) {
+      successMessage.textContent = message;
+      successMessage.style.display = "block";
+      errorMessage.style.display = "none";
+    }
+
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      loginBtn.disabled = true;
+      loginBtn.textContent = "A autenticar...";
+
+      try {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        const response = await authAPI.login({ email, password });
+
+        if (response && response.token) {
+          localStorage.setItem("authToken", response.token);
+          localStorage.setItem("user", JSON.stringify(response.user));
+
+          showSuccess("Login realizado com sucesso! Redirecionando...");
+
+          setTimeout(() => {
+            window.location.href = "/Pages/admin/homeAdmin.html";
+          }, 1000);
+        } else {
+          showError("Falha no login. Verifique as suas credenciais.");
+          loginBtn.disabled = false;
+          loginBtn.textContent = "Entrar";
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        showError(error.message || "Erro ao fazer login. Tente novamente.");
+        loginBtn.disabled = false;
+        loginBtn.textContent = "Entrar";
+      }
+    });
+  }
+
   if (path.endsWith("/Pages/admin/editPlayer.html")) {
     try {
       const params = new URLSearchParams(window.location.search);
-      const teamId = params.get("team"); // preferível: passar team e player
       const playerId = params.get("player");
 
       let player = null;
 
-      if (teamId && playerId) {
-        // Via equipa -> procurar jogador na lista
-        const team = await teamAPI.getById(teamId);
-        if (!team || !Array.isArray(team.players)) {
-          throw new Error("Equipa inválida ou sem lista de jogadores.");
-        }
-        player = team.players.find((p) => p._id === playerId);
-      } else if (playerId) {
-        // Se tiveres endpoint direto
+      if (playerId) {
         player = await playerAPI.getById(playerId);
       } else {
-        throw new Error(
-          "Parâmetros em falta. Esperava ?team=...&player=... ou ?player=...",
-        );
+        throw new Error("Parâmetros em falta. Esperava ?player=...");
       }
 
       if (!player) throw new Error("Jogador não encontrado.");
@@ -255,9 +349,89 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  if (path.endsWith("/Pages/admin/listPlayers.html")) {
+    const teamDropdown = document.getElementById("teamsDropdown");
+    const playersList = document.getElementById("playersList");
+    if (!teamDropdown || !playersList) return;
+
+    const userIsAdmin = isAdmin();
+
+    try {
+      const data = await teamAPI.getAll();
+      const teams = data?.teams ?? [];
+      teamDropdown.innerHTML =
+        `<option value="">Selecione uma equipa</option>` +
+        teams
+          .map((team) => `<option value="${team._id}">${team.name}</option>`)
+          .join("");
+      teamDropdown.addEventListener("change", async () => {
+        const selectedTeamId = teamDropdown.value;
+        if (!selectedTeamId) {
+          playersList.innerHTML = "";
+          return;
+        }
+        try {
+          const teamData = await teamAPI.getById(selectedTeamId);
+          const players = teamData.players ?? [];
+          playersList.innerHTML = players
+            .map((player) => {
+              const deleteButton = userIsAdmin
+                ? `<button class="deletePlayerBtn" data-playerid="${player._id}"><i class="fa-solid fa-trash"></i></button>`
+                : "";
+              return `<div>${player.number} - ${player.name} - ${player.position} <button class="editPlayerBtn" data-playerid="${player._id}"><i class="fa-regular fa-pen-to-square"></i></button> ${deleteButton}</div>`;
+            })
+            .join("");
+        } catch (err) {
+          console.error("Error fetching team players:", err);
+          alert(
+            "Não foi possível carregar os jogadores da equipa selecionada.",
+          );
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+      alert("Não foi possível carregar as equipas.");
+    }
+
+    playersList.addEventListener("click", async (e) => {
+      // EDIT PLAYER
+      const editPlayerBtn = e.target.closest(".editPlayerBtn");
+      if (editPlayerBtn) {
+        const playerId = editPlayerBtn.dataset.playerid;
+        window.location.href = `/Pages/admin/editPlayer.html?player=${playerId}`;
+        return;
+      }
+
+      // DELETE PLAYER
+      const deletePlayerBtn = e.target.closest(".deletePlayerBtn");
+      if (deletePlayerBtn) {
+        const playerId = deletePlayerBtn.dataset.playerid;
+        if (!playerId) return;
+        if (!confirm("Tem certeza que deseja eliminar este jogador?")) return;
+        deletePlayerBtn.disabled = true;
+        const originalText = deletePlayerBtn.textContent;
+        deletePlayerBtn.textContent = "A eliminar...";
+        try {
+          await playerAPI.delete(playerId);
+          alert("Jogador eliminado com sucesso.");
+          const li = deletePlayerBtn.closest("div");
+          if (li) li.remove();
+        } catch (err) {
+          console.error("Error deleting player:", err);
+          alert("Falha ao eliminar o jogador.");
+        } finally {
+          deletePlayerBtn.disabled = false;
+          deletePlayerBtn.textContent = originalText;
+        }
+      }
+    });
+  }
+
   if (path.endsWith("/Pages/admin/listTeams.html")) {
-    const teamList = document.getElementById("teamList");
+    const teamList = document.getElementById("teamsList");
     if (!teamList) return;
+
+    const userIsAdmin = isAdmin();
 
     async function loadAndRenderTeams() {
       try {
@@ -265,33 +439,33 @@ document.addEventListener("DOMContentLoaded", async () => {
         const teams = data?.teams ?? [];
 
         const html = teams
-          .map(
-            (team) => `
-          <li>
-            ${team.name} (${team.country})
-            <div>
+          .map((team) => {
+            const deleteButton = userIsAdmin
+              ? `<button class="deleteTeamBtn" data-teamid="${team._id}">Eliminar Equipa</button>`
+              : "";
+            return `
+          <li class="listTeams">
+            <img src="${team.image}" alt="Imagem não disponivel"/>
+            <h3>${team.name} (${team.country})</h3>
+            <div class="editMenu">
               <button class="editTeamBtn" data-teamid="${team._id}">Editar Equipa</button>
-              <button class="deleteTeamBtn" data-teamid="${team._id}">Eliminar Equipa</button>
+              ${deleteButton}
             </div>
-            <button class="addPlayerBtn" data-teamid="${team._id}">Adicionar Jogador</button>
+            <h5>Jogadores</h5>
             <ul>
               ${(team.players ?? [])
                 .map(
                   (player) => `
                 <li id="${player._id}">
                   ${player.number} - ${player.name} - ${player.position}
-                  <div>
-                    <button class="editPlayerBtn" data-playerid="${player._id}">Editar Jogador</button>
-                    <button class="deletePlayerBtn" data-playerid="${player._id}">Eliminar Jogador</button>
-                  </div>
                 </li>
               `,
                 )
                 .join("")}
             </ul>
           </li>
-        `,
-          )
+        `;
+          })
           .join("");
 
         teamList.innerHTML = html;
@@ -337,37 +511,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           deleteTeamBtn.textContent = originalText;
         }
         return;
-      }
-
-      // EDIT PLAYER (passar team e player no URL)
-      const editPlayerBtn = e.target.closest(".editPlayerBtn");
-      if (editPlayerBtn) {
-        const playerId = editPlayerBtn.dataset.playerid;
-        window.location.href = `/Pages/admin/editPlayer.html?player=${playerId}`;
-        return;
-      }
-
-      // DELETE PLAYER (se precisares no futuro)
-      const deletePlayerBtn = e.target.closest(".deletePlayerBtn");
-      if (deletePlayerBtn) {
-        const playerId = deletePlayerBtn.dataset.playerid;
-        if (!playerId) return;
-        if (!confirm("Tem certeza que deseja eliminar este jogador?")) return;
-        deletePlayerBtn.disabled = true;
-        const originalText = deletePlayerBtn.textContent;
-        deletePlayerBtn.textContent = "A eliminar...";
-        try {
-          await playerAPI.delete(playerId);
-          alert("Jogador eliminado com sucesso.");
-          const li = deletePlayerBtn.closest("li");
-          if (li) li.remove();
-        } catch (err) {
-          console.error("Error deleting player:", err);
-          alert("Falha ao eliminar o jogador.");
-        } finally {
-          deletePlayerBtn.disabled = false;
-          deletePlayerBtn.textContent = originalText;
-        }
       }
     });
   }

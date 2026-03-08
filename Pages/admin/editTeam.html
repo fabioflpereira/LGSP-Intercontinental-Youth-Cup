@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/Pages/admin/css/admin.css" />
     <!-- <link rel="stylesheet" href="/style.css"> -->
     <title>EditTeam</title>
   </head>
@@ -12,15 +13,10 @@
       <h1>Editar Equipa</h1>
       <form id="editTeamForm">
         <label for="teamName">Nome da Equipa:</label>
-        <input type="text" id="teamName" name="teamName" required /><br /><br />
+        <input type="text" id="teamName" name="teamName" required />
 
         <label for="teamCountry">País da Equipa:</label>
-        <input
-          type="text"
-          id="teamCountry"
-          name="teamCountry"
-          required
-        /><br /><br />
+        <input type="text" id="teamCountry" name="teamCountry" required />
 
         <label for="teamImage">Logo da Equipa:</label>
         <img src="" id="imgTeam" alt="" />
@@ -29,7 +25,7 @@
           accept=".jpg, .jpeg, .png"
           id="teamImage"
           name="teamImage"
-        /><br /><br />
+        />
 
         <button type="submit" id="editTeamBtn">Guardar Equipa</button>
         <button type="reset">Reset</button>

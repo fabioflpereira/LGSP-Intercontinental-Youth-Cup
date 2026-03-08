@@ -13,9 +13,9 @@
     <h1>Adicionar Jogador</h1>
 
     <form id="addPlayerForm">
-      <label for="playerTeam">Equipa:</label>
-      <select id="playerTeam" name="playerTeam" required>
-        <!-- as opções são inseridas pelo JS -->
+      <label for="teamsDropdown">Equipa:</label>
+      <select id="teamsDropdown" name="teamsDropdown" required>
+        <option value="">-- Seleciona --</option>
       </select>
       <br><br>
 
@@ -30,14 +30,14 @@
       <label for="playerPosition">Posição:</label>
       <select id="playerPosition" name="playerPosition" required>
         <option value="">-- Seleciona --</option>
-        <option value="GK">Guarda‑Redes</option>
-        <option value="DF">Defesa</option>
-        <option value="MF">Médio</option>
-        <option value="FW">Avançado</option>
+        <option value="guarda-redes">Guarda‑Redes</option>
+        <option value="defesa">Defesa</option>
+        <option value="medio">Médio</option>
+        <option value="avancado">Avançado</option>
       </select>
       <br><br>
 
-      <label for="playerImage">Foto (opcional):</label>
+      <label for="playerImage">Foto:</label>
       <input type="file" id="playerImage" name="playerImage" accept=".jpg,.jpeg,.png" />
       <br><br>
 

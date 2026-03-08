@@ -1,5 +1,7 @@
 *.ai
 *.DS_Store
 *.log
+*.zip
 *.env
+*.temp
 node_modules/

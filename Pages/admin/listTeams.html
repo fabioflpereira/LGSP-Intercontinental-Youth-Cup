@@ -1,22 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/Pages/admin/css/admin.css" />
     <!-- <link rel="stylesheet" href="/style.css"> -->
-    <title>AddTeam</title>
-</head>
-<body>
+    <title>ListTeams</title>
+  </head>
+  <body>
     <header id="header-placeholder"></header>
     <main>
-        <h1>Equipas</h1>
-        <div>
-            <a href="/pages/admin/addTeam.html"><button>Adicionar Equipa</button></a>
-            <div id="teamList"></div>
+      <h1>Equipas</h1>
+      <div>
+        <div class="addMenu">
+          <a href="/pages/admin/addTeam.html"
+            ><button>Adicionar Equipa</button></a
+          >
+          <a href="/Pages/admin/homeAdmin.html"><button>Voltar</button></a>
         </div>
+
+        <div id="teamsList"></div>
+      </div>
     </main>
     <footer id="footer-placeholder"></footer>
-<!--     <script src="/scripts/loadDOM.js"></script>
- -->    <script type="module" src="/scripts/api.js"></script>
-</body>
+    <!--     <script src="/scripts/loadDOM.js"></script>
+ -->
+    <script type="module" src="/scripts/api.js"></script>
+  </body>
 </html>

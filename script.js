@@ -45,22 +45,7 @@ menu9.addEventListener("click", () => {
     : (menu10.style.visibility = "visible");
 });
 
-// Carousel about us page
-document.addEventListener("DOMContentLoaded", function () {
-  const swiper = new Swiper(".swiper-container", {
-    loop: true, // Enable looping
-    navigation: {
-      nextEl: ".swiper-button-next", // Link the next button
-      prevEl: ".swiper-button-prev", // Link the prev button
-    },
-    autoplay: {
-      delay: 2500, // Auto-slide interval
-      disableOnInteraction: false, // Continue autoplay after interaction
-    },
-    speed: 800, // Transition duration in milliseconds (smooth transition)
-  });
-});
-
+// JS Hero section
 (function () {
   const track = document.querySelector(".rail-track");
   const viewport = document.querySelector(".rail-viewport");
@@ -126,4 +111,21 @@ document.addEventListener("DOMContentLoaded", function () {
 // Abre as fixtures
 function toggleFixture(fixture) {
   fixture.classList.toggle("open");
+}
+
+// Muda as tabs da classificação
+function openTab(tabId) {
+  const contents = document.querySelectorAll(".tab-content");
+  const buttons = document.querySelectorAll(".tab-button");
+
+  contents.forEach((content) => {
+    content.classList.remove("active");
+  });
+
+  buttons.forEach((button) => {
+    button.classList.remove("active");
+  });
+
+  document.getElementById(tabId).classList.add("active");
+  event.target.classList.add("active");
 }

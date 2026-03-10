@@ -17,7 +17,7 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="pt_PT">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js" defer></script>
-    <script type="module" src="/script.js" ></script>
+    <script type="module" src="/script.js"></script>
     <link rel="stylesheet" href="/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,8 +35,9 @@
     <!-- Nav Bar Principal -->
     <nav id="mainav">
         <!-- Logo -->
-        <img class="mainimg" src="/images/Logo horizontal branco.png" href="/FIFA cards.html"
-            alt="LGSP Intercontinental Youth Cup Logo">
+        <a href="/index.html"><img class="mainimg" src="images/Logo horizontal branco.png"
+                alt="LGSP Intercontinental Youth Cup Logo"></a>
+
 
         <!-- Main Navigation -->
         <ul id="main-nav-list">
@@ -56,19 +57,13 @@
             <!-- Tab dos servicos -->
             <li><a id="subMenu11" href="#">Servicos</a>
                 <ul id="subMenu12">
-                    <li><a href="fifacards.html">LIYC Cards</a></li>
-                    <li><a href="corporateleague.html">Corporate League</a></li>
-                    <li><a href="https://lcc-lgspsportsandevents.com/" target="_blank">Book Your Trip With Us</a></li>
+                    <li><a href="/Pages/fifacards.html">LIYC Cards</a></li>
+                    <li><a href="/Pages/corporateleague.html">Corporate League</a></li>
+                    <li><a href="https://lcc-lgspsportsandevents.com/" target="_blank">Book Your Trip With Us</a>
+                    </li>
                 </ul>
             </li>
 
-
-            <li><a id="subMenu5" href="#">Equipas</a>
-                <ul id="subMenu6">
-                    <li><a href="/pages/cidade-porto.html">5ª Edição</a></li>
-                    <li><a href="/pages/complexo-desportivo.html">Edições Passadas</a></li>
-                </ul>
-            </li>
             <li><a id="subMenu7" href="#">Jogos</a>
                 <ul id="subMenu8">
                     <li><a href="/pages/quadro-competitivo.html">Quadro Competitivo</a></li>
@@ -77,13 +72,13 @@
             </li>
             <li><a id="subMenu9" href="#">Multimédia</a>
                 <ul id="subMenu10">
-                    <li><a href="/pages/galeria.html">Galeria de Imagens</a></li>
                     <li><a href="/pages/videos.html">Vídeos</a></li>
 
                 </ul>
             </li>
             <li><a href="/pages/contactos.html">Contactos</a></li>
         </ul>
+
 
         <!-- Language Selector -->
 
@@ -118,35 +113,38 @@
 
         <!-- Subcontainer para a introducao -->
         <section class="introductionSubcontainer">
-                <div>
-                    <h2>Welcome to the LIYC Cards</h2>
-                    <p>
-                    LIYC Cards bring the professional football experience to the LGSP Intercontinental Youth Cup. Inspired by the iconic 
-                    FIFA-style player cards, each participant receives a personalized digital card showcasing their name, team, position, 
-                    photo, and performance ratings. It’s more than just a keepsake — it’s a moment of recognition, giving young athletes 
+            <div>
+                <h2>Welcome to the LIYC Cards</h2>
+                <p>
+                    LIYC Cards bring the professional football experience to the LGSP Intercontinental Youth Cup.
+                    Inspired by the iconic
+                    FIFA-style player cards, each participant receives a personalized digital card showcasing their
+                    name, team, position,
+                    photo, and performance ratings. It’s more than just a keepsake — it’s a moment of recognition,
+                    giving young athletes
                     the spotlight they deserve and a memory they’ll carry long after the tournament ends.
-                    </p>
-                </div>
+                </p>
+            </div>
         </section>
 
         <!-- Subcontainer para o formulario e imagem de exemplo-->
         <section class="formSubcontainer">
             <section class="formContainer">
                 <div>
-                    <h2>Please fill out the form below with your details    
-                </h2>
-                <div class="cardForm">
+                    <h2>Please fill out the form below with your details
+                    </h2>
+                    <div class="cardForm">
                         <form id="contactForm" action="formProcessingEngine.php" method="POST">
-        
-                            <input type="text" id="name" name="name" placeholder="Name" >
-                                
-                            <input type="text" id="surname" name="surname" placeholder="Surname" >
 
-                            <input type="email" id="email" name="email" placeholder="email@email.com" >
-                                
-                            <input type="text" id="team" name="team" placeholder="Team" >
-                                
-                            <input type="text" id="nationality" name="nationality" placeholder="Nationality" >
+                            <input type="text" id="name" name="name" placeholder="Name">
+
+                            <input type="text" id="surname" name="surname" placeholder="Surname">
+
+                            <input type="email" id="email" name="email" placeholder="email@email.com">
+
+                            <input type="text" id="team" name="team" placeholder="Team">
+
+                            <input type="text" id="nationality" name="nationality" placeholder="Nationality">
 
                             <select id="playerPosition" name="playerPosition" required>
                                 <option value="" disabled selected>Player Position</option>
@@ -156,29 +154,36 @@
                                 <option value="Forward">Forward</option>
                             </select>
 
-                            <input type="number" id="pacePoints" name="pacePoints" placeholder="PAC - Pace" min="0" max="99" >
+                            <input type="number" id="pacePoints" name="pacePoints" placeholder="PAC - Pace" min="0"
+                                max="99">
 
-                            <input type="number" id="shootingPoints" name="shootingPoints" placeholder="SHO - Shooting" min="0" max="99" >
+                            <input type="number" id="shootingPoints" name="shootingPoints" placeholder="SHO - Shooting"
+                                min="0" max="99">
 
-                            <input type="number" id="passingPoints" name="passingPoints" placeholder="PAS - Passing" min="0" max="99" >
+                            <input type="number" id="passingPoints" name="passingPoints" placeholder="PAS - Passing"
+                                min="0" max="99">
 
-                            <input type="number" id="dribblingPoints" name="dribblingPoints" placeholder="DRI - Dribbling" min="0" max="99" >
+                            <input type="number" id="dribblingPoints" name="dribblingPoints"
+                                placeholder="DRI - Dribbling" min="0" max="99">
 
-                            <input type="number" id="defencePoints" name="defencePoints" placeholder="DEF - Defending" min="0" max="99" >
+                            <input type="number" id="defencePoints" name="defencePoints" placeholder="DEF - Defending"
+                                min="0" max="99">
 
-                            <input type="number" id="physicalPoints" name="physicalPoints" placeholder="PHY - Physical" min="0" max="99" >
-                                
+                            <input type="number" id="physicalPoints" name="physicalPoints" placeholder="PHY - Physical"
+                                min="0" max="99">
+
                             <button type="submit">Send Information</button>
-                            
+
                         </form>
+                    </div>
+            </section>
+            <section class="imageContainer">
+                <div>
+                    <h2>Example image</h2>
+                    <img src="/images/FIFA Card-01.png" alt="Image imageTemplate" id="templateImage"
+                        class="templateImage">
                 </div>
             </section>
-            <section class="imageContainer">   
-                    <div>
-                        <h2>Example image</h2>
-                        <img src="/images/FIFA Card-01.png" alt="Image imageTemplate" id="templateImage" class="templateImage">
-                    </div>
-            </section> 
         </section>
     </section>
 

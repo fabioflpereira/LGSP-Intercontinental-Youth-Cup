@@ -236,6 +236,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const teamData = {
         name: formAddTeam.teamName.value,
         country: formAddTeam.teamCountry.value,
+        group: formAddTeam.teamGroup.value,
         image: upload.url,
       };
       if (!teamData) return console.log("Form data is empty or invalid.");
@@ -252,6 +253,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // Add Player Form
+  const formAddPlayer = document.getElementById("addPlayerForm");
+  if (formAddPlayer) {
+    formAddPlayer.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const upload = await uploadToCpanel(formAddPlayer.playerImage.files[0]);
+      const playerData = {
+        name: formAddPlayer.playerName.value,
+        team: formAddPlayer.teamsDropdown.value,
+        number: formAddPlayer.playerNumber.value,
+        position: formAddPlayer.playerPosition.value,
+        image: upload.url,
+      };
+      if (!playerData) return console.log("Form data is empty or invalid.");
+      playerAPI
+        .create(playerData)
+        .then((response) => {
+          window.location.reload();
+          alert("Jogador adicionado com sucesso!");
+          console.log("Player added successfully:", response);
+        })
+        .catch((error) => {
+          console.error("Error adding player:", error);
+        });
+    });
+  }
+
   // Edit Team Form
   const formEditTeam = document.getElementById("editTeamForm");
   if (formEditTeam) {
@@ -263,6 +291,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const teamData = {
         name: formEditTeam.teamName.value,
         country: formEditTeam.teamCountry.value,
+        group: formEditTeam.teamGroup.value,
         image: upload.url,
       };
       if (!teamData) return console.log("Form data is empty or invalid.");
@@ -279,6 +308,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  //redirect to login
   const adminPages = [
     "/Pages/admin/editPlayer.html",
     "/Pages/admin/editTeam.html",
@@ -288,13 +318,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     "/Pages/admin/addTeam.html",
     "/Pages/admin/homeAdmin.html",
   ];
-
   if (adminPages.some((page) => path.endsWith(page))) {
     protectAdminPage();
   }
 
+  // Logout Button
   const logoutBtn = document.getElementById("logoutBtn");
-
   if (logoutBtn) {
     logoutBtn.addEventListener("click", async (e) => {
       e.preventDefault();
@@ -413,6 +442,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  if (path.endsWith("/Pages/admin/addPlayer.html")) {
+    const teamDropdown = document.getElementById("teamsDropdown");
+    if (!teamDropdown) return console.log("erro");
+
+    try {
+      const data = await teamAPI.getAll();
+      const teams = data?.teams ?? [];
+      teamDropdown.innerHTML =
+        `<option value="">Selecione uma equipa</option>` +
+        teams
+          .map((team) => `<option value="${team._id}">${team.name}</option>`)
+          .join("");
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+      alert("Não foi possível carregar as equipas.");
+    }
+  }
+
   if (path.endsWith("/Pages/admin/listPlayers.html")) {
     const teamDropdown = document.getElementById("teamsDropdown");
     const playersList = document.getElementById("playersList");
@@ -502,19 +549,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         const data = await teamAPI.getAll();
         const teams = data?.teams ?? [];
 
+        if (!userIsAdmin) {
+          document.getElementById("addTeamBtn").style.display = "none";
+        }
+
         const html = teams
           .map((team) => {
-            const deleteButton = userIsAdmin
-              ? `<button class="deleteTeamBtn" data-teamid="${team._id}">Eliminar Equipa</button>`
+            const adminButtons = userIsAdmin
+              ? `<div class="editMenu">
+              <button class="editTeamBtn" data-teamid="${team._id}">Editar Equipa</button>
+              <button class="deleteTeamBtn" data-teamid="${team._id}">Eliminar Equipa</button>
+            </div>`
               : "";
             return `
           <li class="listTeams">
             <img src="${team.image}" alt="Imagem não disponivel"/>
             <h3>${team.name} (${team.country})</h3>
-            <div class="editMenu">
-              <button class="editTeamBtn" data-teamid="${team._id}">Editar Equipa</button>
-              ${deleteButton}
-            </div>
+            <h4>${team.group}</h4>
+            ${adminButtons}
             <h5>Jogadores</h5>
             <ul>
               ${(team.players ?? [])
@@ -565,7 +617,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
           await teamAPI.delete(teamId);
           alert("Equipa eliminada com sucesso.");
-          const li = deleteTeamBtn.closest("li[data-teamid]");
+          const li = deleteTeamBtn.closest("li");
           if (li) li.remove();
         } catch (err) {
           console.error("Error deleting team:", err);

@@ -12,8 +12,8 @@ const menu1 = document.getElementById("subMenu1");
 const menu2 = document.getElementById("subMenu2");
 const menu3 = document.getElementById("subMenu3");
 const menu4 = document.getElementById("subMenu4");
-const menu5 = document.getElementById("subMenu5");
-const menu6 = document.getElementById("subMenu6");
+const menu5 = document.getElementById("subMenu11");
+const menu6 = document.getElementById("subMenu12");
 const menu7 = document.getElementById("subMenu7");
 const menu8 = document.getElementById("subMenu8");
 const menu9 = document.getElementById("subMenu9");
@@ -45,7 +45,7 @@ menu9.addEventListener("click", () => {
     : (menu10.style.visibility = "visible");
 });
 
-// JS Hero section
+// JS para o carrossel de parceiros. Ele calcula a largura do passo (card + gap) e quantos itens cabem na viewport para habilitar/desabilitar os botões de navegação adequadamente.
 (function () {
   const track = document.querySelector(".rail-track");
   const viewport = document.querySelector(".rail-viewport");
@@ -53,19 +53,11 @@ menu9.addEventListener("click", () => {
   const prev = document.querySelector(".rail-btn--prev");
   const next = document.querySelector(".rail-btn--next");
 
-  // Read the CSS gap from the track (fallback to 24 if not found)
-  function getGap() {
-    const style = window.getComputedStyle(track);
-    const gap = parseFloat(style.gap || "24");
-    return Number.isFinite(gap) ? gap : 24;
-  }
-
   // Measure one step (card width + gap). Uses the first card.
   function getStep() {
     const firstCard = items[0].querySelector(".partner-card");
-    const gap = getGap();
     const cardWidth = firstCard.getBoundingClientRect().width;
-    return cardWidth + gap;
+    return cardWidth;
   }
 
   // How many items fit in viewport

@@ -295,9 +295,8 @@ h3 {
 .lp-hero__content{
   position: relative;
   z-index: 1;
-  display: grid;
-  text-align: left;
   padding: 0px 15px 0px 15px;
+  margin-bottom: 70px;
 }
 
 .lp-hero__eyebrow{
@@ -425,7 +424,7 @@ h3 {
   flex-direction: row;
   width: 100%;
   gap : 30px; 
-  margin: 0 auto;
+  margin-bottom: 50px;
   padding: 0;
   box-sizing: border-box;
 } 
@@ -444,6 +443,7 @@ h3 {
   margin: 20px auto;
   box-sizing: border-box;
   overflow: hidden;        /* ensures nothing bleeds outside */
+
 }
 
 .partners-rail #partnersimg {
@@ -471,7 +471,6 @@ h3 {
 
 /* Track uses flex so we can measure items better */
 .rail-track {
-  --gap: 24px;             /* JS will read this */
   display: flex;
   align-items: center;
   gap: var(--gap);
@@ -531,6 +530,14 @@ h3 {
 
 
 /* Hoverable container with background image */
+.clubcontainer {
+  width: 70%;
+  padding: 0;
+  border-radius: 8px;
+  text-align: left;
+  margin: 50px 0 0 0;
+}
+
 .hover-container {
   width: auto;
   height: 120px;
@@ -548,6 +555,7 @@ h3 {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+
 .hover-container .fa-arrow-right {
   position: absolute;
   bottom: 10px;
@@ -561,15 +569,12 @@ h3 {
   transition: transform 0.3s ease, color 0.3s ease;
 }
 
-
-
 .hover-container:hover .fa-arrow-right {
   transform: translateX(5px);
   /* Slide arrow to the right on hover */
   color: #ffad00;
   /* Optional: Change color on hover */
 }
-
 
 
 .hover-container:hover {
@@ -725,6 +730,7 @@ h3 {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
+  min-width: 300px;
 
 }
 
@@ -769,14 +775,18 @@ h3 {
   margin: 50px 0 0 0;
 }
 
-.clubcontainer {
-  width: 70%;
-  padding: 0;
-  border-radius: 8px;
-  text-align: left;
-  margin: 50px 0 0 0;
+
+.containerfixture :nth-child(5) {
+  text-align: right;
+  font-weight: bold;
+
 }
 
+.containerfixture :first-child {
+  text-align: left;
+  font-weight: bold;
+
+}
 #titles {
   height: 50px;
   width: auto;
@@ -793,7 +803,7 @@ h3 {
   background-color: #f4f8ff;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   /* Alinha tudo à esquerda */
   padding: 10px 10px;
   /* Aumentar o padding para mais espaçamento */
@@ -819,12 +829,9 @@ h3 {
 
 /* Nome das equipes com a margem */
 .team {
-  display: inline-block;
   font-size: 15px;
-  /* Adiciona a margem no nome das equipes */
   padding: 0;
   width: 150px;
-  /* Defini uma largura fixa para o nome da equipe */
 }
 
 .time {
@@ -851,7 +858,7 @@ h3 {
 
 
 .successcases {
-margin-left: 270px;
+margin-left: 155px;
 }
 
 .casesgallery {
@@ -958,7 +965,6 @@ margin-left: 270px;
 
 label {
     display: block;
-    margin-bottom: 15px;
     font-weight: bold;
 }
 
@@ -975,7 +981,6 @@ textarea {
 
 button {
     width: 100%;
-    padding: 12px;
     background: #05164d;
     color: white;
     border: none;
@@ -1159,12 +1164,133 @@ footer .social-media a {
   transition: color 0.3s;
 }
 
+/* Small laptops */
+@media (max-width: 1199px) {
+
+
+.containerfixture {
+  width: 30%;
+}
+
+
+.fixture {
+  background-color: #f4f8ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 5px 5px;
+  /* Aumentar o padding para mais espaçamento */
+  gap: 2vw;
+  /* Aumentar o gap entre os elementos */
+  border-bottom: 1px solid #f0f0f0;
+  /* Linha de separação logo no início */
+}
 
 
 
-/* Extra small devices (phones) */
-@media (max-width: 480px) { 
-  /* Menu Responsivo */
+
+
+.fixture img {
+  width: 20px;
+  /* Aumentei o tamanho das logos para 30px */
+  height: 20px;
+  /* Garantir que a altura das logos seja consistente */
+  margin: 0;
+  object-fit: contain;
+  /* Garantir que as logos sejam dimensionadas corretamente */
+}
+
+/* Nome das equipes com a margem */
+.team {
+  font-size: 10px;
+  padding: 0;
+  width: 150px;
+}
+
+.time {
+  font-size: 12px;
+  background:#05164d;
+  min-width: fit-content;
+  color: #ffffff;
+  padding: 3px 15px;
+  /* Aumentar padding para mais espaçamento */
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  display: inline-flex;
+  justify-content: center;
+  margin: 0;
+}
+
+
+/* === Container clubes responsivo === */
+
+.clubcontainer {
+  width: 100%;
+  padding: 0;
+  border-radius: 8px;
+  text-align: left;
+  margin: 50px 0 0 0;
+}
+
+/* Grid for 2 containers per row */
+.container-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px; /* space between containers */
+}
+
+/* Each container */
+.hover-container {
+  position: relative;
+  width: 100%;
+  height: 70px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+/* Image inside the container */
+.container-image {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  margin-right: 10px;
+}
+
+/* Text */
+.container-text {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+
+/* Text at the bottom of the container */
+.container-text {
+  font-size: smaller;
+
+}
+
+/* MOTM */
+.successcases {
+  margin: 10px 0 0 0;
+  
+}
+.casesgallery {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+}
+
+/* Phones */
+@media (max-width: 767px) {  
+  
+  /* ======== Menu Responsivo ========= */
   #mainav {
     justify-content: space-around;
     height: 5rem;
@@ -1230,13 +1356,19 @@ footer .social-media a {
 .corporateleague {
   display: none;
 }
-/* Hero Section Responsivo */
+
+/* ============================= */
+
+
+/* ==== Hero Section Responsivo === */
  .lp-hero__slide{
   padding-bottom: 1.5rem; /* reserve space for selector */
   
 }
 .lp-hero__content{
     padding-bottom: 6.5rem; /* extra breathing room */
+    margin-bottom: 20px;
+    margin-left: 30px; /* alinha com o menu debaixo */
   }
 .lp-hero__selector{
     overflow-x: auto;
@@ -1249,50 +1381,7 @@ footer .social-media a {
     max-width: 50vw;
   }
 
-
-/* Sponsors Responsivos */
-  .partners-rail { width: 100%; height: 50px; }
-  .partner-card { width: 30px; height: auto; }
-  .partners-rail #partnersimg {
-  height: 50px;
-  width: auto;
-  object-fit: contain;     /* keeps the logo inside */
-  left: 0;
-}
-
-.partners-rail img {
-  height: 30px;
-  width: auto;
-  object-fit: contain;     /* keeps the logo inside */
-  left: 0;
-}
-.subcontainer {
-  display: flex;
-  flex-direction: column;
-} 
-.containerfixture {
-  width: 100%;
-}
-.clubcontainer {
-  width: 100%;
-}
-.container-row {
-  grid-template-columns: repeat(2, minmax(150px, 1fr));
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.successcases {
-  margin: 10px 0 0 0;
-  
-}
-.casesgallery {
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(150px, 1fr));
-}
-
-/* Hero selector */
+  /* Hero selector */
 .lp-hero__selector-item{
 
   min-width: 80px;
@@ -1321,22 +1410,331 @@ footer .social-media a {
     font-size: 2rem;
   }
 
+/* ============================= */
 
+/* === Sponsors Responsivos === */
+  .partners-rail { width: 100%; height: 80px; }
+  .partner-card { width: 60px; height: auto; }
+  .partners-rail #partnersimg {
+  height: 40px;
+  width: 20px;
+  object-fit: contain;     /* keeps the logo inside */
+  left: 0;
 }
 
+.rail-track {
+  gap: 20px;
+}
+
+/* ============================= */
 
 
+/* Container passa a column */
+.subcontainer {
+  display: flex;
+  flex-direction: column;
+} 
+.containerfixture {
+  width: 100%;
+}
 
-/* Small devices (phones) */
-@media (max-width: 768px) { 
+/* === Container clubes responsivo === */
+
+.clubcontainer {
+  width: 100%;
+  padding: 0;
+  border-radius: 8px;
+  text-align: left;
+  margin: 50px 0 0 0;
+}
+
+/* Grid for 2 containers per row */
 .container-row {
-  grid-template-columns: repeat(2, minmax(40px, 1fr));
-  gap: 5px;
-  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px; /* space between containers */
+}
+
+/* Each container */
+.hover-container {
+  position: relative;
+  width: 100%;
+  height: 70px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+/* Image inside the container */
+.container-image {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  margin-right: 10px;
+}
+
+/* Text */
+.container-text {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+
+/* Text at the bottom of the container */
+.container-text {
+  font-size: smaller;
+
+}
+
+/* MOTM */
+.successcases {
+  margin: 10px 0 0 0;
+  
+}
+.casesgallery {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+
+}
+
+@media (max-width: 480px) { 
+  /* ======== Menu Responsivo ========= */
+  #mainav {
+    justify-content: space-around;
+    height: 5rem;
+  }
+
+   .hamburger-menu {
+    display:flex;
+    z-index: 999;
+  }
+
+  #mainav #main-nav-list {
+    display: none;
+    position: absolute;
+    top: 0;
+    flex-direction: column;
+    width: 100%;
+    background-color: #05164d;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 500;
+    transition: 0.5s;
+    overflow: hidden;
+  }
+
+  #mainav #main-nav-list li{
+    left: 70px;
+  }
+
+  #mainav #main-nav-list li li{
+    left: 0px;
+  }
+
+  #mainav #main-nav-list li a {
+    width: max-content;
+  }
+
+
+  #mainav #main-nav-list.show-menu {
+    display: flex;
+  }
+
+ 
+  #mainav li {
+    font-size: 1rem;
+    /* Further reduce font size for mobile screens */
+  }
+
+  #mainav ul ul {
+  position: absolute; 
+  top: 70%;
+  width: 150px;
+}
+
+#mainav ul ul ul {
+  top: 0;
+  left: 150px;
+}
+
+  #mainav ul li {
+  font-size: small;
+}
+
+
+.corporateleague {
+  display: none;
+}
+
+/* ============================= */
+
+
+/* ==== Hero Section Responsivo === */
+ .lp-hero__slide{
+  padding-bottom: 1.5rem; /* reserve space for selector */
+  
+}
+.lp-hero__content{
+    padding-bottom: 6.5rem; /* extra breathing room */
+    margin-bottom: 0px;
+    margin-left: 30px; /* alinha com o menu debaixo */
+  }
+.lp-hero__selector{
+    overflow-x: auto;
+    max-width: 92vw;
+  }
+ 
+
+  .btn{
+    margin-block-end: 0rem;
+    max-width: 50vw;
+  }
+
+  /* Hero selector */
+.lp-hero__selector-item{
+
+  min-width: 80px;
+}
+  .lp-hero__selector-item .eyebrow{
+  font-size: .50rem;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+}
+
+.lp-hero__selector-item .title{
+  font-size: .8rem;
+  font-weight: 650;
+}
+
+ .with-image,
+  .with-image.reverse {
+    flex-direction: column;
+  }
+
+  .with-image img {
+    width: 100%;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+/* ============================= */
+
+/* === Sponsors Responsivos === */
+  .partners-rail { width: 100%; height: 60px; }
+  .partner-card { width: 30px; height: auto; }
+  .partners-rail #partnersimg {
+  height: 60px;
+  width: auto;
+  object-fit: contain;     /* keeps the logo inside */
+  left: 0;
+}
+
+.rail-track {
+  gap: 20px;
+}
+.partners-rail img {
+  height: 30px;
+  width: auto;
+  object-fit: contain;     /* keeps the logo inside */
+  left: 0;
+}
+/* ============================= */
+
+
+/* Container passa a column */
+.subcontainer {
+  display: flex;
+  flex-direction: column;
+} 
+.containerfixture {
+  width: 100%;
+}
+
+/* === Container clubes responsivo === */
+
+.clubcontainer {
+  width: 100%;
+  padding: 0;
+  border-radius: 8px;
+  text-align: left;
+  margin: 50px 0 0 0;
+}
+
+/* Grid for 2 containers per row */
+.container-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px; /* space between containers */
+}
+
+/* Each container */
+.hover-container {
+  position: relative;
+  width: 100%;
+  height: 70px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+/* Image inside the container */
+.container-image {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  margin-right: 10px;
+}
+
+/* Text */
+.container-text {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+
+/* Text at the bottom of the container */
+.container-text {
+  font-size: smaller;
+
+}
+
+/* MOTM */
+.successcases {
+  margin: 10px 0 0 0;
+  
+}
+.casesgallery {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(80px, 140px));
 }
 
 
 
+}
+
+
+
+
+
+
+
+
+
+/* Desktops */
+@media (max-width: 1399px) {
+}
+
+/* Large screens */
+@media (min-width: 1400px) {
 }
 
 

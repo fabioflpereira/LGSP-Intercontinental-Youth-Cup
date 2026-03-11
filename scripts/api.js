@@ -1,11 +1,53 @@
 const BASE_URL = "https://liyc-1zn5.onrender.com/api";
 
-async function fetchAPI(endpoint, method = "GET", body = null) {
+async function refreshAccessToken() {
+  try {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (!refreshToken) {
+      throw new Error("No refresh token available");
+    }
+
+    const response = await fetch(`${BASE_URL}/auth/refreshToken`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    if (!response.ok) {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
+      window.location.href = "/Pages/admin/login.html";
+      throw new Error("Token refresh failed");
+    }
+
+    const data = await response.json();
+    localStorage.setItem("accessToken", data.accessToken);
+    localStorage.setItem("refreshToken", data.refreshToken);
+    return data.accessToken;
+  } catch (error) {
+    console.error("Error refreshing token:", error);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
+    window.location.href = "/Pages/admin/login.html";
+    throw error;
+  }
+}
+
+async function fetchAPI(
+  endpoint,
+  method = "GET",
+  body = null,
+  retried = false,
+) {
   const headers = {
     "Content-Type": "application/json",
   };
 
-  const token = localStorage.getItem("authToken");
+  const token = localStorage.getItem("refreshToken");
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
@@ -21,6 +63,15 @@ async function fetchAPI(endpoint, method = "GET", body = null) {
 
   const response = await fetch(`${BASE_URL}${endpoint}`, options);
 
+  if (response.status === 401 && !retried) {
+    try {
+      await refreshAccessToken();
+      return fetchAPI(endpoint, method, body, true);
+    } catch (error) {
+      throw new Error("Session expired. Please login again.");
+    }
+  }
+
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
@@ -34,7 +85,7 @@ export function getCurrentUser() {
 }
 
 export function getAuthToken() {
-  return localStorage.getItem("authToken");
+  return localStorage.getItem("accessToken");
 }
 
 export function isAuthenticated() {
@@ -44,12 +95,6 @@ export function isAuthenticated() {
 export function isAdmin() {
   const user = getCurrentUser();
   return user?.role === "admin";
-}
-
-export function logout() {
-  localStorage.removeItem("authToken");
-  localStorage.removeItem("user");
-  window.location.href = "/Pages/admin/login.html";
 }
 
 export function protectAdminPage() {
@@ -62,6 +107,8 @@ export function protectAdminPage() {
 export const authAPI = {
   login: (data) => fetchAPI("/auth/login", "POST", data),
   register: (data) => fetchAPI("/auth/register", "POST", data),
+  logout: () => fetchAPI("/auth/logout", "POST"),
+  refreshToken: (data) => fetchAPI("/auth/refreshToken", "POST", data),
   getUser: () => fetchAPI("/auth/user", "GET"),
 };
 
@@ -155,82 +202,82 @@ async function sendContactForm(data) {
   return result;
 }
 
-const fifaCardForm = document.getElementById("contactForm");
-
-if (fifaCardForm) {
-  fifaCardForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const result = await sendContactForm({
-      name: `${e.target.name.value} ${e.target.surname.value}`,
-      email: e.target.email.value,
-      subject: `FIFA Card Submission: ${e.target.team.value} - ${e.target.playerPosition.value}`,
-      message: `Team: ${e.target.team.value}\nNationality: ${e.target.nationality.value}\nPosition: ${e.target.playerPosition.value}\nPace: ${e.target.pacePoints.value}\nShooting: ${e.target.shootingPoints.value}\nPassing: ${e.target.passingPoints.value}\nDribbling: ${e.target.dribblingPoints.value}\nDefence: ${e.target.defencePoints.value}\nPhysical: ${e.target.physicalPoints.value}`,
-    });
-
-    if (result.success) {
-      alert("Mensagem enviada com sucesso!");
-      window.location.reload();
-    } else {
-      alert("Erro ao enviar: " + (result.message || ""));
-    }
-  });
-}
-
-const formAddTeam = document.getElementById("addTeamForm");
-
-if (formAddTeam) {
-  formAddTeam.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const upload = await uploadToCpanel(formAddTeam.teamImage.files[0]);
-    const teamData = {
-      name: formAddTeam.teamName.value,
-      country: formAddTeam.teamCountry.value,
-      image: upload.url,
-    };
-    if (!teamData) return console.log("Form data is empty or invalid.");
-    teamAPI
-      .create(teamData)
-      .then((response) => {
-        window.location.reload();
-        alert("Equipa adicionada com sucesso!");
-        console.log("Team added successfully:", response);
-      })
-      .catch((error) => {
-        console.error("Error adding team:", error);
-      });
-  });
-}
-
-const formEditTeam = document.getElementById("editTeamForm");
-
-if (formEditTeam) {
-  const params = new URLSearchParams(window.location.search);
-  const teamId = params.get("team");
-  formEditTeam.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const upload = await uploadToCpanel(formEditTeam.teamImage.files[0]);
-    const teamData = {
-      name: formEditTeam.teamName.value,
-      country: formEditTeam.teamCountry.value,
-      image: upload.url,
-    };
-    if (!teamData) return console.log("Form data is empty or invalid.");
-    teamAPI
-      .update(teamId, teamData)
-      .then((response) => {
-        window.location.reload();
-        alert("Equipa editada com sucesso!");
-        console.log("Team edited successfully:", response);
-      })
-      .catch((error) => {
-        console.error("Error editing team:", error);
-      });
-  });
-}
-
 document.addEventListener("DOMContentLoaded", async () => {
   const path = window.location.pathname;
+
+  // FIFA Card Form
+  const fifaCardForm = document.getElementById("contactForm");
+  if (fifaCardForm) {
+    fifaCardForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const result = await sendContactForm({
+        name: `${e.target.name.value} ${e.target.surname.value}`,
+        email: e.target.email.value,
+        subject: `FIFA Card Submission: ${e.target.team.value} - ${e.target.playerPosition.value}`,
+        message: `Team: ${e.target.team.value}\nNationality: ${e.target.nationality.value}\nPosition: ${e.target.playerPosition.value}\nPace: ${e.target.pacePoints.value}\nShooting: ${e.target.shootingPoints.value}\nPassing: ${e.target.passingPoints.value}\nDribbling: ${e.target.dribblingPoints.value}\nDefence: ${e.target.defencePoints.value}\nPhysical: ${e.target.physicalPoints.value}`,
+      });
+
+      if (result.success) {
+        alert("Mensagem enviada com sucesso!");
+        window.location.reload();
+      } else {
+        alert("Erro ao enviar: " + (result.message || ""));
+      }
+    });
+  }
+
+  // Add Team Form
+  const formAddTeam = document.getElementById("addTeamForm");
+  if (formAddTeam) {
+    formAddTeam.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const upload = await uploadToCpanel(formAddTeam.teamImage.files[0]);
+      const teamData = {
+        name: formAddTeam.teamName.value,
+        country: formAddTeam.teamCountry.value,
+        image: upload.url,
+      };
+      if (!teamData) return console.log("Form data is empty or invalid.");
+      teamAPI
+        .create(teamData)
+        .then((response) => {
+          window.location.reload();
+          alert("Equipa adicionada com sucesso!");
+          console.log("Team added successfully:", response);
+        })
+        .catch((error) => {
+          console.error("Error adding team:", error);
+        });
+    });
+  }
+
+  // Edit Team Form
+  const formEditTeam = document.getElementById("editTeamForm");
+  if (formEditTeam) {
+    const params = new URLSearchParams(window.location.search);
+    const teamId = params.get("team");
+    formEditTeam.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const upload = await uploadToCpanel(formEditTeam.teamImage.files[0]);
+      const teamData = {
+        name: formEditTeam.teamName.value,
+        country: formEditTeam.teamCountry.value,
+        image: upload.url,
+      };
+      if (!teamData) return console.log("Form data is empty or invalid.");
+      teamAPI
+        .update(teamId, teamData)
+        .then((response) => {
+          window.location.reload();
+          alert("Equipa editada com sucesso!");
+          console.log("Team edited successfully:", response);
+        })
+        .catch((error) => {
+          console.error("Error editing team:", error);
+        });
+    });
+  }
 
   const adminPages = [
     "/Pages/admin/editPlayer.html",
@@ -246,27 +293,44 @@ document.addEventListener("DOMContentLoaded", async () => {
     protectAdminPage();
   }
 
-  if (path.endsWith("/pages/admin/login.html")) {
-    if (localStorage.getItem("authToken")) {
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      logoutBtn.textContent = "Login out...";
+      const refreshToken = localStorage.getItem("refreshToken");
+
+      try {
+        const response = await authAPI.logout(refreshToken);
+        console.log("Logout response:", response);
+
+        if (response) {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("user");
+          alert("Login realizado com sucesso! Redirecionando...");
+
+          setTimeout(() => {
+            window.location.href = "/Pages/admin/login.html";
+          }, 1000);
+        } else {
+          alert("Falha no logout.");
+        }
+      } catch (error) {
+        console.error("Logout error:", error);
+        alert(error.message || "Erro ao fazer logout. Tente novamente.");
+      }
+    });
+  }
+
+  if (path.endsWith("/Pages/admin/login.html")) {
+    if (localStorage.getItem("refreshToken")) {
       window.location.href = "/Pages/admin/homeAdmin.html";
     }
 
     const loginForm = document.getElementById("loginForm");
     const loginBtn = document.getElementById("loginBtn");
-    const errorMessage = document.getElementById("errorMessage");
-    const successMessage = document.getElementById("successMessage");
-
-    function showError(message) {
-      errorMessage.textContent = message;
-      errorMessage.style.display = "block";
-      successMessage.style.display = "none";
-    }
-
-    function showSuccess(message) {
-      successMessage.textContent = message;
-      successMessage.style.display = "block";
-      errorMessage.style.display = "none";
-    }
 
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -279,23 +343,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const response = await authAPI.login({ email, password });
 
-        if (response && response.token) {
-          localStorage.setItem("authToken", response.token);
+        if (response && response.accessToken) {
+          localStorage.setItem("accessToken", response.accessToken);
+          localStorage.setItem("refreshToken", response.refreshToken);
           localStorage.setItem("user", JSON.stringify(response.user));
-
-          showSuccess("Login realizado com sucesso! Redirecionando...");
+          alert("Login realizado com sucesso! Redirecionando...");
 
           setTimeout(() => {
             window.location.href = "/Pages/admin/homeAdmin.html";
           }, 1000);
         } else {
-          showError("Falha no login. Verifique as suas credenciais.");
+          alert("Falha no login. Verifique as suas credenciais.");
           loginBtn.disabled = false;
           loginBtn.textContent = "Entrar";
         }
       } catch (error) {
         console.error("Login error:", error);
-        showError(error.message || "Erro ao fazer login. Tente novamente.");
+        alert(error.message || "Erro ao fazer login. Tente novamente.");
         loginBtn.disabled = false;
         loginBtn.textContent = "Entrar";
       }

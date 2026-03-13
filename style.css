@@ -436,7 +436,6 @@ h3 {
   display: grid;
   grid-template-columns: auto 40px 1fr 40px;
   align-items: center;
-  column-gap: 12px;
   /* Sizing constraints */
   height: 100px;
   background-color: #f4f8ff;
@@ -499,8 +498,8 @@ h3 {
 
 /* Images stay inside the card */
 .rail-item img {
-  max-width: auto;
-  max-height: 80px;
+  max-width: 100px;
+  max-height: 100px;
   object-fit: contain;
 }
 
@@ -1000,7 +999,7 @@ button:hover {
    ========================= */
 
 .expandable {
-  width: 50%;
+  width: 90%;
   margin: 20px auto;
   background: #ffffff;
   padding: 0;
@@ -1164,6 +1163,56 @@ footer .social-media a {
   transition: color 0.3s;
 }
 
+
+
+.ytvault-grid-zone{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:28px;
+padding:30px;
+background-color: #f4f8ff;
+}
+
+.ytvault-card-unit{
+background:#f4f8ff;
+border-radius:10px;
+overflow:hidden;
+text-decoration:none;
+color:#05164d;
+
+}
+
+.ytvault-card-unit:hover{
+background-color: #89D4FE;
+}
+
+.ytvault-thumb-box{
+height:300px;
+overflow:hidden;
+}
+
+.ytvault-thumb-box img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.ytvault-text-box{
+padding:14px;
+}
+
+.ytvault-date-tag{
+font-size:13px;
+color:#777;
+margin-bottom:6px;
+}
+
+.ytvault-title-tag{
+font-size:16px;
+font-weight:600;
+line-height:1.35;
+}
+
 /* Small laptops */
 @media (max-width: 1199px) {
 
@@ -1284,7 +1333,101 @@ footer .social-media a {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
+#heroinfo{
+ display: flex;
+  height: 200px;
+}
 
+
+.expandable {
+  width: 90%;
+  margin: 10px auto;
+  background: #ffffff;
+
+}
+.fixture-main {
+  grid-template-columns: 
+    minmax(60px, 1fr)  /* Team A name */
+    60px               /* Logo A */
+    70px              /* Result */
+    60px               /* Logo B */
+    minmax(60px, 1fr);/* Team B name */
+
+}
+
+
+
+.fixture-main :nth-child(5) {
+  justify-self: left;
+  font-weight: bold;
+  font-size: smaller;
+}
+
+.fixture-main :first-child {
+  justify-self: right;
+  font-weight: bold;
+  font-size: smaller;
+}
+
+.timeresult {
+  font-size: 18px;
+  border-radius: 6px;
+  padding: 4px 5px;
+
+}
+
+.expand-hint {
+  display: flex;
+  font-size: 0.6rem;
+  color: #777;
+  white-space: nowrap;
+
+}
+
+
+
+/* Hide when open */
+.expandable.open .expand-hint {
+  display: none;
+}
+
+
+
+/* Hidden by default */
+.fixture-details {
+  display: none;
+  max-width: 90%;
+  text-align:justify;
+  font-size: smaller;
+}
+
+
+/* Show when open */
+.expandable.open .fixture-details {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    
+}
+
+/* Goals */
+.goals p {
+    margin: 6px 0;
+    font-size: smaller;
+}
+
+/* Man of the Match */
+.motm {
+    text-align: center;
+    font-size: smaller;
+}
+
+.motm img {
+    width: auto;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 3px;
+}
 }
 
 /* Phones */
@@ -1422,8 +1565,12 @@ footer .social-media a {
   left: 0;
 }
 
-.rail-track {
-  gap: 20px;
+
+
+/* Buttons */
+.rail-btn {
+  width: 20px; height: 20px;
+
 }
 
 /* ============================= */
@@ -1498,9 +1645,119 @@ footer .social-media a {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
+#heroinfo{
+ display: flex;
+  height: 200px;
+}
 
+/* =========================
+   EXPANDABLE FIXTURE (NEW)
+   ========================= */
+
+.expandable {
+  width: 90%;
+  margin: 10px auto;
+  background: #ffffff;
 
 }
+
+
+.fixture-main {
+  grid-template-columns: 
+    minmax(60px, 1fr)  /* Team A name */
+    60px               /* Logo A */
+    70px              /* Result */
+    60px               /* Logo B */
+    minmax(60px, 1fr);/* Team B name */
+
+}
+
+
+
+.fixture-main :nth-child(5) {
+  justify-self: left;
+  font-weight: bold;
+  font-size: smaller;
+}
+
+.fixture-main :first-child {
+  justify-self: right;
+  font-weight: bold;
+  font-size: smaller;
+}
+
+.timeresult {
+  font-size: 18px;
+  border-radius: 6px;
+  padding: 4px 5px;
+
+}
+
+.expand-hint {
+  display: flex;
+  font-size: 0.6rem;
+  color: #777;
+  white-space: nowrap;
+
+}
+
+
+
+/* Hide when open */
+.expandable.open .expand-hint {
+  display: none;
+}
+
+
+
+/* Hidden by default */
+.fixture-details {
+  display: none;
+  max-width: 90%;
+  text-align:justify;
+  font-size: smaller;
+}
+
+
+/* Show when open */
+.expandable.open .fixture-details {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    
+}
+
+/* Goals */
+.goals p {
+    margin: 6px 0;
+    font-size: smaller;
+}
+
+/* Man of the Match */
+.motm {
+    text-align: center;
+    font-size: smaller;
+}
+
+.motm img {
+    width: auto;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 3px;
+}
+/* CSS da fase de grupos*/
+/* Grid for 2 groups per row */
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+
+}
+}
+
+
+
 
 @media (max-width: 480px) { 
   /* ======== Menu Responsivo ========= */
@@ -1581,7 +1838,7 @@ footer .social-media a {
 .lp-hero__content{
     padding-bottom: 6.5rem; /* extra breathing room */
     margin-bottom: 0px;
-    margin-left: 30px; /* alinha com o menu debaixo */
+    margin-left: 0px; /* alinha com o menu debaixo */
   }
 .lp-hero__selector{
     overflow-x: auto;
@@ -1627,7 +1884,7 @@ footer .social-media a {
 
 /* === Sponsors Responsivos === */
   .partners-rail { width: 100%; height: 60px; }
-  .partner-card { width: 30px; height: auto; }
+  .partner-card { width: 50px; height: 50px; }
   .partners-rail #partnersimg {
   height: 60px;
   width: auto;
@@ -1635,15 +1892,15 @@ footer .social-media a {
   left: 0;
 }
 
-.rail-track {
-  gap: 20px;
-}
+
 .partners-rail img {
-  height: 30px;
-  width: auto;
+  height: 40px;
+  width: 40px;
   object-fit: contain;     /* keeps the logo inside */
   left: 0;
 }
+
+
 /* ============================= */
 
 
@@ -1717,6 +1974,118 @@ footer .social-media a {
   grid-template-columns: repeat(2, minmax(80px, 140px));
 }
 
+#heroinfo{
+ display: flex;
+  height: 100px;
+}
+
+
+/* =========================
+   EXPANDABLE FIXTURE (NEW)
+   ========================= */
+
+.expandable {
+  width: 90%;
+  margin: 10px auto;
+  background: #ffffff;
+
+}
+
+
+.fixture-main {
+  grid-template-columns: 
+    minmax(40px, 1fr)  /* Team A name */
+    40px               /* Logo A */
+    50px              /* Result */
+    40px               /* Logo B */
+    minmax(40px, 1fr);/* Team B name */
+
+}
+
+
+
+.fixture-main :nth-child(5) {
+  justify-self: left;
+  font-weight: bold;
+  font-size: smaller;
+}
+
+.fixture-main :first-child {
+  justify-self: right;
+  font-weight: bold;
+  font-size: smaller;
+}
+
+.timeresult {
+  font-size: 15px;
+  border-radius: 5px;
+  padding: 4px 5px;
+
+}
+
+.expand-hint {
+  display: flex;
+  font-size: 0.4rem;
+  color: #777;
+  white-space: nowrap;
+
+}
+
+
+
+/* Hide when open */
+.expandable.open .expand-hint {
+  display: none;
+}
+
+
+
+/* Hidden by default */
+.fixture-details {
+  display: none;
+  max-width: 90%;
+  text-align:justify;
+  font-size: smaller;
+}
+
+
+/* Show when open */
+.expandable.open .fixture-details {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    
+}
+
+/* Goals */
+.goals p {
+    margin: 5px 0;
+    font-size: smaller;
+}
+
+/* Man of the Match */
+.motm {
+    text-align: center;
+    font-size: smaller;
+}
+
+.motm img {
+    width: auto;
+    height: 50px;
+    object-fit: contain;
+    margin-bottom: 2px;
+}
+
+/* CSS da fase de grupos*/
+/* Grid for 2 groups per row */
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+
+}
+
 
 
 }
@@ -1727,15 +2096,6 @@ footer .social-media a {
 
 
 
-
-
-/* Desktops */
-@media (max-width: 1399px) {
-}
-
-/* Large screens */
-@media (min-width: 1400px) {
-}
 
 
 

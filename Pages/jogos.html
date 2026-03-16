@@ -111,13 +111,18 @@
 
     <section id="heroinfo">
 
-        <img src="/images/sports and events.jpg" alt="LGSP Intercontinental Youth Cup Logo">
+        <img src="/images/hero_sections/hero sections_result_pt.jpg" alt="LGSP Intercontinental Youth Cup Logo">
     </section>
 
     <section class="containermain">
-        <img id="titles" src="/images/Jornada 1.jpg" alt="Jornada 1">
-        <h3>SEX. 2 FEV</h3>
-        <section class="subcontainer">
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab('dia1')">2 DE ABRIL</button>
+            <button class="tab-button" onclick="openTab('dia2')">3 DE ABRIL</button>
+            <button class="tab-button" onclick="openTab('dia3')">4 DE ABRIL</button>
+        </div>
+
+        <div id="dia1" class="tab-content active">
+
 
             <div class="fixture expandable" onclick="toggleFixture(this)">
                 <div class="fixture-main">
@@ -148,32 +153,103 @@
                 </div>
             </div>
 
-        </section>
-        <div class="fixture expandable" onclick="toggleFixture(this)">
-            <div class="fixture-main">
-                <span class="teamresult-left">SC Beira-Mar</span>
-                <img src="/images/logos_equipas/beira-mar-seeklogo.png" class="teamresult-logo">
-                <span class="timeresult">08:00</span>
-                <img src="/images/logos_equipas/benfica.png" class="teamresult-logo">
-                <span class="teamresult-right">SL Benfica</span> <span class="expand-hint">Clique para ver
-                    detalhes</span>
-            </div>
 
-            <!-- Hidden expandable content -->
-            <div class="fixture-details">
-                <div class="goals">
-                    <h4>⚽ Goals</h4>
-                    <p><strong>Groundlink:</strong> Winston Zarate (46')</p>
-                    <p><strong>HF Hotels:</strong> Gonçalo Rocha (0:46', 8', 19' ,28' , 30'), Miguel Almeida
-                        (1',26'),
-                        Gustavo
-                        Gouveia (40'), Jorge Maia (45')</p>
+            <div class="fixture expandable" onclick="toggleFixture(this)">
+                <div class="fixture-main">
+                    <span class="teamresult-left">SC Beira-Mar</span>
+                    <img src="/images/logos_equipas/beira-mar-seeklogo.png" class="teamresult-logo">
+                    <span class="timeresult">08:00</span>
+                    <img src="/images/logos_equipas/benfica.png" class="teamresult-logo">
+                    <span class="teamresult-right">SL Benfica</span> <span class="expand-hint">Clique para ver
+                        detalhes</span>
                 </div>
 
-                <div class="motm">
-                    <h4>🏆 Man of the Match</h4>
-                    <img src="/img/MVP/MVP - Gonçalo Rocha (HF Hotels)(1).jpg" alt="Man of the Match">
-                    <p>Gonçalo Rocha</p>
+                <!-- Hidden expandable content -->
+                <div class="fixture-details">
+                    <div class="goals">
+                        <h4>⚽ Goals</h4>
+                        <p><strong>Groundlink:</strong> Winston Zarate (46')</p>
+                        <p><strong>HF Hotels:</strong> Gonçalo Rocha (0:46', 8', 19' ,28' , 30'), Miguel Almeida
+                            (1',26'),
+                            Gustavo
+                            Gouveia (40'), Jorge Maia (45')</p>
+                    </div>
+
+                    <div class="motm">
+                        <h4>🏆 Man of the Match</h4>
+                        <img src="/img/MVP/MVP - Gonçalo Rocha (HF Hotels)(1).jpg" alt="Man of the Match">
+                        <p>Gonçalo Rocha</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dia 2 -->
+
+        <div id="dia2" class="tab-content">
+
+
+            <div class="fixture expandable" onclick="toggleFixture(this)">
+                <div class="fixture-main">
+                    <span class="teamresult-left">SC Beira-Mar</span>
+                    <img src="/images/logos_equipas/beira-mar-seeklogo.png" class="teamresult-logo">
+                    <span class="timeresult">08:00</span>
+                    <img src="/images/logos_equipas/benfica.png" class="teamresult-logo">
+                    <span class="teamresult-right">SL Benfica</span> <span class="expand-hint">Clique para ver
+                        detalhes</span>
+                </div>
+
+                <!-- Hidden expandable content -->
+                <div class="fixture-details">
+                    <div class="goals">
+                        <h4>⚽ Goals</h4>
+                        <p><strong>Groundlink:</strong> Winston Zarate (46')</p>
+                        <p><strong>HF Hotels:</strong> Gonçalo Rocha (0:46', 8', 19' ,28' , 30'), Miguel Almeida
+                            (1',26'),
+                            Gustavo
+                            Gouveia (40'), Jorge Maia (45')</p>
+                    </div>
+
+                    <div class="motm">
+                        <h4>🏆 Man of the Match</h4>
+                        <img src="/images/MVP - Bruno Carvalho (KPMG)(1).jpg" alt="Man of the Match">
+                        <p>Gonçalo Rocha</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dia 3 -->
+
+        <div id="dia3" class="tab-content">
+
+
+            <div class="fixture expandable" onclick="toggleFixture(this)">
+                <div class="fixture-main">
+                    <span class="teamresult-left">SC Beira-Mar</span>
+                    <img src="/images/logos_equipas/beira-mar-seeklogo.png" class="teamresult-logo">
+                    <span class="timeresult">08:00</span>
+                    <img src="/images/logos_equipas/benfica.png" class="teamresult-logo">
+                    <span class="teamresult-right">SL Benfica</span> <span class="expand-hint">Clique para ver
+                        detalhes</span>
+                </div>
+
+                <!-- Hidden expandable content -->
+                <div class="fixture-details">
+                    <div class="goals">
+                        <h4>⚽ Goals</h4>
+                        <p><strong>Groundlink:</strong> Winston Zarate (46')</p>
+                        <p><strong>HF Hotels:</strong> Gonçalo Rocha (0:46', 8', 19' ,28' , 30'), Miguel Almeida
+                            (1',26'),
+                            Gustavo
+                            Gouveia (40'), Jorge Maia (45')</p>
+                    </div>
+
+                    <div class="motm">
+                        <h4>🏆 Man of the Match</h4>
+                        <img src="/images/MVP - Bruno Carvalho (KPMG)(1).jpg" alt="Man of the Match">
+                        <p>Gonçalo Rocha</p>
+                    </div>
                 </div>
             </div>
         </div>

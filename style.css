@@ -1164,6 +1164,7 @@ footer .social-media a {
 }
 
 
+/* Página videos*/
 
 .ytvault-grid-zone{
 display:grid;
@@ -1183,7 +1184,7 @@ color:#05164d;
 }
 
 .ytvault-card-unit:hover{
-background-color: #89D4FE;
+background-color:#cfe3ff;
 }
 
 .ytvault-thumb-box{
@@ -2085,6 +2086,24 @@ line-height:1.35;
   margin-bottom: 20px;
 
 }
+/* Videos*/
+.ytvault-grid-zone{
+gap:18px;
+padding:10px;
+}
+
+.ytvault-card-unit{
+border-radius:10px;
+
+
+}
+
+.ytvault-thumb-box{
+height:200px;
+width: auto;
+
+}
+
 
 
 

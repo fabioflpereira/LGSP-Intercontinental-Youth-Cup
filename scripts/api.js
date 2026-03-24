@@ -47,11 +47,10 @@ async function fetchAPI(
     "Content-Type": "application/json",
   };
 
-  const token = localStorage.getItem("refreshToken");
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  }
-
+const token = localStorage.getItem("accessToken"); // ✅ correto
+if (token) {
+  headers["Authorization"] = `Bearer ${token}`;
+}
   const options = {
     method,
     headers,

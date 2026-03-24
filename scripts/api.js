@@ -1,4 +1,5 @@
 const BASE_URL = "https://liyc-1zn5.onrender.com/api";
+const path = window.location.pathname;
 
 async function refreshAccessToken() {
   try {
@@ -47,10 +48,10 @@ async function fetchAPI(
     "Content-Type": "application/json",
   };
 
-const token = localStorage.getItem("accessToken"); // ✅ correto
-if (token) {
-  headers["Authorization"] = `Bearer ${token}`;
-}
+  const token = localStorage.getItem("accessToken"); // ✅ correto
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
   const options = {
     method,
     headers,
@@ -88,7 +89,7 @@ export function getAuthToken() {
 }
 
 export function isAuthenticated() {
-  return !!getAuthToken();
+  return getAuthToken();
 }
 
 export function isAdmin() {
@@ -201,49 +202,460 @@ async function sendContactForm(data) {
   return result;
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const path = window.location.pathname;
+// Helper functions
+async function loadTeamsDropdown(selectElement, includeEmpty = true) {
+  try {
+    const data = await teamAPI.getAll();
+    const teams = data?.teams ?? [];
+    selectElement.innerHTML =
+      (includeEmpty ? `<option value="">Selecione uma equipa</option>` : "") +
+      teams
+        .map((team) => `<option value="${team._id}">${team.name}</option>`)
+        .join("");
+  } catch (error) {
+    console.error("Error fetching teams:", error);
+    alert("Não foi possível carregar as equipas.");
+  }
+}
 
- // --------------------------- LOGIN PAGE ---------------------------
-    if (path.endsWith("/Pages/admin/login.html")) {
-        if (localStorage.getItem("refreshToken")) {
-            window.location.href = "/Pages/admin/homeAdmin.html";
-        }
+async function loadGamesDropdown(selectElement, includeEmpty = true) {
+  try {
+    const data = await gameAPI.getAll();
+    const games = data?.games ?? [];
+    selectElement.innerHTML =
+      (includeEmpty ? `<option value="">Selecione um jogo</option>` : "") +
+      games
+        .map(
+          (game) => `<option value="${game._id}">Jogo J${game.n_jogo}</option>`,
+        )
+        .join("");
+  } catch (error) {
+    console.error("Error fetching games:", error);
+    alert("Não foi possível carregar os jogos.");
+  }
+}
 
-        const loginForm = document.getElementById("loginForm");
-        const loginBtn = document.getElementById("loginBtn");
+async function loadTeamsForGame(gameId, teamSelect) {
+  if (!gameId) {
+    teamSelect.innerHTML = `<option value="">Selecione uma equipa</option>`;
+    return;
+  }
 
-        loginForm?.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            loginBtn.disabled = true;
-            loginBtn.textContent = "A autenticar...";
+  try {
+    const game = await gameAPI.getById(gameId);
 
-            try {
-                const email = document.getElementById("email").value;
-                const password = document.getElementById("password").value;
-                const response = await authAPI.login({ email, password });
+    const gameTeams = game.teams;
 
-                if (response?.accessToken) {
-                    localStorage.setItem("accessToken", response.accessToken);
-                    localStorage.setItem("refreshToken", response.refreshToken);
-                    localStorage.setItem("user", JSON.stringify(response.user));
-                    alert("Login realizado com sucesso! Redirecionando...");
-                    setTimeout(() => window.location.href = "/Pages/admin/homeAdmin.html", 1000);
-                } else {
-                    alert("Falha no login. Verifique as suas credenciais.");
-                    loginBtn.disabled = false;
-                    loginBtn.textContent = "Entrar";
-                }
-            } catch (err) {
-                console.error(err);
-                alert(err.message || "Erro ao fazer login. Tente novamente.");
-                loginBtn.disabled = false;
-                loginBtn.textContent = "Entrar";
-            }
-        });
+    teamSelect.innerHTML =
+      `<option value="">Selecione uma equipa</option>` +
+      gameTeams
+        .map((team) => `<option value="${team._id}">${team.name}</option>`)
+        .join("");
+  } catch (err) {
+    console.error("Erro ao carregar equipas do jogo:", err);
+    alert("Não foi possível carregar as equipas deste jogo.");
+  }
+}
+
+async function loadPlayersForTeam(teamId, playerSelect) {
+  if (!teamId) {
+    playerSelect.innerHTML = `<option value="">Selecione um jogador</option>`;
+    return;
+  }
+
+  try {
+    const team = await teamAPI.getById(teamId);
+
+    const teamPlayers = team.players;
+
+    playerSelect.innerHTML =
+      `<option value="">Selecione um jogador</option>` +
+      teamPlayers
+        .map(
+          (player) => `<option value="${player._id}">${player.name}</option>`,
+        )
+        .join("");
+  } catch (err) {
+    console.error("Erro ao carregar jogadores:", err);
+    alert("Não foi possível carregar os jogadores.");
+  }
+}
+
+async function loadPlayers(teamId, playersListElement) {
+  try {
+    const teamData = await teamAPI.getById(teamId);
+    const players = teamData.players ?? [];
+    const userIsAdmin = isAdmin();
+    playersListElement.innerHTML = players
+      .map((player) => {
+        const deleteButton = userIsAdmin
+          ? `<button class="deletePlayerBtn" data-playerid="${player._id}"><i class="fa-solid fa-trash"></i></button>`
+          : "";
+        return `<div>${player.number} - ${player.name} - ${player.position} <button class="editPlayerBtn" data-playerid="${player._id}"><i class="fa-regular fa-pen-to-square"></i></button> ${deleteButton}</div>`;
+      })
+      .join("");
+  } catch (err) {
+    console.error("Error fetching team players:", err);
+    alert("Não foi possível carregar os jogadores da equipa selecionada.");
+  }
+}
+
+async function loadEvents(gameId, eventsListElement) {
+  try {
+    const gameData = await gameAPI.getById(gameId);
+    const events = gameData.events ?? [];
+
+    const htmlArray = await Promise.all(
+      events.map(async (event) => {
+        const team = await teamAPI.getById(event.team);
+        const player = await playerAPI.getById(event.player);
+        return `
+        <div>
+          ${event.type} | ${event.time}min - ${team.name} - ${player.name}
+        </div>
+      `;
+      }),
+    );
+
+    eventsListElement.innerHTML = htmlArray.join("");
+  } catch (err) {
+    console.error("Error fetching game events:", err);
+    alert("Não foi possível carregar os eventos do jogo selecionado.");
+  }
+}
+
+async function loadAndRenderTeams(teamsListElement) {
+  try {
+    const data = await teamAPI.getAll();
+    const teams = data?.teams ?? [];
+    const userIsAdmin = isAdmin();
+
+    if (!userIsAdmin) {
+      const addBtn = document.getElementById("addTeamBtn");
+      if (addBtn) addBtn.style.display = "none";
     }
 
+    const html = teams
+      .map((team) => {
+        const adminButtons = userIsAdmin
+          ? `<div class="editMenu">
+              <button class="editTeamBtn" data-teamid="${team._id}">Editar Equipa</button>
+              <button class="deleteTeamBtn" data-teamid="${team._id}">Eliminar Equipa</button>
+            </div>`
+          : "";
+        return `
+          <li class="listTeams">
+            <img src="${team.image}" alt="Imagem não disponível"/>
+            <h3>${team.name} (${team.country})</h3>
+            <h4>${team.group}</h4>
+            ${adminButtons}
+            <h5>Jogadores</h5>
+            <ul>
+              ${(team.players ?? [])
+                .map(
+                  (player) => `
+                <li id="${player._id}">
+                  ${player.number} - ${player.name} - ${player.position}
+                </li>
+              `,
+                )
+                .join("")}
+            </ul>
+          </li>
+        `;
+      })
+      .join("");
 
+    teamsListElement.innerHTML = html;
+  } catch (error) {
+    console.error("Error fetching teams:", error);
+    alert("Não foi possível carregar as equipas.");
+  }
+}
+
+async function loadAndRenderGames(gamesListElement) {
+  try {
+    const data = await gameAPI.getAll();
+    const games = data?.games ?? [];
+    const userIsAdmin = isAdmin();
+
+    if (!userIsAdmin) {
+      const addBtn = document.getElementById("addGameBtn");
+      if (addBtn) addBtn.style.display = "none";
+    }
+
+    const html = games
+      .map((game) => {
+        const adminButtons = userIsAdmin
+          ? `<div class="editMenu">
+              <button class="editGameBtn" data-gameid="${game._id}">Editar Jogo</button>
+              <button class="deleteGameBtn" data-gameid="${game._id}">Eliminar Jogo</button>
+            </div>`
+          : "";
+        return `
+          <li class="listGames">
+            <h3>Jogo J${game.n_jogo}</h3>
+            ${adminButtons}
+            <h5>Equipas</h5>
+            <ul>
+              ${(game.teams ?? [])
+                .map(
+                  (team) => `
+                <li id="${team._id}">
+                  ${team.name}
+                </li>
+              `,
+                )
+                .join("")}
+            </ul>
+          </li>
+        `;
+      })
+      .join("");
+
+    gamesListElement.innerHTML = html;
+  } catch (error) {
+    console.error("Error fetching games:", error);
+    alert("Não foi possível carregar os jogos.");
+  }
+}
+
+async function loadAndRenderEvents(eventsListElement) {
+  try {
+    const data = await eventAPI.getAll();
+    const events = data.events ?? [];
+    const userIsAdmin = isAdmin();
+
+    const html = events
+      .map((ev) => {
+        const adminBtns = userIsAdmin
+          ? `<div class="editMenu">
+          <button class="editEventBtn" data-eventid="${ev._id}">Editar</button>
+          <button class="deleteEventBtn" data-eventid="${ev._id}">Eliminar</button>
+        </div>`
+          : "";
+        return `<li class="eventItem">
+          <h3>Jogo J${ev.game.n_jogo}</h3>
+          <p><strong>equipa:</strong> ${ev.team.name} <strong>jogador:</strong> ${ev.player.name}</p>
+          <p><strong>minuto:</strong> ${ev.time} <strong>tipo:</strong> ${ev.type}</p>
+          ${adminBtns}
+        </li>`;
+      })
+      .join("");
+
+    eventsListElement.innerHTML = html;
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    alert("Não foi possível carregar os eventos.");
+  }
+}
+
+async function handleDelete(
+  apiCall,
+  id,
+  elementToRemove,
+  successMessage,
+  errorMessage,
+) {
+  if (!confirm("Tem certeza que deseja eliminar este item?")) return;
+
+  const btn = elementToRemove.querySelector('button[class*="delete"]');
+  if (btn) {
+    btn.disabled = true;
+    const originalText = btn.textContent;
+    originalText = "A eliminar...";
+  }
+
+  try {
+    await apiCall(id);
+    alert(successMessage);
+    elementToRemove.remove();
+  } catch (err) {
+    console.error("Error deleting:", err);
+    alert(errorMessage);
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
+  }
+}
+
+async function loadPlayerForEdit(playerId) {
+  try {
+    const player = await playerAPI.getById(playerId);
+    if (!player) throw new Error("Jogador não encontrado.");
+
+    document.getElementById("playerName").value = player.name ?? "";
+    document.getElementById("playerNumber").value = player.number ?? "";
+    document.getElementById("playerPosition").value = player.position ?? "";
+
+    const teams = (await teamAPI.getAll())?.teams ?? [];
+    const teamDropdown = document.getElementById("teamsDropdown");
+    teamDropdown.innerHTML = teams
+      .map(
+        (t) =>
+          `<option value="${t._id}" ${t._id === player.team ? "selected" : ""}>${t.name}</option>`,
+      )
+      .join("");
+
+    const imgPreview = document.getElementById("imgPlayer");
+    if (player.image && imgPreview) imgPreview.src = player.image;
+  } catch (err) {
+    console.error("Erro ao carregar jogador:", err);
+    alert("Não foi possível carregar os dados do jogador.");
+  }
+}
+
+async function loadTeamForEdit(teamId) {
+  try {
+    const team = await teamAPI.getById(teamId);
+    if (!team) throw new Error("Equipa não encontrada.");
+
+    document.getElementById("teamName").value = team.name ?? "";
+    document.getElementById("teamCountry").value = team.country ?? "";
+    document.getElementById("teamGroup").value = team.group ?? "";
+
+    const imgPreview = document.getElementById("imgTeam");
+    if (imgPreview && team.image) {
+      imgPreview.src = team.image;
+      imgPreview.style.display = "block";
+    }
+  } catch (error) {
+    console.error("Error fetching team:", error);
+    alert("Não foi possível carregar os dados da equipa.");
+  }
+}
+
+async function loadGameForEdit(gameId) {
+  try {
+    const game = await gameAPI.getById(gameId);
+    if (!game) throw new Error("Jogo não encontrado.");
+
+    const teams = (await teamAPI.getAll())?.teams ?? [];
+    const teamA = document.getElementById("teamA");
+    const teamB = document.getElementById("teamB");
+
+    const options = teams
+      .map((t) => `<option value="${t._id}">${t.name}</option>`)
+      .join("");
+
+    teamA.innerHTML = options;
+    teamB.innerHTML = options;
+
+    teamA.value = game.teams[0]?._id || game.teams[0];
+    teamB.value = game.teams[1]?._id || game.teams[1];
+
+    const statusEl = document.getElementById("status");
+    if (statusEl) statusEl.value = game.status;
+    const n_jogoEl = document.getElementById("n_jogo");
+    if (n_jogoEl) n_jogoEl.value = game.n_jogo;
+  } catch (err) {
+    console.error(err);
+    alert("Não foi possível carregar o jogo.");
+  }
+}
+
+async function loadEventForEdit(eventId) {
+  try {
+    const event = await eventAPI.getById(eventId);
+    if (!event) throw new Error("Evento não encontrado.");
+
+    const teamDropdown = document.getElementById("teamsDropdown");
+    const gamesDropdown = document.getElementById("gamesDropdown");
+    const playersDropdown = document.getElementById("playersDropdown");
+
+    await loadGamesDropdown(gamesDropdown);
+    gamesDropdown.value = event.game._id;
+    await loadTeamsForGame(event.game._id, teamDropdown);
+    teamDropdown.value = event.team._id;
+    await loadPlayersForTeam(event.team._id, playersDropdown);
+    playersDropdown.value = event.player._id;
+    document.getElementById("eventType").value = event.type;
+    document.getElementById("eventTime").value = event.time;
+  } catch (err) {
+    console.error(err);
+    alert("Não foi possível carregar o evento.");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  // Logout
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      logoutBtn.textContent = "A sair...";
+      const refreshToken = localStorage.getItem("refreshToken");
+
+      try {
+        const response = await authAPI.logout(refreshToken);
+        console.log("Logout response:", response);
+
+        if (response) {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("user");
+          alert("Logout realizado com sucesso! Redirecionando...");
+
+          setTimeout(() => {
+            window.location.href = "/Pages/admin/login.html";
+          }, 1000);
+        } else {
+          alert("Falha no logout.");
+        }
+      } catch (error) {
+        console.error("Logout error:", error);
+        alert(error.message || "Erro ao fazer logout. Tente novamente.");
+      }
+    });
+  }
+
+  // Login
+  if (path.endsWith("/Pages/admin/login.html")) {
+    if (localStorage.getItem("refreshToken")) {
+      window.location.href = "/Pages/admin/homeAdmin.html";
+    }
+
+    const loginForm = document.getElementById("loginForm");
+    const loginBtn = document.getElementById("loginBtn");
+
+    loginForm?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      loginBtn.disabled = true;
+      loginBtn.textContent = "A autenticar...";
+
+      try {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        const response = await authAPI.login({ email, password });
+
+        if (response?.accessToken) {
+          localStorage.setItem("accessToken", response.accessToken);
+          localStorage.setItem("refreshToken", response.refreshToken);
+          localStorage.setItem("user", JSON.stringify(response.user));
+          alert("Login realizado com sucesso! Redirecionando...");
+          setTimeout(
+            () =>
+              isAdmin
+                ? (window.location.href = "/Pages/admin/home.html")
+                : (window.location.href = "/Pages/admin/gameMaster.html"),
+            1000,
+          );
+        } else {
+          alert("Falha no login. Verifique as suas credenciais.");
+          loginBtn.disabled = false;
+          loginBtn.textContent = "Entrar";
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao fazer login. Tente novamente.");
+        loginBtn.disabled = false;
+        loginBtn.textContent = "Entrar";
+      }
+    });
+  }
 
   // FIFA Card Form
   const fifaCardForm = document.getElementById("contactForm");
@@ -267,57 +679,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-
   // ADD GAME
-const addGameForm = document.getElementById("addGameForm");
+  const addGameForm = document.getElementById("addGameForm");
+  if (addGameForm) {
+    const teamA = document.getElementById("teamA");
+    const teamB = document.getElementById("teamB");
 
-if (addGameForm) {
-  const teamA = document.getElementById("teamA");
-  const teamB = document.getElementById("teamB");
+    await loadTeamsDropdown(teamA, true);
+    await loadTeamsDropdown(teamB, true);
 
-  try {
-    
-    const data = await teamAPI.getAll();
-    const teams = data?.teams ?? [];
+    addGameForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    const options = teams
-      .map((t) => `<option value="${t._id}">${t.name}</option>`)
-      .join("");
+      try {
+        if (e.target.teamA.value === e.target.teamB.value) {
+          return alert("As equipas têm de ser diferentes!");
+        }
 
-    teamA.innerHTML = `<option value="">Seleciona</option>` + options;
-    teamB.innerHTML = `<option value="">Seleciona</option>` + options;
+        const gameData = {
+          teams: [e.target.teamA.value, e.target.teamB.value],
+          n_jogo: e.target.n_jogo.value,
+          status: e.target.status.value,
+        };
 
-  } catch (err) {
-    console.error("Erro ao carregar equipas:", err);
-    alert("Não foi possível carregar as equipas.");
+        await gameAPI.create(gameData);
+
+        alert("Jogo criado com sucesso!");
+        window.location.href = "/Pages/admin/listGames.html";
+      } catch (err) {
+        console.error("Erro ao criar jogo:", err);
+        alert("Erro ao criar jogo.");
+      }
+    });
   }
 
-  
-  addGameForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    try {
-      
-      if (teamA.value === teamB.value) {
-        return alert("As equipas têm de ser diferentes!");
-      }
-
-      const gameData = {
-        teams: [teamA.value, teamB.value],
-        status: document.getElementById("status").value,
-      };
-
-      await gameAPI.create(gameData);
-
-      alert("Jogo criado com sucesso!");
-      window.location.href = "/Pages/admin/listGames.html";
-
-    } catch (err) {
-      console.error("Erro ao criar jogo:", err);
-      alert("Erro ao criar jogo.");
-    }
-  });
-}
   // Add Team Form
   const formAddTeam = document.getElementById("addTeamForm");
   if (formAddTeam) {
@@ -330,23 +725,26 @@ if (addGameForm) {
         group: formAddTeam.teamGroup.value,
         image: upload.url,
       };
-      if (!teamData) return console.log("Form data is empty or invalid.");
-      teamAPI
-        .create(teamData)
-        .then((response) => {
-          window.location.reload();
-          alert("Equipa adicionada com sucesso!");
-          console.log("Team added successfully:", response);
-        })
-        .catch((error) => {
-          console.error("Error adding team:", error);
-        });
+      if (!teamData.name || !teamData.country)
+        return alert("Preencha todos os campos obrigatórios.");
+
+      try {
+        await teamAPI.create(teamData);
+        alert("Equipa adicionada com sucesso!");
+        window.location.reload();
+      } catch (error) {
+        console.error("Error adding team:", error);
+        alert("Erro ao adicionar equipa.");
+      }
     });
   }
 
   // Add Player Form
   const formAddPlayer = document.getElementById("addPlayerForm");
   if (formAddPlayer) {
+    const teamDropdown = document.getElementById("teamsDropdown");
+    if (teamDropdown) await loadTeamsDropdown(teamDropdown);
+
     formAddPlayer.addEventListener("submit", async (e) => {
       e.preventDefault();
       const upload = await uploadToCpanel(formAddPlayer.playerImage.files[0]);
@@ -357,40 +755,60 @@ if (addGameForm) {
         position: formAddPlayer.playerPosition.value,
         image: upload.url,
       };
-      if (!playerData) return console.log("Form data is empty or invalid.");
-      playerAPI
-        .create(playerData)
-        .then((response) => {
-          window.location.reload();
-          alert("Jogador adicionado com sucesso!");
-          console.log("Player added successfully:", response);
-        })
-        .catch((error) => {
-          console.error("Error adding player:", error);
-        });
+      if (!playerData.name || !playerData.team)
+        return alert("Preencha todos os campos obrigatórios.");
+
+      try {
+        await playerAPI.create(playerData);
+        alert("Jogador adicionado com sucesso!");
+        window.location.reload();
+      } catch (error) {
+        console.error("Error adding player:", error);
+        alert("Erro ao adicionar jogador.");
+      }
     });
   }
- // Add Event Form
- const formAddEvent = document.getElementById("addEventForm");
+
+  // Add Event Form
+  const formAddEvent = document.getElementById("addEventForm");
   if (formAddEvent) {
+    const teamDropdown = document.getElementById("teamsDropdown");
+    const gamesDropdown = document.getElementById("gamesDropdown");
+    const playersDropdown = document.getElementById("playersDropdown");
+    if (gamesDropdown) await loadGamesDropdown(gamesDropdown);
+    gamesDropdown.addEventListener("change", () => {
+      if (teamDropdown) loadTeamsForGame(gamesDropdown.value, teamDropdown);
+    });
+    teamDropdown.addEventListener("change", () => {
+      if (playersDropdown)
+        loadPlayersForTeam(teamDropdown.value, playersDropdown);
+    });
+
     formAddEvent.addEventListener("submit", async (e) => {
       e.preventDefault();
       try {
-        let imageUrl = "";
-        const file = formAddEvent.eventImage.files[0];
-        if (file) {
-          const upload = await uploadToCpanel(file);
-          imageUrl = upload.url;
-        }
         const eventData = {
-          name: formAddEvent.eventName.value,
-          date: formAddEvent.eventDate.value,
-          location: formAddEvent.eventLocation.value,
-          image: imageUrl
+          type: formAddEvent.eventType.value,
+          time: formAddEvent.eventTime.value,
+          team: formAddEvent.teamsDropdown.value,
+          player: formAddEvent.playersDropdown.value,
+          game: formAddEvent.gamesDropdown?.value || gamesDropdown.value,
         };
+        if (
+          !eventData.type ||
+          !eventData.time ||
+          !eventData.game ||
+          !eventData.player ||
+          !eventData.team
+        )
+          return alert("Preencha todos os campos obrigatórios.");
+
         await eventAPI.create(eventData);
         alert("Evento adicionado com sucesso!");
-        window.location.href = "/Pages/admin/listEvents.html";
+        if (path.endsWith("/Pages/admin/gameMaster.html"))
+          window.location.href = "/Pages/admin/gameMaster.html";
+        if (path.endsWith("/Pages/admin/addEvent.html"))
+          window.location.href = "/Pages/admin/listEvents.html";
       } catch (err) {
         console.error(err);
         alert("Erro ao adicionar evento.");
@@ -398,38 +816,24 @@ if (addGameForm) {
     });
   }
 
-
   // EDIT GAME
-if (path.endsWith("/Pages/admin/editGame.html")) {
-  const form = document.getElementById("editGameForm");
-
-  try {
+  if (path.endsWith("/Pages/admin/editGame.html")) {
+    const form = document.getElementById("editGameForm");
     const params = new URLSearchParams(window.location.search);
     const gameId = params.get("game");
 
-    if (!gameId) throw new Error("ID do jogo em falta.");
+    if (!gameId) {
+      alert("ID do jogo em falta.");
+      return;
+    }
 
-    const game = await gameAPI.getById(gameId);
+    await loadGameForEdit(gameId);
 
-    const teams = (await teamAPI.getAll())?.teams ?? [];
-    const teamA = document.getElementById("teamA");
-    const teamB = document.getElementById("teamB");
-
-    const options = teams
-      .map((t) => `<option value="${t._id}">${t.name}</option>`)
-      .join("");
-
-    teamA.innerHTML = options;
-    teamB.innerHTML = options;
-
-    
-    teamA.value = game.teams[0]?._id || game.teams[0];
-    teamB.value = game.teams[1]?._id || game.teams[1];
-
-    document.getElementById("status").value = game.status;
-
-    form.addEventListener("submit", async (e) => {
+    form?.addEventListener("submit", async (e) => {
       e.preventDefault();
+
+      const teamA = document.getElementById("teamA");
+      const teamB = document.getElementById("teamB");
 
       if (teamA.value === teamB.value) {
         return alert("As equipas têm de ser diferentes!");
@@ -438,50 +842,47 @@ if (path.endsWith("/Pages/admin/editGame.html")) {
       try {
         const updatedGame = {
           teams: [teamA.value, teamB.value],
-          status: document.getElementById("status").value,
+          status: document.getElementById("status")?.value || "",
         };
 
         await gameAPI.update(gameId, updatedGame);
 
         alert("Jogo atualizado com sucesso!");
         window.location.href = "/Pages/admin/listGames.html";
-
       } catch (err) {
         console.error(err);
         alert("Erro ao atualizar jogo.");
       }
     });
-
-  } catch (err) {
-    console.error(err);
-    alert("Não foi possível carregar o jogo.");
   }
-}
+
   // Edit Team Form
   const formEditTeam = document.getElementById("editTeamForm");
   if (formEditTeam) {
     const params = new URLSearchParams(window.location.search);
     const teamId = params.get("team");
+
+    if (teamId) await loadTeamForEdit(teamId);
+
     formEditTeam.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const upload = await uploadToCpanel(formEditTeam.teamImage.files[0]);
-      const teamData = {
-        name: formEditTeam.teamName.value,
-        country: formEditTeam.teamCountry.value,
-        group: formEditTeam.teamGroup.value,
-        image: upload.url,
-      };
-      if (!teamData) return console.log("Form data is empty or invalid.");
-      teamAPI
-        .update(teamId, teamData)
-        .then((response) => {
-          window.location.reload();
-          alert("Equipa editada com sucesso!");
-          console.log("Team edited successfully:", response);
-        })
-        .catch((error) => {
-          console.error("Error editing team:", error);
-        });
+      try {
+        const file = formEditTeam.teamImage.files[0];
+        const upload = file ? await uploadToCpanel(file) : { url: "" };
+        const teamData = {
+          name: formEditTeam.teamName.value,
+          country: formEditTeam.teamCountry.value,
+          group: formEditTeam.teamGroup.value,
+          image: upload.url || document.getElementById("imgTeam")?.src || "",
+        };
+
+        await teamAPI.update(teamId, teamData);
+        alert("Equipa editada com sucesso!");
+        window.location.reload();
+      } catch (error) {
+        console.error("Error editing team:", error);
+        alert("Erro ao editar equipa.");
+      }
     });
   }
 
@@ -489,32 +890,24 @@ if (path.endsWith("/Pages/admin/editGame.html")) {
   const formEditPlayer = document.getElementById("editPlayerForm");
   if (formEditPlayer) {
     const playerId = new URLSearchParams(window.location.search).get("player");
-    const player = await playerAPI.getById(playerId);
 
-    formEditPlayer.playerName.value = player.name ?? "";
-    formEditPlayer.playerNumber.value = player.number ?? "";
-    formEditPlayer.playerPosition.value = player.position ?? "";
-
-    const teams = (await teamAPI.getAll())?.teams ?? [];
-    const teamDropdown = document.getElementById("teamsDropdown");
-    teamDropdown.innerHTML = teams.map(t => `<option value="${t._id}" ${t._id===player.team?"selected":""}>${t.name}</option>`).join("");
-
-    const imgPreview = document.getElementById("imgPlayer");
-    if (player.image && imgPreview) imgPreview.src = player.image;
+    if (playerId) await loadPlayerForEdit(playerId);
 
     formEditPlayer.addEventListener("submit", async (e) => {
       e.preventDefault();
       try {
-        const upload = formEditPlayer.playerImage.files[0] 
-          ? await uploadToCpanel(formEditPlayer.playerImage.files[0]) 
-          : { url: player.image };
+        const file = formEditPlayer.playerImage.files[0];
+        const upload = file
+          ? await uploadToCpanel(file)
+          : { url: document.getElementById("imgPlayer")?.src || "" };
         const updatedPlayer = {
           name: formEditPlayer.playerName.value,
           number: formEditPlayer.playerNumber.value,
           position: formEditPlayer.playerPosition.value,
           team: formEditPlayer.teamsDropdown.value,
-          image: upload.url
+          image: upload.url,
         };
+
         await playerAPI.update(playerId, updatedPlayer);
         alert("Jogador atualizado com sucesso!");
         window.location.href = "/Pages/admin/listPlayers.html";
@@ -525,31 +918,58 @@ if (path.endsWith("/Pages/admin/editGame.html")) {
     });
   }
 
-// Edit Event Form
- const formEditEvent = document.getElementById("editEventForm");
+  const menu = document.getElementById("menu");
+  if (menu) {
+    if (isAdmin()) {
+      menu.innerHTML = `<ul class="menu">
+        <li>
+          <button><a href="/Pages/admin/listTeams.html">Equipas</a></button>
+        </li>
+        <li>
+          <button><a href="/Pages/admin/listPlayers.html">Jogadores</a></button>
+        </li>
+        <li>
+          <button><a href="/Pages/admin/listGames.html">Jogos</a></button>
+        </li>
+        <li>
+          <button><a href="/Pages/admin/listEvents.html">Eventos</a></button>
+        </li>
+      </ul>`;
+    } else {
+      menu.innerHTML = `<ul class="menu">
+        <li>
+          <button><a href="/Pages/admin/gameMaster.html">Game Master</a></button>
+        </li>
+      </ul>`;
+    }
+  }
+
+  // Edit Event Form
+  const formEditEvent = document.getElementById("editEventForm");
   if (formEditEvent) {
     const eventId = new URLSearchParams(window.location.search).get("event");
-    const event = await eventAPI.getById(eventId);
 
-    formEditEvent.eventName.value = event.name ?? "";
-    formEditEvent.eventDate.value = event.date ? event.date.split("T")[0] : "";
-    formEditEvent.eventLocation.value = event.location ?? "";
-
-    const imgPreview = document.getElementById("imgEvent");
-    if (event.image && imgPreview) imgPreview.src = event.image;
+    if (eventId) await loadEventForEdit(eventId);
 
     formEditEvent.addEventListener("submit", async (e) => {
       e.preventDefault();
       try {
-        const upload = formEditEvent.eventImage.files[0] 
-          ? await uploadToCpanel(formEditEvent.eventImage.files[0]) 
-          : { url: event.image };
-        const updatedEvent = {
-          name: formEditEvent.eventName.value,
-          date: formEditEvent.eventDate.value,
-          location: formEditEvent.eventLocation.value,
-          image: upload.url
+        const eventData = {
+          type: formEditEvent.eventType.value,
+          time: formEditEvent.eventTime.value,
+          team: formEditEvent.teamsDropdown.value,
+          player: formEditEvent.playersDropdown.value,
+          game: formEditEvent.gamesDropdown.value,
         };
+        if (
+          !eventData.type ||
+          !eventData.time ||
+          !eventData.game ||
+          !eventData.player ||
+          !eventData.team
+        )
+          return alert("Preencha todos os campos obrigatórios.");
+
         await eventAPI.update(eventId, updatedEvent);
         alert("Evento atualizado com sucesso!");
         window.location.href = "/Pages/admin/listEvents.html";
@@ -559,501 +979,210 @@ if (path.endsWith("/Pages/admin/editGame.html")) {
       }
     });
   }
- //  LIST PLAYERS 
+
+  // LIST PLAYERS
   const playersList = document.getElementById("playersList");
   const teamDropdown = document.getElementById("teamsDropdown");
   if (playersList && teamDropdown) {
-    const userIsAdmin = isAdmin();
-    const teams = (await teamAPI.getAll())?.teams ?? [];
-    teamDropdown.innerHTML = `<option value="">Selecione uma equipa</option>` +
-      teams.map(t => `<option value="${t._id}">${t.name}</option>`).join("");
+    await loadTeamsDropdown(teamDropdown);
 
     teamDropdown.addEventListener("change", async () => {
       const selectedTeamId = teamDropdown.value;
-      if (!selectedTeamId) { playersList.innerHTML = ""; return; }
-      const teamData = await teamAPI.getById(selectedTeamId);
-      const players = teamData.players ?? [];
-      playersList.innerHTML = players.map(player => {
-        const deleteBtn = userIsAdmin ? `<button class="deletePlayerBtn" data-playerid="${player._id}">🗑️</button>` : "";
-        return `<div>${player.number} - ${player.name} - ${player.position} <button class="editPlayerBtn" data-playerid="${player._id}">✏️</button> ${deleteBtn}</div>`;
-      }).join("");
+      if (!selectedTeamId) {
+        playersList.innerHTML = "";
+        return;
+      }
+      await loadPlayers(selectedTeamId, playersList);
     });
 
     playersList.addEventListener("click", async (e) => {
       const editBtn = e.target.closest(".editPlayerBtn");
+      if (editBtn) {
+        window.location.href = `/Pages/admin/editPlayer.html?player=${editBtn.dataset.playerid}`;
+        return;
+      }
+
       const deleteBtn = e.target.closest(".deletePlayerBtn");
-      if (editBtn) window.location.href = `/Pages/admin/editPlayer.html?player=${editBtn.dataset.playerid}`;
       if (deleteBtn) {
-        if (!confirm("Tem certeza que deseja eliminar este jogador?")) return;
-        await playerAPI.delete(deleteBtn.dataset.playerid);
-        alert("Jogador eliminado!");
-        deleteBtn.closest("div")?.remove();
+        await handleDelete(
+          playerAPI.delete,
+          deleteBtn.dataset.playerid,
+          deleteBtn.closest("div"),
+          "Jogador eliminado com sucesso.",
+          "Falha ao eliminar o jogador.",
+        );
       }
     });
   }
 
-  // LIST TEAMS 
+  // LIST TEAMS
   const teamsList = document.getElementById("teamsList");
   if (teamsList) {
-    const userIsAdmin = isAdmin();
-    async function loadTeams() {
-      const data = await teamAPI.getAll();
-      const teams = data.teams ?? [];
-      teamsList.innerHTML = teams.map(team => {
-        const adminBtns = userIsAdmin ? `<div class="editMenu">
-          <button class="editTeamBtn" data-teamid="${team._id}">Editar</button>
-          <button class="deleteTeamBtn" data-teamid="${team._id}">Eliminar</button>
-        </div>` : "";
-        const playersHTML = (team.players ?? []).map(p => `<li>${p.number} - ${p.name} - ${p.position}</li>`).join("");
-        return `<li class="teamItem">
-          <img src="${team.image}" alt="${team.name}">
-          <h3>${team.name} (${team.country})</h3>
-          <h4>${team.group}</h4>
-          ${adminBtns}
-          <ul>${playersHTML}</ul>
-        </li>`;
-      }).join("");
-    }
-    await loadTeams();
+    await loadAndRenderTeams(teamsList);
+
     teamsList.addEventListener("click", async (e) => {
       const editBtn = e.target.closest(".editTeamBtn");
+      if (editBtn) {
+        window.location.href = `/Pages/admin/editTeam.html?team=${editBtn.dataset.teamid}`;
+        return;
+      }
+
       const deleteBtn = e.target.closest(".deleteTeamBtn");
-      if (editBtn) window.location.href = `/Pages/admin/editTeam.html?team=${editBtn.dataset.teamid}`;
       if (deleteBtn) {
-        if (!confirm("Tem certeza que deseja eliminar esta equipa?")) return;
-        await teamAPI.delete(deleteBtn.dataset.teamid);
-        alert("Equipa eliminada!");
-        deleteBtn.closest("li")?.remove();
+        await handleDelete(
+          teamAPI.delete,
+          deleteBtn.dataset.teamid,
+          deleteBtn.closest("li"),
+          "Equipa eliminada com sucesso.",
+          "Falha ao eliminar a equipa.",
+        );
       }
     });
   }
-// LIST GAMES
-const gamesList = document.getElementById("gamesList");
 
-if (gamesList) {
-  const userIsAdmin = isAdmin();
+  // LIST GAMES
+  const gamesList = document.getElementById("gamesList");
+  if (gamesList) {
+    await loadAndRenderGames(gamesList);
 
-  try {
-    const data = await gameAPI.getAll();
-    const games = data?.games ?? [];
+    gamesList.addEventListener("click", async (e) => {
+      const editBtn = e.target.closest(".editGameBtn");
+      if (editBtn) {
+        window.location.href = `/Pages/admin/editGame.html?game=${editBtn.dataset.gameid}`;
+        return;
+      }
 
-    if (games.length === 0) {
-      gamesList.innerHTML = "<p>Sem jogos disponíveis.</p>";
-    }
-
-    gamesList.innerHTML = games
-      .map((g) => {
-        const teamA = g.teams[0]?.name || "Equipa A";
-        const teamB = g.teams[1]?.name || "Equipa B";
-
-        const score = g.result
-          ? `${g.result.homeScore ?? 0} - ${g.result.awayScore ?? 0}`
-          : "0 - 0";
-
-        const adminBtns = userIsAdmin
-          ? `<div class="editMenu">
-              <button class="editGameBtn" data-id="${g._id}">Editar</button>
-              <button class="deleteGameBtn" data-id="${g._id}">Eliminar</button>
-            </div>`
-          : "";
-
-        return `
-          <li class="gameItem">
-            <h3>${teamA} vs ${teamB}</h3>
-            <p>Resultado: ${score}</p>
-            <p>Estado: ${g.status}</p>
-            ${adminBtns}
-          </li>
-        `;
-      })
-      .join("");
-
-  } catch (err) {
-    console.error(err);
-    alert("Erro ao carregar jogos.");
+      const deleteBtn = e.target.closest(".deleteGameBtn");
+      if (deleteBtn) {
+        await handleDelete(
+          gameAPI.delete,
+          deleteBtn.dataset.gameid,
+          deleteBtn.closest("li"),
+          "Jogo eliminado com sucesso.",
+          "Falha ao eliminar o jogo.",
+        );
+      }
+    });
   }
 
-  
-  gamesList.addEventListener("click", async (e) => {
-    const editBtn = e.target.closest(".editGameBtn");
-    const deleteBtn = e.target.closest(".deleteGameBtn");
-
-    if (editBtn) {
-      window.location.href = `/Pages/admin/editGame.html?game=${editBtn.dataset.id}`;
-    }
-
-    if (deleteBtn) {
-      if (!confirm("Eliminar jogo?")) return;
-
-      try {
-        await gameAPI.delete(deleteBtn.dataset.id);
-        alert("Jogo eliminado!");
-        deleteBtn.closest("li")?.remove();
-      } catch (err) {
-        console.error(err);
-        alert("Erro ao eliminar jogo.");
-      }
-    }
-  });
-}
-  // LIST EVENTS 
+  // LIST EVENTS
   const eventsList = document.getElementById("eventsList");
   if (eventsList) {
-    const userIsAdmin = isAdmin();
-    async function loadEvents() {
-      const data = await eventAPI.getAll();
-      const events = data.events ?? [];
-      eventsList.innerHTML = events.map(ev => {
-        const adminBtns = userIsAdmin ? `<div class="editMenu">
-          <button class="editEventBtn" data-eventid="${ev._id}">Editar</button>
-          <button class="deleteEventBtn" data-eventid="${ev._id}">Eliminar</button>
-        </div>` : "";
-        return `<li class="eventItem">
-          <h3>${ev.name} (${ev.date ? ev.date.split("T")[0] : ""})</h3>
-          <p>${ev.location}</p>
-          ${ev.image ? `<img src="${ev.image}" alt="${ev.name}" style="width:150px;height:auto;">` : ""}
-          ${adminBtns}
-        </li>`;
-      }).join("");
-    }
-    await loadEvents();
+    await loadAndRenderEvents(eventsList);
+
     eventsList.addEventListener("click", async (e) => {
       const editBtn = e.target.closest(".editEventBtn");
+      if (editBtn) {
+        window.location.href = `/Pages/admin/editEvent.html?event=${editBtn.dataset.eventid}`;
+        return;
+      }
+
       const deleteBtn = e.target.closest(".deleteEventBtn");
-      if (editBtn) window.location.href = `/Pages/admin/editEvents.html?event=${editBtn.dataset.eventid}`;
       if (deleteBtn) {
-        if (!confirm("Tem certeza que deseja eliminar este evento?")) return;
-        await eventAPI.delete(deleteBtn.dataset.eventid);
-        alert("Evento eliminado!");
-        deleteBtn.closest("li")?.remove();
+        await handleDelete(
+          eventAPI.delete,
+          deleteBtn.dataset.eventid,
+          deleteBtn.closest("li"),
+          "Evento eliminado com sucesso.",
+          "Falha ao eliminar o evento.",
+        );
       }
     });
   }
 
-});
-  //redirect to login
-  const adminPages = [
-     "/Pages/admin/editPlayer.html",
-    "/Pages/admin/editTeam.html",
-    "/Pages/admin/listPlayers.html",
-    "/Pages/admin/listTeams.html",
-    "/Pages/admin/addPlayer.html",
-    "/Pages/admin/addGame.html",
-    "/Pages/admin/addTeam.html",
-    "/Pages/admin/listEvents.html",
-    "/Pages/admin/listGame.html",
-    "/Pages/admin/addEvent.html",
-    "/Pages/admin/editEvents.html",
-    "/Pages/admin/editGame.html",
-    "/Pages/admin/homeAdmin.html"
-  ];
-  if (adminPages.some((page) => path.endsWith(page))) {
-    protectAdminPage();
-  }
-
-  // Logout Button
-  const logoutBtn = document.getElementById("logoutBtn");
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", async (e) => {
-      e.preventDefault();
-      logoutBtn.textContent = "Login out...";
-      const refreshToken = localStorage.getItem("refreshToken");
-
-      try {
-        const response = await authAPI.logout(refreshToken);
-        console.log("Logout response:", response);
-
-        if (response) {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          localStorage.removeItem("user");
-          alert("Login realizado com sucesso! Redirecionando...");
-
-          setTimeout(() => {
-            window.location.href = "/Pages/admin/login.html";
-          }, 1000);
-        } else {
-          alert("Falha no logout.");
-        }
-      } catch (error) {
-        console.error("Logout error:", error);
-        alert(error.message || "Erro ao fazer logout. Tente novamente.");
-      }
-    });
-  }
-
-  if (path.endsWith("/Pages/admin/login.html")) {
-    if (localStorage.getItem("refreshToken")) {
-      window.location.href = "/Pages/admin/homeAdmin.html";
-    }
-
-    const loginForm = document.getElementById("loginForm");
-    const loginBtn = document.getElementById("loginBtn");
-
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      loginBtn.disabled = true;
-      loginBtn.textContent = "A autenticar...";
-
-      try {
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-
-        const response = await authAPI.login({ email, password });
-
-        if (response && response.accessToken) {
-          localStorage.setItem("accessToken", response.accessToken);
-          localStorage.setItem("refreshToken", response.refreshToken);
-          localStorage.setItem("user", JSON.stringify(response.user));
-          alert("Login realizado com sucesso! Redirecionando...");
-
-          setTimeout(() => {
-            window.location.href = "/Pages/admin/homeAdmin.html";
-          }, 1000);
-        } else {
-          alert("Falha no login. Verifique as suas credenciais.");
-          loginBtn.disabled = false;
-          loginBtn.textContent = "Entrar";
-        }
-      } catch (error) {
-        console.error("Login error:", error);
-        alert(error.message || "Erro ao fazer login. Tente novamente.");
-        loginBtn.disabled = false;
-        loginBtn.textContent = "Entrar";
-      }
-    });
-  }
-
+  // Page-specific initial loads
   if (path.endsWith("/Pages/admin/editPlayer.html")) {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const playerId = params.get("player");
-
-      let player = null;
-
-      if (playerId) {
-        player = await playerAPI.getById(playerId);
-      } else {
-        throw new Error("Parâmetros em falta. Esperava ?player=...");
-      }
-
-      if (!player) throw new Error("Jogador não encontrado.");
-
-      document.getElementById("playerName").value = player.name ?? "";
-      document.getElementById("playerNumber").value = player.number ?? "";
-      document.getElementById("playerPosition").value = player.position ?? "";
-    } catch (err) {
-      console.error("Erro ao carregar jogador:", err);
-      alert("Não foi possível carregar os dados do jogador.");
-    }
+    const playerId = new URLSearchParams(window.location.search).get("player");
+    if (playerId) await loadPlayerForEdit(playerId);
   }
 
   if (path.endsWith("/Pages/admin/editTeam.html")) {
-    try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const teamId = urlParams.get("team");
-      if (!teamId) throw new Error("Parâmetro 'id' em falta no URL.");
-
-      const team = await teamAPI.getById(teamId);
-      console.log("Team data:", team);
-
-      document.getElementById("teamName").value = team.name ?? "";
-      document.getElementById("teamCountry").value = team.country ?? "";
-
-      const imgPreview = document.getElementById("imgTeam");
-      if (imgPreview && team.image) {
-        imgPreview.src = team.image;
-        imgPreview.style.display = "block";
-      }
-    } catch (error) {
-      console.error("Error fetching team:", error);
-      alert("Não foi possível carregar os dados da equipa.");
-    }
+    const teamId = new URLSearchParams(window.location.search).get("team");
+    if (teamId) await loadTeamForEdit(teamId);
   }
 
   if (path.endsWith("/Pages/admin/addPlayer.html")) {
     const teamDropdown = document.getElementById("teamsDropdown");
-    if (!teamDropdown) return console.log("erro");
-
-    try {
-      const data = await teamAPI.getAll();
-      const teams = data?.teams ?? [];
-      teamDropdown.innerHTML =
-        `<option value="">Selecione uma equipa</option>` +
-        teams
-          .map((team) => `<option value="${team._id}">${team.name}</option>`)
-          .join("");
-    } catch (error) {
-      console.error("Error fetching teams:", error);
-      alert("Não foi possível carregar as equipas.");
-    }
+    if (teamDropdown) await loadTeamsDropdown(teamDropdown);
   }
 
-  if (path.endsWith("/Pages/admin/listPlayers.html")) {
-    const teamDropdown = document.getElementById("teamsDropdown");
-    const playersList = document.getElementById("playersList");
-    if (!teamDropdown || !playersList) return;
+  if (path.endsWith("/Pages/admin/gameMaster.html")) {
+    const gameId = new URLSearchParams(window.location.search).get("game");
+    if (gameId) await loadGameForEdit(gameId);
 
-    const userIsAdmin = isAdmin();
+    const gamesDropdown = document.getElementById("gamesDropdown");
+    const playersA = document.getElementById("playersA");
+    const playersB = document.getElementById("playersB");
+    const gameEventsList = document.getElementById("gameEventsList");
+    const startGameBtn = document.getElementById("startGameBtn");
+    const endGameBtn = document.getElementById("endGameBtn");
+    const imgA = document.getElementById("imgTeamA");
+    const imgB = document.getElementById("imgTeamB");
+    const scoreA = document.getElementById("scoreTeamA");
+    const scoreB = document.getElementById("scoreTeamB");
+    const statusEl = document.getElementById("status");
 
-    try {
-      const data = await teamAPI.getAll();
-      const teams = data?.teams ?? [];
-      teamDropdown.innerHTML =
-        `<option value="">Selecione uma equipa</option>` +
-        teams
-          .map((team) => `<option value="${team._id}">${team.name}</option>`)
-          .join("");
-      teamDropdown.addEventListener("change", async () => {
-        const selectedTeamId = teamDropdown.value;
-        if (!selectedTeamId) {
-          playersList.innerHTML = "";
-          return;
-        }
+    if (gamesDropdown) await loadGamesDropdown(gamesDropdown);
+    gamesDropdown.addEventListener("change", async () => {
+      const game = await gameAPI.getById(gamesDropdown.value);
+      if (!game) return console.error("Jogo não encontrado!");
+
+      startGameBtn.addEventListener("click", async () => {
+        if (!game) return alert("Escolha um jogo!");
         try {
-          const teamData = await teamAPI.getById(selectedTeamId);
-          const players = teamData.players ?? [];
-          playersList.innerHTML = players
-            .map((player) => {
-              const deleteButton = userIsAdmin
-                ? `<button class="deletePlayerBtn" data-playerid="${player._id}"><i class="fa-solid fa-trash"></i></button>`
-                : "";
-              return `<div>${player.number} - ${player.name} - ${player.position} <button class="editPlayerBtn" data-playerid="${player._id}"><i class="fa-regular fa-pen-to-square"></i></button> ${deleteButton}</div>`;
-            })
-            .join("");
+          await gameAPI.update(game._id, { status: "in_progress" });
+          window.location.reload();
+          alert("Jogo iniciado!");
         } catch (err) {
-          console.error("Error fetching team players:", err);
-          alert(
-            "Não foi possível carregar os jogadores da equipa selecionada.",
-          );
+          console.error("Erro ao iniciar jogo:", err);
         }
       });
-    } catch (error) {
-      console.error("Error fetching teams:", error);
-      alert("Não foi possível carregar as equipas.");
-    }
 
-    playersList.addEventListener("click", async (e) => {
-      // EDIT PLAYER
-      const editPlayerBtn = e.target.closest(".editPlayerBtn");
-      if (editPlayerBtn) {
-        const playerId = editPlayerBtn.dataset.playerid;
-        window.location.href = `/Pages/admin/editPlayer.html?player=${playerId}`;
-        return;
-      }
-
-      // DELETE PLAYER
-      const deletePlayerBtn = e.target.closest(".deletePlayerBtn");
-      if (deletePlayerBtn) {
-        const playerId = deletePlayerBtn.dataset.playerid;
-        if (!playerId) return;
-        if (!confirm("Tem certeza que deseja eliminar este jogador?")) return;
-        deletePlayerBtn.disabled = true;
-        const originalText = deletePlayerBtn.textContent;
-        deletePlayerBtn.textContent = "A eliminar...";
+      endGameBtn.addEventListener("click", async () => {
+        if (!game) return alert("Escolha um jogo!");
         try {
-          await playerAPI.delete(playerId);
-          alert("Jogador eliminado com sucesso.");
-          const li = deletePlayerBtn.closest("div");
-          if (li) li.remove();
+          await gameAPI.update(game._id, { status: "completed" });
+          alert("Jogo finalizado!");
         } catch (err) {
-          console.error("Error deleting player:", err);
-          alert("Falha ao eliminar o jogador.");
-        } finally {
-          deletePlayerBtn.disabled = false;
-          deletePlayerBtn.textContent = originalText;
+          console.error("Erro ao finalizar jogo:", err);
         }
+      });
+
+      const teams = game.teams;
+      if (!Array.isArray(teams) || teams.length < 2) {
+        return console.error("Jogo inválido: equipas insuficientes.");
       }
+      const teamA = await teamAPI.getById(teams[0]._id);
+      const teamB = await teamAPI.getById(teams[1]._id);
+
+      imgA.src = `${teamA.image}`;
+      imgB.src = `${teamB.image}`;
+      scoreA.innerHTML = `${game.result.homeScore}`;
+      scoreB.innerHTML = `${game.result.awayScore}`;
+      statusEl.innerHTML = `${game.status}`;
+      await loadPlayers(teams[0]._id, playersA);
+      await loadPlayers(teams[1]._id, playersB);
+      await loadEvents(game._id, gameEventsList);
     });
   }
+});
 
-  if (path.endsWith("/Pages/admin/listTeams.html")) {
-    const teamList = document.getElementById("teamsList");
-    if (!teamList) return;
-
-    const userIsAdmin = isAdmin();
-
-    async function loadAndRenderTeams() {
-      try {
-        const data = await teamAPI.getAll();
-        const teams = data?.teams ?? [];
-
-        if (!userIsAdmin) {
-          document.getElementById("addTeamBtn").style.display = "none";
-        }
-
-        const html = teams
-          .map((team) => {
-            const adminButtons = userIsAdmin
-              ? `<div class="editMenu">
-              <button class="editTeamBtn" data-teamid="${team._id}">Editar Equipa</button>
-              <button class="deleteTeamBtn" data-teamid="${team._id}">Eliminar Equipa</button>
-            </div>`
-              : "";
-            return `
-          <li class="listTeams">
-            <img src="${team.image}" alt="Imagem não disponivel"/>
-            <h3>${team.name} (${team.country})</h3>
-            <h4>${team.group}</h4>
-            ${adminButtons}
-            <h5>Jogadores</h5>
-            <ul>
-              ${(team.players ?? [])
-                .map(
-                  (player) => `
-                <li id="${player._id}">
-                  ${player.number} - ${player.name} - ${player.position}
-                </li>
-              `,
-                )
-                .join("")}
-            </ul>
-          </li>
-        `;
-          })
-          .join("");
-
-        teamList.innerHTML = html;
-      } catch (error) {
-        console.error("Error fetching teams:", error);
-        alert("Não foi possível carregar as equipas.");
-      }
-    }
-    await loadAndRenderTeams();
-    teamList.addEventListener("click", async (e) => {
-      // EDIT TEAM
-      const editTeamBtn = e.target.closest(".editTeamBtn");
-      if (editTeamBtn) {
-        const teamId = editTeamBtn.dataset.teamid;
-        window.location.href = `/Pages/admin/editTeam.html?team=${teamId}`;
-        return;
-      }
-
-       // DELETE TEAM
-      const deleteTeamBtn = e.target.closest(".deleteTeamBtn");
-      if (deleteTeamBtn) {
-        const teamId = deleteTeamBtn.dataset.teamid;
-        if (!teamId) return;
-
-        if (!confirm("Tem certeza que deseja eliminar esta equipa?")) return;
-
-        deleteTeamBtn.disabled = true;
-        const originalText = deleteTeamBtn.textContent;
-        deleteTeamBtn.textContent = "A eliminar...";
-
-        try {
-          await teamAPI.delete(teamId);
-          alert("Equipa eliminada com sucesso.");
-          const li = deleteTeamBtn.closest("li");
-          if (li) li.remove();
-        } catch (err) {
-          console.error("Error deleting team:", err);
-          alert("Falha ao eliminar a equipa.");
-        } finally {
-          deleteTeamBtn.disabled = false;
-          deleteTeamBtn.textContent = originalText;
-        }
-        return;
-      }
-    }); 
-  } ; 
+// Redirect to login for admin pages
+const adminPages = [
+  "/Pages/admin/editPlayer.html",
+  "/Pages/admin/editTeam.html",
+  "/Pages/admin/listPlayers.html",
+  "/Pages/admin/listTeams.html",
+  "/Pages/admin/addPlayer.html",
+  "/Pages/admin/addGame.html",
+  "/Pages/admin/addTeam.html",
+  "/Pages/admin/listEvents.html",
+  "/Pages/admin/listGames.html",
+  "/Pages/admin/addEvent.html",
+  "/Pages/admin/editEvent.html",
+  "/Pages/admin/editGame.html",
+  "/Pages/admin/home.html",
+];
+if (adminPages.some((page) => path.endsWith(page))) {
+  protectAdminPage();
+}

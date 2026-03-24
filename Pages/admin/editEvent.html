@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/Pages/admin/css/admin.css" />
-    <title>Editar Evento</title>
+    <title>Adicionar Evento</title>
   </head>
 
   <body>
@@ -14,21 +14,16 @@
       <button id="logoutBtn">Logout</button>
       <h1>Editar Evento</h1>
 
-      <form id="editEventForm">
+      <form class="form" id="editEventForm">
+        <label for="gamesDropdown">Jogo:</label>
+        <select id="gamesDropdown" required></select>
 
-        <!-- Jogo -->
-        <label for="gameDropdown">Jogo:</label>
-        <select id="gameDropdown" required></select>
+        <label for="teamsDropdown">Equipa:</label>
+        <select id="teamsDropdown" required></select>
 
-        <!-- Equipa -->
-        <label for="teamDropdown">Equipa:</label>
-        <select id="teamDropdown" required></select>
+        <label for="playersDropdown">Jogador:</label>
+        <select id="playersDropdown" required></select>
 
-        <!-- Jogador -->
-        <label for="playerDropdown">Jogador:</label>
-        <select id="playerDropdown" required></select>
-
-        <!-- Tipo -->
         <label for="eventType">Tipo de Evento:</label>
         <select id="eventType" required>
           <option value="">Seleciona</option>
@@ -38,19 +33,14 @@
           <option value="cartao vermelho">Cartão Vermelho</option>
         </select>
 
-        <!-- Minuto -->
         <label for="eventTime">Minuto:</label>
-        <input type="number" id="eventTime" min="0" max="120" required />
+        <input type="number" id="eventTime" min="0" max="60" required />
 
-        <!-- Botões -->
-        <div style="margin-top:10px;">
-          <button type="submit">Guardar Alterações</button>
-          <button type="reset">Reset</button>
-          <a href="/Pages/admin/listEvents.html">
-            <button type="button">Voltar para a lista</button>
-          </a>
-        </div>
-
+        <button type="submit">Atualizar Evento</button>
+        <button type="reset">Reset</button>
+        <button>
+          <a href="/Pages/admin/listEvents.html">Voltar para lista</a>
+        </button>
       </form>
     </main>
 

@@ -4,48 +4,44 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/Pages/admin/css/admin.css" />
-    <title>Adicionar Evento</title>
+    <title>Editar Jogo</title>
   </head>
   <body>
     <header id="header-placeholder"></header>
 
     <main>
       <button id="logoutBtn">Logout</button>
-      <h1>Adicionar Evento</h1>
+      <h1>Editar Jogo</h1>
 
-      <form id="addEventForm">
+      <form class="form" id="addGameForm">
+        <!-- Equipa Casa -->
+        <label for="teamA">Equipa 1:</label>
+        <select id="teamA" required></select>
 
-        
-        <label for="gameDropdown">Jogo:</label>
-        <select id="gameDropdown" required></select>
+        <!-- Equipa Fora -->
+        <label for="teamB">Equipa 2:</label>
+        <select id="teamB" required></select>
 
-     
-        <label for="teamDropdown">Equipa:</label>
-        <select id="teamDropdown" required></select>
+        <label for="n_jogo">Jogo Número:</label>
+        <input type="text" id="n_jogo" required />
 
-        <label for="playerDropdown">Jogador:</label>
-        <select id="playerDropdown" required></select>
-
-       
-        <label for="eventType">Tipo de Evento:</label>
-        <select id="eventType" required>
-          <option value="">Seleciona</option>
-          <option value="golo">Golo</option>
-          <option value="autogolo">Auto-golo</option>
-          <option value="cartao amarelo">Cartão Amarelo</option>
-          <option value="cartao vermelho">Cartão Vermelho</option>
+        <!-- Status -->
+        <label for="status">Estado do Jogo:</label>
+        <select id="status">
+          <option value="scheduled">Agendado</option>
+          <option value="in_progress">A decorrer</option>
+          <option value="completed">Finalizado</option>
         </select>
 
-      
-        <label for="eventTime">Minuto:</label>
-        <input type="number" id="eventTime" min="0" max="60" required />
-
-        <button type="submit">Adicionar Evento</button>
+        <!-- Botões -->
+        <div>
+          <button type="submit">Atualizar Jogo</button>
+          <button type="reset">Reset</button>
+          <button>
+            <a href="/Pages/admin/listGames.html">Voltar para lista</a>
+          </button>
+        </div>
       </form>
-
-      <button>
-        <a href="/Pages/admin/listEvents.html">Voltar</a>
-      </button>
     </main>
 
     <footer id="footer-placeholder"></footer>

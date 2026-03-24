@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     list-style: none;
+    text-decoration: none;
     box-sizing: border-box;
     justify-items: center;
     justify-content: center;
@@ -19,21 +20,7 @@ body{
     width: 100vw;
 }
 
-#editTeamForm{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1vh;
-}
-
-#loginForm{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1vh;
-}
-
-#addTeamForm{
+.form{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -45,12 +32,6 @@ h1{
     margin-bottom: 10%;
 }
 
-.editMenu{
-    display: flex;
-    flex-direction: row;
-    gap: 1vw;
-}
-
 img {
     width: 100px;
     height: 100px;
@@ -58,31 +39,14 @@ img {
     padding: 2%;
 }
 
-.addMenu{
+.menu{
     display: flex;
     flex-direction: column;
     row-gap: 1vh;
 }
 
-#teamsList{
-    display: flex;
-    flex-direction: column;
-    gap: 5vh;
-}
-
-#playersList{
-    display: flex;
-    flex-direction: column;
-    gap: 1vh;
-}
 
 li{
     display: flex;
     flex-direction: column;
-}
-
-.menuAdmin{
-    display: flex;
-    flex-direction: column;
-    gap: 5vh;
 }

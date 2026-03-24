@@ -13,20 +13,16 @@
       <button id="logoutBtn">Logout</button>
       <h1>Adicionar Evento</h1>
 
-      <form id="addEventForm">
+      <form class="form" id="addEventForm">
+        <label for="gamesDropdown">Jogo:</label>
+        <select id="gamesDropdown" required></select>
 
-        
-        <label for="gameDropdown">Jogo:</label>
-        <select id="gameDropdown" required></select>
+        <label for="teamsDropdown">Equipa:</label>
+        <select id="teamsDropdown" required></select>
 
-     
-        <label for="teamDropdown">Equipa:</label>
-        <select id="teamDropdown" required></select>
+        <label for="playersDropdown">Jogador:</label>
+        <select id="playersDropdown" required></select>
 
-        <label for="playerDropdown">Jogador:</label>
-        <select id="playerDropdown" required></select>
-
-       
         <label for="eventType">Tipo de Evento:</label>
         <select id="eventType" required>
           <option value="">Seleciona</option>
@@ -36,11 +32,14 @@
           <option value="cartao vermelho">Cartão Vermelho</option>
         </select>
 
-      
         <label for="eventTime">Minuto:</label>
         <input type="number" id="eventTime" min="0" max="60" required />
 
         <button type="submit">Adicionar Evento</button>
+        <button type="reset">Reset</button>
+        <button>
+          <a href="/Pages/admin/listEvents.html">Voltar para lista</a>
+        </button>
       </form>
 
       <button>

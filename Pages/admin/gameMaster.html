@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/Pages/admin/css/admin.css" />
+    <title>Ficha de Jogo</title>
+  </head>
+  <body>
+    <main>
+      <h1>Ficha de Jogo</h1>
+
+      <!-- Seleção de jogo -->
+      <section>
+        <label for="gamesDropdown">Escolha o jogo:</label>
+        <select id="gamesDropdown"></select>
+        <h5 id="status"></h5>
+      </section>
+
+      <!-- Controles do jogo -->
+      <section class="game-controls">
+        <button id="startGameBtn">Iniciar Jogo</button>
+        <button id="endGameBtn">Finalizar Jogo</button>
+      </section>
+
+      <section class="teams">
+        <div class="team">
+          <img src="" id="imgTeamA" alt="Logo Clube" />
+          <h3>Equipa A</h3>
+          <div id="scoreTeamA"></div>
+          <div id="playersA"></div>
+        </div>
+        <div class="team">
+          <img src="" id="imgTeamB" alt="Logo Clube" />
+          <h3>Equipa B</h3>
+          <div id="scoreTeamB"></div>
+          <div id="playersB"></div>
+        </div>
+      </section>
+
+      <!-- Formulário de eventos -->
+      <section class="events">
+        <!-- Lista de eventos -->
+        <h3>Eventos do Jogo</h3>
+        <ul id="gameEventsList"></ul>
+        <h3>Adicionar Evento</h3>
+        <form class="form" id="addEventForm">
+          <label for="teamsDropdown">Equipa:</label>
+          <select id="teamsDropdown" required></select>
+
+          <label for="playersDropdown">Jogador:</label>
+          <select id="playersDropdown" required></select>
+
+          <label for="eventType">Tipo de Evento:</label>
+          <select id="eventType" required>
+            <option value="">Seleciona</option>
+            <option value="golo">Golo</option>
+            <option value="autogolo">Auto-golo</option>
+            <option value="cartao amarelo">Cartão Amarelo</option>
+            <option value="cartao vermelho">Cartão Vermelho</option>
+          </select>
+
+          <label for="eventTime">Minuto:</label>
+          <input type="number" id="eventTime" min="0" max="60" required />
+
+          <button type="submit">Adicionar Evento</button>
+          <button type="reset">Reset</button>
+        </form>
+      </section>
+    </main>
+
+    <script type="module" src="/scripts/api.js"></script>
+  </body>
+</html>

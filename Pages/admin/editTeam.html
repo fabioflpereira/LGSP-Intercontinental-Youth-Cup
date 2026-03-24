@@ -5,19 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/Pages/admin/css/admin.css" />
     <!-- <link rel="stylesheet" href="/style.css"> -->
-    <title>EditTeam</title>
+    <title>Editar Equipa</title>
   </head>
   <body>
     <header id="header-placeholder"></header>
     <main>
       <button id="logoutBtn">Logout</button>
       <h1>Editar Equipa</h1>
-      <form id="editTeamForm">
+      <form class="form" id="editTeamForm">
         <label for="teamName">Nome da Equipa:</label>
         <input type="text" id="teamName" name="teamName" required />
 
         <label for="teamCountry">País da Equipa:</label>
         <input type="text" id="teamCountry" name="teamCountry" required />
+
+        <label for="teamGroup">Grupo:</label>
+        <select name="teamGroup" id="teamGroup">
+          <option value="">Seleciona um grupo</option>
+          <option value="Grupo A">Grupo A</option>
+          <option value="Grupo A">Grupo B</option>
+          <option value="Grupo A">Grupo C</option>
+          <option value="Grupo A">Grupo D</option>
+        </select>
 
         <label for="teamImage">Logo da Equipa:</label>
         <img src="" id="imgTeam" alt="" />
@@ -28,12 +37,12 @@
           name="teamImage"
         />
 
-        <button type="submit" id="editTeamBtn">Guardar Equipa</button>
+        <button type="submit" id="editTeamBtn">Atualizar Equipa</button>
         <button type="reset">Reset</button>
+        <button>
+          <a href="/Pages/admin/listTeams.html">Voltar para lista</a>
+        </button>
       </form>
-      <button>
-        <a href="/Pages/admin/listTeams.html">Voltar para lista</a>
-      </button>
     </main>
     <footer id="footer-placeholder"></footer>
     <!--     <script src="/scripts/loadDOM.js"></script>

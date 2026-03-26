@@ -444,6 +444,11 @@ h3 {
   overflow: hidden;        /* ensures nothing bleeds outside */
 
 }
+#sponsor_title {
+  color: #05164d;
+  font-size: small;
+  padding: 0 20px 0 20px;
+}
 
 .partners-rail #partnersimg {
   height: 100px;

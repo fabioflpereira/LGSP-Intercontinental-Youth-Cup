@@ -97,9 +97,15 @@ export function isAdmin() {
   return user?.role === "admin";
 }
 
-export function protectAdminPage() {
+export function protectPage() {
   if (!isAuthenticated()) {
     window.location.href = "/Pages/admin/login.html";
+  }
+}
+
+export function protectPagesAdmin() {
+  if (!isAdmin) {
+    window.location.href = "/Pages/admin/home.html";
   }
 }
 
@@ -123,11 +129,8 @@ export const eventAPI = {
 
 // Fixtures API
 export const fixturesAPI = {
-  getAll: () => fetchAPI("/fixtures", "GET"),
-  getById: (id) => fetchAPI(`/fixtures/${id}`, "GET"),
-  create: (data) => fetchAPI("/fixtures", "POST", data),
-  update: (id, data) => fetchAPI(`/fixtures/${id}`, "PUT", data),
-  delete: (id) => fetchAPI(`/fixtures/${id}`, "DELETE"),
+  create: (data) => fetchAPI("/", "POST", data),
+  createGroups: (data) => fetchAPI("/groups", "POST", data),
 };
 
 // Game API
@@ -151,10 +154,9 @@ export const playerAPI = {
 // Standings API
 export const standingsAPI = {
   getAll: () => fetchAPI("/standings", "GET"),
-  getById: (id) => fetchAPI(`/standings/${id}`, "GET"),
-  create: (data) => fetchAPI("/standings", "POST", data),
-  update: (id, data) => fetchAPI(`/standings/${id}`, "PUT", data),
-  delete: (id) => fetchAPI(`/standings/${id}`, "DELETE"),
+  getByGroup: () => fetchAPI(`/standings/byGroup`, "GET"),
+  getLive: () => fetchAPI(`/standings/live`, "GET"),
+  getByGroupLive: () => fetchAPI(`/standings/byGroupLive`, "GET"),
 };
 
 // Team API
@@ -614,7 +616,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Login
   if (path.endsWith("/Pages/admin/login.html")) {
     if (localStorage.getItem("refreshToken")) {
-      window.location.href = "/Pages/admin/homeAdmin.html";
+      window.location.href = "/Pages/admin/home.html";
     }
 
     const loginForm = document.getElementById("loginForm");
@@ -1184,5 +1186,8 @@ const adminPages = [
   "/Pages/admin/home.html",
 ];
 if (adminPages.some((page) => path.endsWith(page))) {
-  protectAdminPage();
+  protectPagesAdmin();
+}
+if (path.endsWith("/Pages/admin/gameMaster.html")) {
+  protectPage();
 }

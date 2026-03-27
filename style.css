@@ -479,6 +479,7 @@ h3 {
   display: flex;
   align-items: center;
   transition: transform 300ms ease;
+  padding: 0px;
 
 }
 

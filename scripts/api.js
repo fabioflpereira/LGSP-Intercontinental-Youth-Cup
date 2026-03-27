@@ -461,11 +461,11 @@ async function handleDelete(
 ) {
   if (!confirm("Tem certeza que deseja eliminar este item?")) return;
 
-  const btn = elementToRemove.querySelector('button[class*="delete"]');
+  const btn = document.querySelector('button[class="delete*"]');
   if (btn) {
     btn.disabled = true;
     const originalText = btn.textContent;
-    originalText = "A eliminar...";
+    btn.textContent = "A eliminar...";
   }
 
   try {
@@ -475,6 +475,8 @@ async function handleDelete(
   } catch (err) {
     console.error("Error deleting:", err);
     alert(errorMessage);
+    btn.disabled = false;
+    btn.textContent = originalText;
   } finally {
     if (btn) {
       btn.disabled = false;

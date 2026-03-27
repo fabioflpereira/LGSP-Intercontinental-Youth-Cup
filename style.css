@@ -445,6 +445,13 @@ h3 {
 
 }
 
+
+#sponsor_title {
+  color: #05164d;
+  font-size: small;
+  padding: 0 20px 0 20px;
+}
+
 .partners-rail #partnersimg {
   height: 100px;
   width: auto;
@@ -465,18 +472,14 @@ h3 {
 /* Viewport always matches container’s height */
 .rail-viewport {
   overflow: hidden;
-  height: 100%;
 }
 
 /* Track uses flex so we can measure items better */
 .rail-track {
   display: flex;
   align-items: center;
-  gap: var(--gap);
-  list-style: none; margin: 0; padding: 0;
-  transform: translateX(0);
   transition: transform 300ms ease;
-  height: 100%;            /* lock to container height */
+
 }
 
 /* Items are fixed-height and auto-width */
@@ -499,7 +502,7 @@ h3 {
 /* Images stay inside the card */
 .rail-item img {
   max-width: 100px;
-  max-height: 100px;
+  max-height: 80px;
   object-fit: contain;
 }
 
@@ -1885,7 +1888,7 @@ line-height:1.35;
 
 /* === Sponsors Responsivos === */
   .partners-rail { width: 100%; height: 60px; }
-  .partner-card { width: 50px; height: 50px; }
+  .partner-card { width: 80px; height: 50px; }
   .partners-rail #partnersimg {
   height: 60px;
   width: auto;
@@ -1900,6 +1903,13 @@ line-height:1.35;
   object-fit: contain;     /* keeps the logo inside */
   left: 0;
 }
+
+/* Buttons */
+.rail-btn {
+  width: 20px; height: 20px;
+font-size: small;
+}
+
 
 
 /* ============================= */

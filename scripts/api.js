@@ -38,20 +38,16 @@ async function refreshAccessToken() {
   }
 }
 
-async function fetchAPI(
-  endpoint,
-  method = "GET",
-  body = null,
-  retried = false,
-) {
+async function fetchAPI(endpoint, method = "GET", body = null, retried = false) {
   const headers = {
     "Content-Type": "application/json",
   };
 
-  const token = localStorage.getItem("accessToken"); // ✅ correto
+  const token = localStorage.getItem("accessToken");
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
+
   const options = {
     method,
     headers,
@@ -106,7 +102,7 @@ export function protectPage() {
 }
 
 export function protectPagesAdmin() {
-  if (!isAdmin ()) {
+  if (!isAdmin()) {
     window.location.href = "/Pages/admin/home.html";
   }
 }
@@ -175,13 +171,10 @@ async function uploadToCpanel(file) {
   const formData = new FormData();
   formData.append("image", file);
 
-  const res = await fetch(
-    "https://lgspintercontinentalyouthcup.com/upload.php",
-    {
-      method: "POST",
-      body: formData,
-    },
-  );
+  const res = await fetch("https://lgspintercontinentalyouthcup.com/upload.php", {
+    method: "POST",
+    body: formData,
+  });
 
   return await res.json();
 }
@@ -194,13 +187,10 @@ async function sendContactForm(data) {
   formData.append("subject", data.subject);
   formData.append("message", data.message);
 
-  const res = await fetch(
-    "https://lgspintercontinentalyouthcup.com/sendEmail.php",
-    {
-      method: "POST",
-      body: formData,
-    },
-  );
+  const res = await fetch("https://lgspintercontinentalyouthcup.com/sendEmail.php", {
+    method: "POST",
+    body: formData,
+  });
 
   const result = await res.json();
   return result;
@@ -213,9 +203,7 @@ async function loadTeamsDropdown(selectElement, includeEmpty = true) {
     const teams = data?.teams ?? [];
     selectElement.innerHTML =
       (includeEmpty ? `<option value="">Selecione uma equipa</option>` : "") +
-      teams
-        .map((team) => `<option value="${team._id}">${team.name}</option>`)
-        .join("");
+      teams.map((team) => `<option value="${team._id}">${team.name}</option>`).join("");
   } catch (error) {
     console.error("Error fetching teams:", error);
     alert("Não foi possível carregar as equipas.");
@@ -229,9 +217,7 @@ async function loadGamesDropdown(selectElement, includeEmpty = true) {
     selectElement.innerHTML =
       (includeEmpty ? `<option value="">Selecione um jogo</option>` : "") +
       games
-        .map(
-          (game) => `<option value="${game._id}">Jogo J${game.n_jogo}</option>`,
-        )
+        .map((game) => `<option value="${game._id}">Jogo J${game.n_jogo}</option>`)
         .join("");
   } catch (error) {
     console.error("Error fetching games:", error);
@@ -252,9 +238,7 @@ async function loadTeamsForGame(gameId, teamSelect) {
 
     teamSelect.innerHTML =
       `<option value="">Selecione uma equipa</option>` +
-      gameTeams
-        .map((team) => `<option value="${team._id}">${team.name}</option>`)
-        .join("");
+      gameTeams.map((team) => `<option value="${team._id}">${team.name}</option>`).join("");
   } catch (err) {
     console.error("Erro ao carregar equipas do jogo:", err);
     alert("Não foi possível carregar as equipas deste jogo.");
@@ -275,9 +259,7 @@ async function loadPlayersForTeam(teamId, playerSelect) {
     playerSelect.innerHTML =
       `<option value="">Selecione um jogador</option>` +
       teamPlayers
-        .map(
-          (player) => `<option value="${player._id}">${player.name}</option>`,
-        )
+        .map((player) => `<option value="${player._id}">${player.name}</option>`)
         .join("");
   } catch (err) {
     console.error("Erro ao carregar jogadores:", err);
@@ -290,11 +272,13 @@ async function loadPlayers(teamId, playersListElement) {
     const teamData = await teamAPI.getById(teamId);
     const players = teamData.players ?? [];
     const userIsAdmin = isAdmin();
+
     playersListElement.innerHTML = players
       .map((player) => {
         const deleteButton = userIsAdmin
           ? `<button class="deletePlayerBtn" data-playerid="${player._id}"><i class="fa-solid fa-trash"></i></button>`
           : "";
+
         return `<div>${player.number} - ${player.name} - ${player.position} <button class="editPlayerBtn" data-playerid="${player._id}"><i class="fa-regular fa-pen-to-square"></i></button> ${deleteButton}</div>`;
       })
       .join("");
@@ -313,12 +297,13 @@ async function loadEvents(gameId, eventsListElement) {
       events.map(async (event) => {
         const team = await teamAPI.getById(event.team);
         const player = await playerAPI.getById(event.player);
+
         return `
         <div>
           ${event.type} | ${event.time}min - ${team.name} - ${player.name}
         </div>
       `;
-      }),
+      })
     );
 
     eventsListElement.innerHTML = htmlArray.join("");
@@ -347,6 +332,7 @@ async function loadAndRenderTeams(teamsListElement) {
               <button class="deleteTeamBtn" data-teamid="${team._id}">Eliminar Equipa</button>
             </div>`
           : "";
+
         return `
           <li class="listTeams">
             <img src="${team.image}" alt="Imagem não disponível"/>
@@ -361,7 +347,7 @@ async function loadAndRenderTeams(teamsListElement) {
                 <li id="${player._id}">
                   ${player.number} - ${player.name} - ${player.position}
                 </li>
-              `,
+              `
                 )
                 .join("")}
             </ul>
@@ -396,6 +382,7 @@ async function loadAndRenderGames(gamesListElement) {
               <button class="deleteGameBtn" data-gameid="${game._id}">Eliminar Jogo</button>
             </div>`
           : "";
+
         return `
           <li class="listGames">
             <h3>Jogo J${game.n_jogo}</h3>
@@ -408,7 +395,7 @@ async function loadAndRenderGames(gamesListElement) {
                 <li id="${team._id}">
                   ${team.name}
                 </li>
-              `,
+              `
                 )
                 .join("")}
             </ul>
@@ -438,6 +425,7 @@ async function loadAndRenderEvents(eventsListElement) {
           <button class="deleteEventBtn" data-eventid="${ev._id}">Eliminar</button>
         </div>`
           : "";
+
         return `<li class="eventItem">
           <h3>Jogo J${ev.game.n_jogo}</h3>
           <p><strong>equipa:</strong> ${ev.team.name} <strong>jogador:</strong> ${ev.player.name}</p>
@@ -454,19 +442,16 @@ async function loadAndRenderEvents(eventsListElement) {
   }
 }
 
-async function handleDelete(
-  apiCall,
-  id,
-  elementToRemove,
-  successMessage,
-  errorMessage,
-) {
+async function handleDelete(apiCall, id, elementToRemove, successMessage, errorMessage) {
   if (!confirm("Tem certeza que deseja eliminar este item?")) return;
 
-  const btn = document.querySelector('button[class="delete*"]');
-  if (btn) {
+ 
+  const btn = document.activeElement;
+  let originalText = "";
+
+  if (btn && btn.tagName === "BUTTON") {
+    originalText = btn.textContent;
     btn.disabled = true;
-    const originalText = btn.textContent;
     btn.textContent = "A eliminar...";
   }
 
@@ -475,12 +460,9 @@ async function handleDelete(
     alert(successMessage);
     elementToRemove.remove();
   } catch (err) {
-    console.error("Error deleting:", err);
-    alert(errorMessage);
-    btn.disabled = false;
-    btn.textContent = originalText;
+    console.error("Error deleting:", err);    alert(errorMessage);
   } finally {
-    if (btn) {
+    if (btn && btn.tagName === "BUTTON") {
       btn.disabled = false;
       btn.textContent = originalText;
     }
@@ -498,10 +480,11 @@ async function loadPlayerForEdit(playerId) {
 
     const teams = (await teamAPI.getAll())?.teams ?? [];
     const teamDropdown = document.getElementById("teamsDropdown");
+
     teamDropdown.innerHTML = teams
       .map(
         (t) =>
-          `<option value="${t._id}" ${t._id === player.team ? "selected" : ""}>${t.name}</option>`,
+          `<option value="${t._id}" ${t._id === player.team ? "selected" : ""}>${t.name}</option>`
       )
       .join("");
 
@@ -542,9 +525,7 @@ async function loadGameForEdit(gameId) {
     const teamA = document.getElementById("teamA");
     const teamB = document.getElementById("teamB");
 
-    const options = teams
-      .map((t) => `<option value="${t._id}">${t.name}</option>`)
-      .join("");
+    const options = teams.map((t) => `<option value="${t._id}">${t.name}</option>`).join("");
 
     teamA.innerHTML = options;
     teamB.innerHTML = options;
@@ -592,10 +573,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     logoutBtn.addEventListener("click", async (e) => {
       e.preventDefault();
       logoutBtn.textContent = "A sair...";
-      const refreshToken = localStorage.getItem("refreshToken");
 
       try {
-        const response = await authAPI.logout(refreshToken);
+        // ALTERADO:
+        // antes estavas a passar refreshToken para authAPI.logout(refreshToken)
+        // mas authAPI.logout não recebe parâmetros
+        const response = await authAPI.logout();
         console.log("Logout response:", response);
 
         if (response) {
@@ -647,7 +630,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               isAdmin()
                 ? (window.location.href = "/Pages/admin/home.html")
                 : (window.location.href = "/Pages/admin/gameMaster.html"),
-            1000,
+            1000
           );
         } else {
           alert("Falha no login. Verifique as suas credenciais.");
@@ -730,10 +713,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         country: formAddTeam.teamCountry.value,
         group: formAddTeam.teamGroup.value,
         image: upload.url,
-      };
-      if (!teamData.name || !teamData.country)
-        return alert("Preencha todos os campos obrigatórios.");
+     };
 
+      if (!teamData.name || !teamData.country) {
+        return alert("Preencha todos os campos obrigatórios.");      }
       try {
         await teamAPI.create(teamData);
         alert("Equipa adicionada com sucesso!");
@@ -753,6 +736,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     formAddPlayer.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       const upload = await uploadToCpanel(formAddPlayer.playerImage.files[0]);
       const playerData = {
         name: formAddPlayer.playerName.value,
@@ -761,8 +745,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         position: formAddPlayer.playerPosition.value,
         image: upload.url,
       };
-      if (!playerData.name || !playerData.team)
+
+      if (!playerData.name || !playerData.team) {
         return alert("Preencha todos os campos obrigatórios.");
+      }
 
       try {
         await playerAPI.create(playerData);
@@ -775,8 +761,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-
-
   // Add Event Form
   const formAddEvent = document.getElementById("addEventForm");
   if (formAddEvent) {
@@ -788,12 +772,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (teamDropdown) loadTeamsForGame(gamesDropdown.value, teamDropdown);
     });
     teamDropdown.addEventListener("change", () => {
-      if (playersDropdown)
-        loadPlayersForTeam(teamDropdown.value, playersDropdown);
+      if (playersDropdown) loadPlayersForTeam(teamDropdown.value, playersDropdown);
     });
 
     formAddEvent.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       try {
         const eventData = {
           type: formAddEvent.eventType.value,
@@ -802,21 +786,27 @@ document.addEventListener("DOMContentLoaded", async () => {
           player: formAddEvent.playersDropdown.value,
           game: formAddEvent.gamesDropdown?.value || gamesDropdown.value,
         };
+
         if (
           !eventData.type ||
           !eventData.time ||
           !eventData.game ||
           !eventData.player ||
           !eventData.team
-        )
+        ) {
           return alert("Preencha todos os campos obrigatórios.");
+        }
 
         await eventAPI.create(eventData);
         alert("Evento adicionado com sucesso!");
-        if (path.endsWith("/Pages/admin/gameMaster.html"))
+
+        if (path.endsWith("/Pages/admin/gameMaster.html")) {
           window.location.href = "/Pages/admin/gameMaster.html";
-        if (path.endsWith("/Pages/admin/addEvent.html"))
+        }
+
+        if (path.endsWith("/Pages/admin/addEvent.html")) {
           window.location.href = "/Pages/admin/listEvents.html";
+        }
       } catch (err) {
         console.error(err);
         alert("Erro ao adicionar evento.");
@@ -874,9 +864,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     formEditTeam.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       try {
         const file = formEditTeam.teamImage.files[0];
         const upload = file ? await uploadToCpanel(file) : { url: "" };
+
         const teamData = {
           name: formEditTeam.teamName.value,
           country: formEditTeam.teamCountry.value,
@@ -903,11 +895,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     formEditPlayer.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       try {
         const file = formEditPlayer.playerImage.files[0];
         const upload = file
           ? await uploadToCpanel(file)
           : { url: document.getElementById("imgPlayer")?.src || "" };
+
         const updatedPlayer = {
           name: formEditPlayer.playerName.value,
           number: formEditPlayer.playerNumber.value,
@@ -961,6 +955,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     formEditEvent.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       try {
         const eventData = {
           type: formEditEvent.eventType.value,
@@ -969,16 +964,23 @@ document.addEventListener("DOMContentLoaded", async () => {
           player: formEditEvent.playersDropdown.value,
           game: formEditEvent.gamesDropdown.value,
         };
+
         if (
           !eventData.type ||
           !eventData.time ||
           !eventData.game ||
           !eventData.player ||
           !eventData.team
-        )
+        ) {
           return alert("Preencha todos os campos obrigatórios.");
+        }
 
-        await eventAPI.update(eventId, updatedEvent);
+        // ALTERADO:
+        // antes estava:
+        // await eventAPI.update(eventId, updatedEvent);
+        // updatedEvent não existia
+        await eventAPI.update(eventId, eventData);
+
         alert("Evento atualizado com sucesso!");
         window.location.href = "/Pages/admin/listEvents.html";
       } catch (err) {
@@ -991,15 +993,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   // LIST PLAYERS
   const playersList = document.getElementById("playersList");
   const teamDropdown = document.getElementById("teamsDropdown");
+
   if (playersList && teamDropdown) {
     await loadTeamsDropdown(teamDropdown);
 
     teamDropdown.addEventListener("change", async () => {
       const selectedTeamId = teamDropdown.value;
+
       if (!selectedTeamId) {
         playersList.innerHTML = "";
         return;
       }
+
       await loadPlayers(selectedTeamId, playersList);
     });
 
@@ -1017,7 +1022,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           deleteBtn.dataset.playerid,
           deleteBtn.closest("div"),
           "Jogador eliminado com sucesso.",
-          "Falha ao eliminar o jogador.",
+          "Falha ao eliminar o jogador."
         );
       }
     });
@@ -1042,7 +1047,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           deleteBtn.dataset.teamid,
           deleteBtn.closest("li"),
           "Equipa eliminada com sucesso.",
-          "Falha ao eliminar a equipa.",
+          "Falha ao eliminar a equipa."
         );
       }
     });
@@ -1067,7 +1072,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           deleteBtn.dataset.gameid,
           deleteBtn.closest("li"),
           "Jogo eliminado com sucesso.",
-          "Falha ao eliminar o jogo.",
+          "Falha ao eliminar o jogo."
         );
       }
     });
@@ -1092,14 +1097,13 @@ document.addEventListener("DOMContentLoaded", async () => {
           deleteBtn.dataset.eventid,
           deleteBtn.closest("li"),
           "Evento eliminado com sucesso.",
-          "Falha ao eliminar o evento.",
+          "Falha ao eliminar o evento."
         );
       }
     });
   }
-  
-  // Page-specific initial loads
 
+  // Page-specific initial loads
   if (path.endsWith("/Pages/admin/editPlayer.html")) {
     const playerId = new URLSearchParams(window.location.search).get("player");
     if (playerId) await loadPlayerForEdit(playerId);
@@ -1115,6 +1119,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (teamDropdown) await loadTeamsDropdown(teamDropdown);
   }
 
+  // GAME MASTER
   if (path.endsWith("/Pages/admin/gameMaster.html")) {
     const gameId = new URLSearchParams(window.location.search).get("game");
     if (gameId) await loadGameForEdit(gameId);
@@ -1130,97 +1135,176 @@ document.addEventListener("DOMContentLoaded", async () => {
     const scoreA = document.getElementById("scoreTeamA");
     const scoreB = document.getElementById("scoreTeamB");
     const statusEl = document.getElementById("status");
+    const mvpDropdown = document.getElementById("mvpDropdown");
+    const saveMvpBtn = document.getElementById("saveMvpBtn");
 
-    if (gamesDropdown) await loadGamesDropdown(gamesDropdown);
-    gamesDropdown.addEventListener("change", async () => {
-      const game = await gameAPI.getById(gamesDropdown.value);
-      if (!game) return console.error("Jogo não encontrado!");
+    let currentGame = null;
 
-      startGameBtn.addEventListener("click", async () => {
-        if (!game) return alert("Escolha um jogo!");
+  
+    function fillMvpDropdown(playersAData = [], playersBData = []) {
+      if (!mvpDropdown) return;
+
+      mvpDropdown.innerHTML = '<option value="">Seleciona jogador</option>';
+
+      [...playersAData, ...playersBData].forEach((player) => {
+        const option = document.createElement("option");
+        option.value = player._id;
+        option.textContent = `${player.name} (#${player.number})`;
+        mvpDropdown.appendChild(option);
+      });
+    }
+
+   
+    async function renderGame(gameId) {
+      if (!gameId) {
+        currentGame = null;
+        imgA.src = "";
+        imgB.src = "";
+        scoreA.innerHTML = "";
+        scoreB.innerHTML = "";
+        statusEl.innerHTML = "";
+        playersA.innerHTML = "";
+        playersB.innerHTML = "";
+        gameEventsList.innerHTML = "";
+        fillMvpDropdown([], []);
+        return;
+      }
+
+      try {
+        const game = await gameAPI.getById(gameId);
+        if (!game) {
+          console.error("Jogo não encontrado!");
+          return;
+        }
+
+        const teams = game.teams;
+        if (!Array.isArray(teams) || teams.length < 2) {
+          console.error("Jogo inválido: equipas insuficientes.");
+          return;
+        }
+
+        const teamAData = await teamAPI.getById(teams[0]._id);
+        const teamBData = await teamAPI.getById(teams[1]._id);
+
+        currentGame = game;
+
+        imgA.src = teamAData.image || "";
+        imgB.src = teamBData.image || "";
+        scoreA.innerHTML = game.result?.homeScore ?? 0;
+        scoreB.innerHTML = game.result?.awayScore ?? 0;
+        statusEl.innerHTML = game.status || "";
+
+        await loadPlayers(teams[0]._id, playersA);
+        await loadPlayers(teams[1]._id, playersB);
+        await loadEvents(game._id, gameEventsList);
+
+        fillMvpDropdown(teamAData.players || [], teamBData.players || []);
+      } catch (err) {
+        console.error("Erro ao carregar jogo:", err);
+        alert("Não foi possível carregar o jogo.");
+      }
+    }
+
+    if (gamesDropdown) {
+      await loadGamesDropdown(gamesDropdown);
+
+      gamesDropdown.addEventListener("change", async () => {
+        await renderGame(gamesDropdown.value);
+      });
+    }
+
+    if (startGameBtn) {
+      startGameBtn.onclick = async () => {
+        const gameId = gamesDropdown.value;
+
+        if (!gameId) {
+          alert("Escolha um jogo!");
+          return;
+        }
+
         try {
-          await gameAPI.update(game._id, { status: "in_progress" });
-          window.location.reload();
+          await gameAPI.update(gameId, { status: "in_progress" });
+
+          // ALTERADO:
+          // não faz refresh ao iniciar
+          // apenas atualiza o estado no ecrã
+          statusEl.innerHTML = "in_progress";
+
+          if (currentGame) {
+            currentGame.status = "in_progress";
+          }
+
           alert("Jogo iniciado!");
         } catch (err) {
           console.error("Erro ao iniciar jogo:", err);
+          alert("Erro ao iniciar jogo.");
         }
-      });
-
-      endGameBtn.addEventListener("click", async () => {
-        if (!game) return alert("Escolha um jogo!");
-        try {
-          await gameAPI.update(game._id, { status: "completed" });
-          alert("Jogo finalizado!");
-        } catch (err) {
-          console.error("Erro ao finalizar jogo:", err);
-        }
-      });
-
-      const teams = game.teams;
-      if (!Array.isArray(teams) || teams.length < 2) {
-        return console.error("Jogo inválido: equipas insuficientes.");
-      }
-      const teamA = await teamAPI.getById(teams[0]._id);
-      const teamB = await teamAPI.getById(teams[1]._id);
-
-      imgA.src = `${teamA.image}`;
-      imgB.src = `${teamB.image}`;
-      scoreA.innerHTML = `${game.result.homeScore}`;
-      scoreB.innerHTML = `${game.result.awayScore}`;
-      statusEl.innerHTML = `${game.status}`;
-      await loadPlayers(teams[0]._id, playersA);
-      await loadPlayers(teams[1]._id, playersB);
-      await loadEvents(game._id, gameEventsList);
-    });
-  }
-});
-
-//mvp pagina gamemaster 
-const mvpDropdown = document.getElementById("mvpDropdown");
-const saveMvpBtn = document.getElementById("saveMvpBtn");
-function fillMvpDropdown(playersA, playersB) {
-  mvpDropdown.innerHTML = '<option value="">Seleciona jogador</option>';
-
-  [...playersA, ...playersB].forEach((player) => {
-    const option = document.createElement("option");
-    option.value = player._id;
-    option.textContent = `${player.name} (#${player.number})`;
-    mvpDropdown.appendChild(option);
-  });
-}
-
-fillMvpDropdown(teamA.players, teamB.players);
-
-saveMvpBtn.addEventListener("click", async () => {
-  const gameId = document.getElementById("gamesDropdown").value;
-  const mvp = mvpDropdown.value;
-
-  if (!gameId || !mvp) {
-    alert("Seleciona jogo e MVP");
-    return;
-  }
-
-  try {
-    const res = await fetch(`/api/games/${gameId}/mvp`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ mvp }),
-    });
-
-    if (!res.ok) {
-      throw new Error();
+      };
     }
 
-    alert("MVP guardado com sucesso!");
-  } catch (err) {
-    console.error(err);
-    alert("Erro ao guardar MVP");
+    if (endGameBtn) {
+      endGameBtn.onclick = async () => {
+        const gameId = gamesDropdown.value;
+
+        if (!gameId) {
+          alert("Escolha um jogo!");
+          return;
+        }
+
+        try {
+          await gameAPI.update(gameId, { status: "completed" });
+
+          statusEl.innerHTML = "completed";
+
+          if (currentGame) {
+            currentGame.status = "completed";
+          }
+
+          alert("Jogo finalizado!");
+
+         
+          window.location.reload();
+        } catch (err) {
+          console.error("Erro ao finalizar jogo:", err);
+          alert("Erro ao finalizar jogo.");
+        }
+      };
+    }
+
+    if (saveMvpBtn) {
+      saveMvpBtn.onclick = async () => {
+        const gameId = gamesDropdown.value;
+        const mvp = mvpDropdown.value;
+
+        if (!gameId || !mvp) {
+          alert("Seleciona jogo e MVP");
+          return;
+        }
+
+        try {
+          
+          const res = await fetch(`${BASE_URL}/games/${gameId}/mvp`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+            body: JSON.stringify({ mvp }),
+          });
+
+          if (!res.ok) {
+            throw new Error("Erro ao guardar MVP");
+          }
+
+          alert("MVP guardado com sucesso!");
+        } catch (err) {
+          console.error(err);
+          alert("Erro ao guardar MVP");
+        }
+      };
+    }
   }
 });
-
 // Redirect to login for admin pages
 const adminPages = [
   "/Pages/admin/editPlayer.html",

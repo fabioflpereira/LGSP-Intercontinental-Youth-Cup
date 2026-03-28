@@ -89,7 +89,9 @@ export function getAuthToken() {
 }
 
 export function isAuthenticated() {
-  return getAuthToken();
+  const token = getAuthToken();
+  const user = getCurrentUser();
+  return !!token && !!user;
 }
 
 export function isAdmin() {
@@ -104,7 +106,7 @@ export function protectPage() {
 }
 
 export function protectPagesAdmin() {
-  if (!isAdmin) {
+  if (!isAdmin ()) {
     window.location.href = "/Pages/admin/home.html";
   }
 }
@@ -642,7 +644,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           alert("Login realizado com sucesso! Redirecionando...");
           setTimeout(
             () =>
-              isAdmin
+              isAdmin()
                 ? (window.location.href = "/Pages/admin/home.html")
                 : (window.location.href = "/Pages/admin/gameMaster.html"),
             1000,
@@ -1191,5 +1193,7 @@ if (adminPages.some((page) => path.endsWith(page))) {
   protectPagesAdmin();
 }
 if (path.endsWith("/Pages/admin/gameMaster.html")) {
-  protectPage();
+  if (!isAuthenticated()) {
+    window.location.href = "/Pages/admin/login.html";
+  }
 }

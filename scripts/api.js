@@ -1176,6 +1176,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+//mvp pagina gamemaster 
 const mvpDropdown = document.getElementById("mvpDropdown");
 const saveMvpBtn = document.getElementById("saveMvpBtn");
 function fillMvpDropdown(playersA, playersB) {

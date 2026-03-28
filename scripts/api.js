@@ -775,6 +775,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+
+
   // Add Event Form
   const formAddEvent = document.getElementById("addEventForm");
   if (formAddEvent) {
@@ -1095,8 +1097,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
   }
-
+  
   // Page-specific initial loads
+
   if (path.endsWith("/Pages/admin/editPlayer.html")) {
     const playerId = new URLSearchParams(window.location.search).get("player");
     if (playerId) await loadPlayerForEdit(playerId);
@@ -1170,6 +1173,50 @@ document.addEventListener("DOMContentLoaded", async () => {
       await loadPlayers(teams[1]._id, playersB);
       await loadEvents(game._id, gameEventsList);
     });
+  }
+});
+
+const mvpDropdown = document.getElementById("mvpDropdown");
+const saveMvpBtn = document.getElementById("saveMvpBtn");
+function fillMvpDropdown(playersA, playersB) {
+  mvpDropdown.innerHTML = '<option value="">Seleciona jogador</option>';
+
+  [...playersA, ...playersB].forEach((player) => {
+    const option = document.createElement("option");
+    option.value = player._id;
+    option.textContent = `${player.name} (#${player.number})`;
+    mvpDropdown.appendChild(option);
+  });
+}
+
+fillMvpDropdown(teamA.players, teamB.players);
+
+saveMvpBtn.addEventListener("click", async () => {
+  const gameId = document.getElementById("gamesDropdown").value;
+  const mvp = mvpDropdown.value;
+
+  if (!gameId || !mvp) {
+    alert("Seleciona jogo e MVP");
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/games/${gameId}/mvp`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ mvp }),
+    });
+
+    if (!res.ok) {
+      throw new Error();
+    }
+
+    alert("MVP guardado com sucesso!");
+  } catch (err) {
+    console.error(err);
+    alert("Erro ao guardar MVP");
   }
 });
 

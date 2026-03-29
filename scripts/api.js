@@ -283,6 +283,45 @@ async function loadPlayersForTeam(teamId, playerSelect) {
   }
 }
 
+async function loadMvpDropdown(gameId, mvpSelect) {
+  if (!gameId) {
+    mvpSelect.innerHTML = `<option value="">Seleciona jogador</option>`;
+    return;
+  }
+
+  try {
+    const game = await gameAPI.getById(gameId);
+    const teams = game.teams ?? [];
+
+    let allPlayers = [];
+
+    for (const team of teams) {
+      const teamData = await teamAPI.getById(team._id || team);
+      const players = teamData.players ?? [];
+
+      const mappedPlayers = players.map(
+        (player) => `
+          <option value="${player._id}">
+            ${player.name}
+          </option>
+        `,
+      );
+
+      allPlayers.push(...mappedPlayers);
+    }
+
+    mvpSelect.innerHTML =
+      `<option value="">Seleciona jogador</option>` + allPlayers.join("");
+
+    if (game.mvp) {
+      mvpSelect.value = game.mvp._id || game.mvp;
+    }
+  } catch (err) {
+    console.error("Erro ao carregar MVP:", err);
+    alert("Não foi possível carregar os jogadores para o MVP.");
+  }
+}
+
 async function loadPlayers(teamId, playersListElement) {
   try {
     const teamData = await teamAPI.getById(teamId);
@@ -704,6 +743,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           teams: [e.target.teamA.value, e.target.teamB.value],
           n_jogo: e.target.n_jogo.value,
           status: e.target.status.value,
+          date: e.target.date.value,
         };
 
         await gameAPI.create(gameData);
@@ -810,7 +850,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         await eventAPI.create(eventData);
         alert("Evento adicionado com sucesso!");
         if (path.endsWith("/Pages/admin/gameMaster.html"))
-          window.location.href = "/Pages/admin/gameMaster.html";
+           await loadEvents(eventData.game, document.getElementById("gameEventsList"));
         if (path.endsWith("/Pages/admin/addEvent.html"))
           window.location.href = "/Pages/admin/listEvents.html";
       } catch (err) {
@@ -1125,17 +1165,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     const scoreA = document.getElementById("scoreTeamA");
     const scoreB = document.getElementById("scoreTeamB");
     const statusEl = document.getElementById("status");
+    const mvpDropdown = document.getElementById("mvpDropdown");
+   const saveMvpBtn = document.getElementById("saveMvpBtn");
 
     if (gamesDropdown) await loadGamesDropdown(gamesDropdown);
+
+    if (saveMvpBtn) {
+  saveMvpBtn.addEventListener("click", async () => {
+    const gameId = gamesDropdown.value;
+    const mvpPlayerId = mvpDropdown.value;
+
+    if (!gameId) return alert("Escolha um jogo.");
+    if (!mvpPlayerId) return alert("Escolha um jogador para MVP.");
+
+    try {
+      await gameAPI.update(gameId, { mvp: mvpPlayerId });
+      alert("MVP guardado com sucesso!");
+    } catch (err) {
+      console.error("Erro ao guardar MVP:", err);
+      alert("Não foi possível guardar o MVP.");
+    }
+  });
+}
+
     gamesDropdown.addEventListener("change", async () => {
       const game = await gameAPI.getById(gamesDropdown.value);
       if (!game) return console.error("Jogo não encontrado!");
+
+      if (mvpDropdown) await loadMvpDropdown(game._id, mvpDropdown);
 
       startGameBtn.addEventListener("click", async () => {
         if (!game) return alert("Escolha um jogo!");
         try {
           await gameAPI.update(game._id, { status: "in_progress" });
-          window.location.reload();
+          gamesDropdown.dispatchEvent(new Event("change"));
           alert("Jogo iniciado!");
         } catch (err) {
           console.error("Erro ao iniciar jogo:", err);
@@ -1146,6 +1209,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!game) return alert("Escolha um jogo!");
         try {
           await gameAPI.update(game._id, { status: "completed" });
+          gamesDropdown.dispatchEvent(new Event("change"));
           alert("Jogo finalizado!");
         } catch (err) {
           console.error("Erro ao finalizar jogo:", err);

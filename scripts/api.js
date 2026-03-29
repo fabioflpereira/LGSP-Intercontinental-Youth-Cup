@@ -1,62 +1,6 @@
 const BASE_URL = "https://liyc-1zn5.onrender.com/api";
 const path = window.location.pathname;
 
-
-let currentSelectedGameId = null;
-
-
-async function renderSelectedGame(gameId) {
-  if (!gameId) return;
-
-  const playersA = document.getElementById("playersA");
-  const playersB = document.getElementById("playersB");
-  const gameEventsList = document.getElementById("gameEventsList");
-  const imgA = document.getElementById("imgTeamA");
-  const imgB = document.getElementById("imgTeamB");
-  const scoreA = document.getElementById("scoreTeamA");
-  const scoreB = document.getElementById("scoreTeamB");
-  const statusEl = document.getElementById("status");
-  const mvpDropdown = document.getElementById("mvpDropdown");
-
-  function fillMvpDropdown(playersAData = [], playersBData = []) {
-    if (!mvpDropdown) return;
-
-    mvpDropdown.innerHTML = '<option value="">Seleciona jogador</option>';
-
-    [...playersAData, ...playersBData].forEach((player) => {
-      const option = document.createElement("option");
-      option.value = player._id;
-      option.textContent = `${player.name} (#${player.number})`;
-      mvpDropdown.appendChild(option);
-    });
-  }
-
-  try {
-    const game = await gameAPI.getById(gameId);
-    if (!game) return;
-
-    const teams = game.teams;
-    if (!Array.isArray(teams) || teams.length < 2) return;
-
-    const teamAData = await teamAPI.getById(teams[0]._id);
-    const teamBData = await teamAPI.getById(teams[1]._id);
-
-    if (imgA) imgA.src = teamAData.image || "";
-    if (imgB) imgB.src = teamBData.image || "";
-    if (scoreA) scoreA.innerHTML = game.result?.homeScore ?? 0;
-    if (scoreB) scoreB.innerHTML = game.result?.awayScore ?? 0;
-    if (statusEl) statusEl.innerHTML = game.status || "";
-
-    if (playersA) await loadPlayers(teams[0]._id, playersA);
-    if (playersB) await loadPlayers(teams[1]._id, playersB);
-    if (gameEventsList) await loadEvents(game._id, gameEventsList);
-
-    fillMvpDropdown(teamAData.players || [], teamBData.players || []);
-  } catch (err) {
-    console.error("Erro ao atualizar jogo selecionado:", err);
-  }
-}
-
 async function refreshAccessToken() {
   try {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -94,16 +38,20 @@ async function refreshAccessToken() {
   }
 }
 
-async function fetchAPI(endpoint, method = "GET", body = null, retried = false) {
+async function fetchAPI(
+  endpoint,
+  method = "GET",
+  body = null,
+  retried = false,
+) {
   const headers = {
     "Content-Type": "application/json",
   };
 
-  const token = localStorage.getItem("accessToken");
+  const token = localStorage.getItem("accessToken"); // ✅ correto
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
-
   const options = {
     method,
     headers,
@@ -141,9 +89,7 @@ export function getAuthToken() {
 }
 
 export function isAuthenticated() {
-  const token = getAuthToken();
-  const user = getCurrentUser();
-  return !!token && !!user;
+  return getAuthToken();
 }
 
 export function isAdmin() {
@@ -158,7 +104,7 @@ export function protectPage() {
 }
 
 export function protectPagesAdmin() {
-  if (!isAdmin()) {
+  if (!isAdmin) {
     window.location.href = "/Pages/admin/home.html";
   }
 }
@@ -227,10 +173,13 @@ async function uploadToCpanel(file) {
   const formData = new FormData();
   formData.append("image", file);
 
-  const res = await fetch("https://lgspintercontinentalyouthcup.com/upload.php", {
-    method: "POST",
-    body: formData,
-  });
+  const res = await fetch(
+    "https://lgspintercontinentalyouthcup.com/upload.php",
+    {
+      method: "POST",
+      body: formData,
+    },
+  );
 
   return await res.json();
 }
@@ -243,10 +192,13 @@ async function sendContactForm(data) {
   formData.append("subject", data.subject);
   formData.append("message", data.message);
 
-  const res = await fetch("https://lgspintercontinentalyouthcup.com/sendEmail.php", {
-    method: "POST",
-    body: formData,
-  });
+  const res = await fetch(
+    "https://lgspintercontinentalyouthcup.com/sendEmail.php",
+    {
+      method: "POST",
+      body: formData,
+    },
+  );
 
   const result = await res.json();
   return result;
@@ -259,7 +211,9 @@ async function loadTeamsDropdown(selectElement, includeEmpty = true) {
     const teams = data?.teams ?? [];
     selectElement.innerHTML =
       (includeEmpty ? `<option value="">Selecione uma equipa</option>` : "") +
-      teams.map((team) => `<option value="${team._id}">${team.name}</option>`).join("");
+      teams
+        .map((team) => `<option value="${team._id}">${team.name}</option>`)
+        .join("");
   } catch (error) {
     console.error("Error fetching teams:", error);
     alert("Não foi possível carregar as equipas.");
@@ -273,7 +227,9 @@ async function loadGamesDropdown(selectElement, includeEmpty = true) {
     selectElement.innerHTML =
       (includeEmpty ? `<option value="">Selecione um jogo</option>` : "") +
       games
-        .map((game) => `<option value="${game._id}">Jogo J${game.n_jogo}</option>`)
+        .map(
+          (game) => `<option value="${game._id}">Jogo J${game.n_jogo}</option>`,
+        )
         .join("");
   } catch (error) {
     console.error("Error fetching games:", error);
@@ -294,7 +250,9 @@ async function loadTeamsForGame(gameId, teamSelect) {
 
     teamSelect.innerHTML =
       `<option value="">Selecione uma equipa</option>` +
-      gameTeams.map((team) => `<option value="${team._id}">${team.name}</option>`).join("");
+      gameTeams
+        .map((team) => `<option value="${team._id}">${team.name}</option>`)
+        .join("");
   } catch (err) {
     console.error("Erro ao carregar equipas do jogo:", err);
     alert("Não foi possível carregar as equipas deste jogo.");
@@ -315,7 +273,9 @@ async function loadPlayersForTeam(teamId, playerSelect) {
     playerSelect.innerHTML =
       `<option value="">Selecione um jogador</option>` +
       teamPlayers
-        .map((player) => `<option value="${player._id}">${player.name}</option>`)
+        .map(
+          (player) => `<option value="${player._id}">${player.name}</option>`,
+        )
         .join("");
   } catch (err) {
     console.error("Erro ao carregar jogadores:", err);
@@ -328,13 +288,11 @@ async function loadPlayers(teamId, playersListElement) {
     const teamData = await teamAPI.getById(teamId);
     const players = teamData.players ?? [];
     const userIsAdmin = isAdmin();
-
     playersListElement.innerHTML = players
       .map((player) => {
         const deleteButton = userIsAdmin
           ? `<button class="deletePlayerBtn" data-playerid="${player._id}"><i class="fa-solid fa-trash"></i></button>`
           : "";
-
         return `<div>${player.number} - ${player.name} - ${player.position} <button class="editPlayerBtn" data-playerid="${player._id}"><i class="fa-regular fa-pen-to-square"></i></button> ${deleteButton}</div>`;
       })
       .join("");
@@ -353,13 +311,12 @@ async function loadEvents(gameId, eventsListElement) {
       events.map(async (event) => {
         const team = await teamAPI.getById(event.team);
         const player = await playerAPI.getById(event.player);
-
         return `
         <div>
           ${event.type} | ${event.time}min - ${team.name} - ${player.name}
         </div>
       `;
-      })
+      }),
     );
 
     eventsListElement.innerHTML = htmlArray.join("");
@@ -388,7 +345,6 @@ async function loadAndRenderTeams(teamsListElement) {
               <button class="deleteTeamBtn" data-teamid="${team._id}">Eliminar Equipa</button>
             </div>`
           : "";
-
         return `
           <li class="listTeams">
             <img src="${team.image}" alt="Imagem não disponível"/>
@@ -403,7 +359,7 @@ async function loadAndRenderTeams(teamsListElement) {
                 <li id="${player._id}">
                   ${player.number} - ${player.name} - ${player.position}
                 </li>
-              `
+              `,
                 )
                 .join("")}
             </ul>
@@ -438,7 +394,6 @@ async function loadAndRenderGames(gamesListElement) {
               <button class="deleteGameBtn" data-gameid="${game._id}">Eliminar Jogo</button>
             </div>`
           : "";
-
         return `
           <li class="listGames">
             <h3>Jogo J${game.n_jogo}</h3>
@@ -451,7 +406,7 @@ async function loadAndRenderGames(gamesListElement) {
                 <li id="${team._id}">
                   ${team.name}
                 </li>
-              `
+              `,
                 )
                 .join("")}
             </ul>
@@ -481,7 +436,6 @@ async function loadAndRenderEvents(eventsListElement) {
           <button class="deleteEventBtn" data-eventid="${ev._id}">Eliminar</button>
         </div>`
           : "";
-
         return `<li class="eventItem">
           <h3>Jogo J${ev.game.n_jogo}</h3>
           <p><strong>equipa:</strong> ${ev.team.name} <strong>jogador:</strong> ${ev.player.name}</p>
@@ -498,16 +452,19 @@ async function loadAndRenderEvents(eventsListElement) {
   }
 }
 
-async function handleDelete(apiCall, id, elementToRemove, successMessage, errorMessage) {
+async function handleDelete(
+  apiCall,
+  id,
+  elementToRemove,
+  successMessage,
+  errorMessage,
+) {
   if (!confirm("Tem certeza que deseja eliminar este item?")) return;
 
-  
-  const btn = document.activeElement;
-  let originalText = "";
-
-  if (btn && btn.tagName === "BUTTON") {
-    originalText = btn.textContent;
+  const btn = document.querySelector('button[class="delete*"]');
+  if (btn) {
     btn.disabled = true;
+    const originalText = btn.textContent;
     btn.textContent = "A eliminar...";
   }
 
@@ -518,8 +475,10 @@ async function handleDelete(apiCall, id, elementToRemove, successMessage, errorM
   } catch (err) {
     console.error("Error deleting:", err);
     alert(errorMessage);
+     btn.disabled = false;
+    btn.textContent = originalText;
   } finally {
-    if (btn && btn.tagName === "BUTTON") {
+    if (btn) {
       btn.disabled = false;
       btn.textContent = originalText;
     }
@@ -537,11 +496,10 @@ async function loadPlayerForEdit(playerId) {
 
     const teams = (await teamAPI.getAll())?.teams ?? [];
     const teamDropdown = document.getElementById("teamsDropdown");
-
     teamDropdown.innerHTML = teams
       .map(
         (t) =>
-          `<option value="${t._id}" ${t._id === player.team ? "selected" : ""}>${t.name}</option>`
+          `<option value="${t._id}" ${t._id === player.team ? "selected" : ""}>${t.name}</option>`,
       )
       .join("");
 
@@ -582,7 +540,9 @@ async function loadGameForEdit(gameId) {
     const teamA = document.getElementById("teamA");
     const teamB = document.getElementById("teamB");
 
-    const options = teams.map((t) => `<option value="${t._id}">${t.name}</option>`).join("");
+    const options = teams
+      .map((t) => `<option value="${t._id}">${t.name}</option>`)
+      .join("");
 
     teamA.innerHTML = options;
     teamB.innerHTML = options;
@@ -592,7 +552,6 @@ async function loadGameForEdit(gameId) {
 
     const statusEl = document.getElementById("status");
     if (statusEl) statusEl.value = game.status;
-
     const n_jogoEl = document.getElementById("n_jogo");
     if (n_jogoEl) n_jogoEl.value = game.n_jogo;
   } catch (err) {
@@ -616,7 +575,6 @@ async function loadEventForEdit(eventId) {
     teamDropdown.value = event.team._id;
     await loadPlayersForTeam(event.team._id, playersDropdown);
     playersDropdown.value = event.player._id;
-
     document.getElementById("eventType").value = event.type;
     document.getElementById("eventTime").value = event.time;
   } catch (err) {
@@ -632,11 +590,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     logoutBtn.addEventListener("click", async (e) => {
       e.preventDefault();
       logoutBtn.textContent = "A sair...";
+      const refreshToken = localStorage.getItem("refreshToken");
 
       try {
-        
-        // antes passavas refreshToken ao logout, mas a função não recebe argumentos
-        const response = await authAPI.logout();
+        const response = await authAPI.logout(refreshToken);
         console.log("Logout response:", response);
 
         if (response) {
@@ -683,13 +640,12 @@ document.addEventListener("DOMContentLoaded", async () => {
           localStorage.setItem("refreshToken", response.refreshToken);
           localStorage.setItem("user", JSON.stringify(response.user));
           alert("Login realizado com sucesso! Redirecionando...");
-
           setTimeout(
             () =>
-              isAdmin()
+              isAdmin
                 ? (window.location.href = "/Pages/admin/home.html")
                 : (window.location.href = "/Pages/admin/gameMaster.html"),
-            1000
+            1000,
           );
         } else {
           alert("Falha no login. Verifique as suas credenciais.");
@@ -766,7 +722,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (formAddTeam) {
     formAddTeam.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       const upload = await uploadToCpanel(formAddTeam.teamImage.files[0]);
       const teamData = {
         name: formAddTeam.teamName.value,
@@ -774,10 +729,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         group: formAddTeam.teamGroup.value,
         image: upload.url,
       };
-
-      if (!teamData.name || !teamData.country) {
+      if (!teamData.name || !teamData.country)
         return alert("Preencha todos os campos obrigatórios.");
-      }
 
       try {
         await teamAPI.create(teamData);
@@ -798,7 +751,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     formAddPlayer.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       const upload = await uploadToCpanel(formAddPlayer.playerImage.files[0]);
       const playerData = {
         name: formAddPlayer.playerName.value,
@@ -807,10 +759,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         position: formAddPlayer.playerPosition.value,
         image: upload.url,
       };
-
-      if (!playerData.name || !playerData.team) {
+      if (!playerData.name || !playerData.team)
         return alert("Preencha todos os campos obrigatórios.");
-      }
 
       try {
         await playerAPI.create(playerData);
@@ -829,20 +779,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     const teamDropdown = document.getElementById("teamsDropdown");
     const gamesDropdown = document.getElementById("gamesDropdown");
     const playersDropdown = document.getElementById("playersDropdown");
-
     if (gamesDropdown) await loadGamesDropdown(gamesDropdown);
-
     gamesDropdown.addEventListener("change", () => {
       if (teamDropdown) loadTeamsForGame(gamesDropdown.value, teamDropdown);
     });
-
     teamDropdown.addEventListener("change", () => {
-      if (playersDropdown) loadPlayersForTeam(teamDropdown.value, playersDropdown);
+      if (playersDropdown)
+        loadPlayersForTeam(teamDropdown.value, playersDropdown);
     });
 
     formAddEvent.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       try {
         const eventData = {
           type: formAddEvent.eventType.value,
@@ -851,47 +798,21 @@ document.addEventListener("DOMContentLoaded", async () => {
           player: formAddEvent.playersDropdown.value,
           game: formAddEvent.gamesDropdown?.value || gamesDropdown.value,
         };
-
         if (
           !eventData.type ||
           !eventData.time ||
           !eventData.game ||
           !eventData.player ||
           !eventData.team
-        ) {
+        )
           return alert("Preencha todos os campos obrigatórios.");
-        }
 
         await eventAPI.create(eventData);
         alert("Evento adicionado com sucesso!");
-
-  
-        // no gameMaster já não redireciona nem faz refresh
-        // mantém o jogo selecionado e atualiza só a UI
-        if (path.endsWith("/Pages/admin/gameMaster.html")) {
-          currentSelectedGameId = eventData.game;
-
-          formAddEvent.reset();
-
-          if (playersDropdown) {
-            playersDropdown.innerHTML = `<option value="">Selecione um jogador</option>`;
-          }
-
-          if (gamesDropdown) {
-            gamesDropdown.value = currentSelectedGameId;
-          }
-
-          if (teamDropdown) {
-            await loadTeamsForGame(currentSelectedGameId, teamDropdown);
-          }
-
-          await renderSelectedGame(currentSelectedGameId);
-          return;
-        }
-
-        if (path.endsWith("/Pages/admin/addEvent.html")) {
+        if (path.endsWith("/Pages/admin/gameMaster.html"))
+          window.location.href = "/Pages/admin/gameMaster.html";
+        if (path.endsWith("/Pages/admin/addEvent.html"))
           window.location.href = "/Pages/admin/listEvents.html";
-        }
       } catch (err) {
         console.error(err);
         alert("Erro ao adicionar evento.");
@@ -949,11 +870,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     formEditTeam.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       try {
         const file = formEditTeam.teamImage.files[0];
         const upload = file ? await uploadToCpanel(file) : { url: "" };
-
         const teamData = {
           name: formEditTeam.teamName.value,
           country: formEditTeam.teamCountry.value,
@@ -980,13 +899,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     formEditPlayer.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       try {
         const file = formEditPlayer.playerImage.files[0];
         const upload = file
           ? await uploadToCpanel(file)
           : { url: document.getElementById("imgPlayer")?.src || "" };
-
         const updatedPlayer = {
           name: formEditPlayer.playerName.value,
           number: formEditPlayer.playerNumber.value,
@@ -1040,7 +957,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     formEditEvent.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       try {
         const eventData = {
           type: formEditEvent.eventType.value,
@@ -1049,20 +965,16 @@ document.addEventListener("DOMContentLoaded", async () => {
           player: formEditEvent.playersDropdown.value,
           game: formEditEvent.gamesDropdown.value,
         };
-
         if (
           !eventData.type ||
           !eventData.time ||
           !eventData.game ||
           !eventData.player ||
           !eventData.team
-        ) {
+        )
           return alert("Preencha todos os campos obrigatórios.");
-        }
 
-        
-        await eventAPI.update(eventId, eventData);
-
+        await eventAPI.update(eventId, updatedEvent);
         alert("Evento atualizado com sucesso!");
         window.location.href = "/Pages/admin/listEvents.html";
       } catch (err) {
@@ -1075,18 +987,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   // LIST PLAYERS
   const playersList = document.getElementById("playersList");
   const teamDropdown = document.getElementById("teamsDropdown");
-
   if (playersList && teamDropdown) {
     await loadTeamsDropdown(teamDropdown);
 
     teamDropdown.addEventListener("change", async () => {
       const selectedTeamId = teamDropdown.value;
-
       if (!selectedTeamId) {
         playersList.innerHTML = "";
         return;
       }
-
       await loadPlayers(selectedTeamId, playersList);
     });
 
@@ -1104,7 +1013,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           deleteBtn.dataset.playerid,
           deleteBtn.closest("div"),
           "Jogador eliminado com sucesso.",
-          "Falha ao eliminar o jogador."
+          "Falha ao eliminar o jogador.",
         );
       }
     });
@@ -1129,7 +1038,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           deleteBtn.dataset.teamid,
           deleteBtn.closest("li"),
           "Equipa eliminada com sucesso.",
-          "Falha ao eliminar a equipa."
+          "Falha ao eliminar a equipa.",
         );
       }
     });
@@ -1154,7 +1063,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           deleteBtn.dataset.gameid,
           deleteBtn.closest("li"),
           "Jogo eliminado com sucesso.",
-          "Falha ao eliminar o jogo."
+          "Falha ao eliminar o jogo.",
         );
       }
     });
@@ -1179,7 +1088,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           deleteBtn.dataset.eventid,
           deleteBtn.closest("li"),
           "Evento eliminado com sucesso.",
-          "Falha ao eliminar o evento."
+          "Falha ao eliminar o evento.",
         );
       }
     });
@@ -1201,115 +1110,64 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (teamDropdown) await loadTeamsDropdown(teamDropdown);
   }
 
-  // GAME MASTER
   if (path.endsWith("/Pages/admin/gameMaster.html")) {
+    const gameId = new URLSearchParams(window.location.search).get("game");
+    if (gameId) await loadGameForEdit(gameId);
+
     const gamesDropdown = document.getElementById("gamesDropdown");
+    const playersA = document.getElementById("playersA");
+    const playersB = document.getElementById("playersB");
+    const gameEventsList = document.getElementById("gameEventsList");
     const startGameBtn = document.getElementById("startGameBtn");
     const endGameBtn = document.getElementById("endGameBtn");
-    const saveMvpBtn = document.getElementById("saveMvpBtn");
-    const mvpDropdown = document.getElementById("mvpDropdown");
+    const imgA = document.getElementById("imgTeamA");
+    const imgB = document.getElementById("imgTeamB");
+    const scoreA = document.getElementById("scoreTeamA");
+    const scoreB = document.getElementById("scoreTeamB");
     const statusEl = document.getElementById("status");
 
-    if (gamesDropdown) {
-      await loadGamesDropdown(gamesDropdown);
+    if (gamesDropdown) await loadGamesDropdown(gamesDropdown);
+    gamesDropdown.addEventListener("change", async () => {
+      const game = await gameAPI.getById(gamesDropdown.value);
+      if (!game) return console.error("Jogo não encontrado!");
 
-      gamesDropdown.addEventListener("change", async () => {
-        // guarda sempre o jogo atual
-        currentSelectedGameId = gamesDropdown.value;
-        await renderSelectedGame(gamesDropdown.value);
-      });
-    }
-
-    if (startGameBtn) {
-      startGameBtn.onclick = async () => {
-      
-        const gameId = gamesDropdown.value || currentSelectedGameId;
-
-        if (!gameId) {
-          alert("Escolha um jogo!");
-          return;
-        }
-
+      startGameBtn.addEventListener("click", async () => {
+        if (!game) return alert("Escolha um jogo!");
         try {
-          await gameAPI.update(gameId, { status: "in_progress" });
-
-          
-          // sem refresh ao iniciar
-          if (statusEl) statusEl.innerHTML = "in_progress";
-
+          await gameAPI.update(game._id, { status: "in_progress" });
+          window.location.reload();
           alert("Jogo iniciado!");
-
-         
-          // opcionalmente volta a renderizar para garantir score/eventos/status corretos
-          await renderSelectedGame(gameId);
         } catch (err) {
           console.error("Erro ao iniciar jogo:", err);
-          alert("Erro ao iniciar jogo.");
         }
-      };
-    }
+      });
 
-    if (endGameBtn) {
-      endGameBtn.onclick = async () => {
-        const gameId = gamesDropdown.value || currentSelectedGameId;
-
-        if (!gameId) {
-          alert("Escolha um jogo!");
-          return;
-        }
-
+      endGameBtn.addEventListener("click", async () => {
+        if (!game) return alert("Escolha um jogo!");
         try {
-          await gameAPI.update(gameId, { status: "completed" });
-
-        
-          // atualiza primeiro o status
-          if (statusEl) statusEl.innerHTML = "completed";
-
+          await gameAPI.update(game._id, { status: "completed" });
           alert("Jogo finalizado!");
-
-         
-          // refresh apenas ao finalizar
-          window.location.reload();
         } catch (err) {
           console.error("Erro ao finalizar jogo:", err);
-          alert("Erro ao finalizar jogo.");
         }
-      };
-    }
+      });
 
-    if (saveMvpBtn) {
-      saveMvpBtn.onclick = async () => {
-        const gameId = gamesDropdown.value || currentSelectedGameId;
-        const mvp = mvpDropdown?.value;
+      const teams = game.teams;
+      if (!Array.isArray(teams) || teams.length < 2) {
+        return console.error("Jogo inválido: equipas insuficientes.");
+      }
+      const teamA = await teamAPI.getById(teams[0]._id);
+      const teamB = await teamAPI.getById(teams[1]._id);
 
-        if (!gameId || !mvp) {
-          alert("Seleciona jogo e MVP");
-          return;
-        }
-
-        try {
-          // ALTERADO:
-          // usa BASE_URL e Authorization
-          const res = await fetch(`${BASE_URL}/games/${gameId}/mvp`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-            body: JSON.stringify({ mvp }),
-          });
-
-          if (!res.ok) {
-            throw new Error("Erro ao guardar MVP");
-          }
-
-          alert("MVP guardado com sucesso!");
-        } catch (err) {
-          console.error(err);
-          alert("Erro ao guardar MVP");
-        }
-      };
-    }
+      imgA.src = `${teamA.image}`;
+      imgB.src = `${teamB.image}`;
+      scoreA.innerHTML = `${game.result.homeScore}`;
+      scoreB.innerHTML = `${game.result.awayScore}`;
+      statusEl.innerHTML = `${game.status}`;
+      await loadPlayers(teams[0]._id, playersA);
+      await loadPlayers(teams[1]._id, playersB);
+      await loadEvents(game._id, gameEventsList);
+    });
   }
 });
 
@@ -1329,13 +1187,9 @@ const adminPages = [
   "/Pages/admin/editGame.html",
   "/Pages/admin/home.html",
 ];
-
 if (adminPages.some((page) => path.endsWith(page))) {
   protectPagesAdmin();
 }
-
 if (path.endsWith("/Pages/admin/gameMaster.html")) {
-  if (!isAuthenticated()) {
-    window.location.href = "/Pages/admin/login.html";
-  }
+  protectPage();
 }

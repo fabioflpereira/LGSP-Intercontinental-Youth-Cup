@@ -2072,7 +2072,7 @@ font-size: small;
 .casesgallery {
   grid-template-columns: repeat(1, minmax(150px, 1fr));
   gap: 20px;
-
+  justify-items: center;
 }
 
 

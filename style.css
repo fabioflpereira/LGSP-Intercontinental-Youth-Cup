@@ -670,6 +670,11 @@ h3 {
 .tab-content.active {
   display: block;
 }
+#classifinfo {
+  font-size: small;
+  color: #777;
+  margin-top: 10px;
+}
 
 /* CSS da fase de grupos*/
 /* Grid for 2 groups per row */
@@ -730,11 +735,11 @@ h3 {
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  width: 100%;
+  width: 90%;
   border-collapse: collapse;
   margin-bottom: 20px;
   min-width: 300px;
-
+margin-right: 30px;
 }
 
 .standings-table th, .standings-table td {
@@ -757,7 +762,8 @@ h3 {
   display: flex;
   align-items: center;
   gap: 6px;
-  justify-content: flex-start;
+  justify-content: center;
+  width: 20vw;
 }
 
 .teamtable img {
@@ -859,43 +865,115 @@ h3 {
 }
 
 
-
+/* =========================
+   Melhores marcadores
+========================= */
 .successcases {
-margin-left: 155px;
+  font-size: small;
+  color: #777;
+  margin-top: 10px;
 }
-
 .casesgallery {
-  margin-top: 20px;
   display: grid;
-  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  grid-template-columns: repeat(3, minmax(150px, 1fr));
   gap: 50px;
 }
 
-.casesgallery img {
-  width: 100%;
+
+/* MELHORES MARCADORES*/
+.golos-card {
+  width: 250px;
   height: auto;
+  background: #f4f8ff;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.golos-card:hover{
+  transform: scale(1.1);
   transition: transform 0.3s ease;
 }
-
-.casesgallery img:hover {
-  transform: scale(1.05);
+/* Header */
+.golos-header {
+  background: #05164d;
+  padding: 10px;
 }
 
-
-/* =========================
-   Página about us
-========================= */
-#heroinfo{
- display: flex;
-  height: 300px;
+.golos-badge {
+  color: white;
+  font-weight: bold;
 }
-#heroinfo img{
+
+/* Image Section */
+.golos-image-wrapper {
+  position: relative;
+  background: #e6e8ef;
+  text-align: center;
+  padding: 20px 0px 0px 0px;
+}
+.golos-image-wrapper img#logobackground {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
+  z-index: 1;
 }
+
+.golos-image {
+  max-width: 100px;
+  max-height: 160px;
+  z-index: 2;
+  position: relative;
+  
+}
+
+.golos-number {
+  position: absolute;
+  right: 15px;
+  bottom: 10px;
+  font-size: 80px;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* List */
+.golos-list {
+  padding: 10px;
+}
+
+.golos-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.golos-info {
+  flex: 1;
+}
+
+.golos-name {
+  display: block;
+  font-weight: bold;
+}
+
+.golos-team {
+  font-size: 12px;
+  color: gray;
+}
+
+.golos-score {
+ font-size: 12px;
+  color: gray;
+}
+
+
+
+
 
 /* CONTEÚDO */
 .content {
@@ -1217,6 +1295,9 @@ font-size:16px;
 font-weight:600;
 line-height:1.35;
 }
+
+
+
 
 /* Small laptops */
 @media (max-width: 1199px) {
@@ -1975,21 +2056,34 @@ font-size: small;
 
 }
 
-/* MOTM */
+/* =========================
+   Melhores marcadores
+========================= */
+/* =========================
+   Melhores marcadores
+========================= */
 .successcases {
-  margin: 10px 0 0 0;
-  
-}
-.casesgallery {
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(80px, 140px));
+  font-size: small;
+  color: #777;
+  margin-top: 10px;
+  justify-content: center;
 }
 
-#heroinfo{
- display: flex;
-  height: 100px;
+.casesgallery {
+  grid-template-columns: repeat(1, minmax(150px, 1fr));
+  gap: 20px;
+
 }
+
+
+/* MELHORES MARCADORES*/
+.golos-card {
+  width: 50vw;
+  height: auto;
+}
+
+
+
 
 
 /* =========================

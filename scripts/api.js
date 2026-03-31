@@ -62,7 +62,7 @@ async function refreshAccessToken() {
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
       alert("Sessão expirada. Por favor, faça login novamente.");
-      window.location.href = "/Pages/admin/login.html";
+      window.location.href = "/pages/admin/login.html";
       throw new Error("Token refresh failed");
     }
 
@@ -75,7 +75,7 @@ async function refreshAccessToken() {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("user");
-    window.location.href = "/Pages/admin/login.html";
+    window.location.href = "/pages/admin/login.html";
     throw error;
   }
 }
@@ -105,13 +105,13 @@ export function isAdmin() {
 
 export async function protectPage() {
   if (!(await isAuthenticated())) {
-    window.location.href = "/Pages/admin/login.html";
+    window.location.href = "/pages/admin/login.html";
   }
 }
 
 export function protectPagesAdmin() {
   if (!isAdmin()) {
-    window.location.href = "/Pages/admin/home.html";
+    window.location.href = "/pages/admin/home.html";
   }
 }
 
@@ -235,7 +235,7 @@ async function loadGamesDropdown(selectElement, includeEmpty = true) {
       games
         .map(
           (game) =>
-            `<option value="${game._id}">J${game.n_jogo} | ${game.teams[0].name} vs ${game.teams[1].name}</option>`,
+            `<option value="${game._id}">J${game.n_jogo} | ${game.teams[0]?.name} vs ${game.teams[1]?.name}</option>`,
         )
         .join("");
   } catch (error) {
@@ -724,7 +724,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           alert("Logout realizado com sucesso! Redirecionando...");
 
           setTimeout(() => {
-            window.location.href = "/Pages/admin/login.html";
+            window.location.href = "/pages/admin/login.html";
           }, 1000);
         } else {
           alert("Falha no logout.");
@@ -737,9 +737,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // Login
-  if (path.endsWith("/Pages/admin/login.html")) {
+  if (path.endsWith("/pages/admin/login.html")) {
     if (localStorage.getItem("refreshToken")) {
-      window.location.href = "/Pages/admin/home.html";
+      window.location.href = "/pages/admin/home.html";
     }
 
     const loginForm = document.getElementById("loginForm");
@@ -764,8 +764,8 @@ document.addEventListener("DOMContentLoaded", async () => {
           setTimeout(
             () =>
               isAdmin
-                ? (window.location.href = "/Pages/admin/home.html")
-                : (window.location.href = "/Pages/admin/gameMaster.html"),
+                ? (window.location.href = "/pages/admin/home.html")
+                : (window.location.href = "/pages/admin/gameMaster.html"),
             1000,
           );
         } else {
@@ -832,7 +832,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         await gameAPI.create(gameData);
 
         alert("Jogo criado com sucesso!");
-        window.location.href = "/Pages/admin/listGames.html";
+        window.location.href = "/pages/admin/listGames.html";
       } catch (err) {
         console.error("Erro ao criar jogo:", err);
         alert("Erro ao criar jogo.");
@@ -931,12 +931,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         await eventAPI.create(eventData);
         alert("Evento adicionado com sucesso!");
-        if (path.endsWith("/Pages/admin/gameMaster.html")) {
+        if (path.endsWith("/pages/admin/gameMaster.html")) {
           await refreshGameMaster(eventData.game);
           formAddEvent.reset();
         }
-        if (path.endsWith("/Pages/admin/addEvent.html"))
-          window.location.href = "/Pages/admin/listEvents.html";
+        if (path.endsWith("/pages/admin/addEvent.html"))
+          window.location.href = "/pages/admin/listEvents.html";
       } catch (err) {
         console.error(err);
         alert("Erro ao adicionar evento.");
@@ -945,7 +945,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // EDIT GAME
-  if (path.endsWith("/Pages/admin/editGame.html")) {
+  if (path.endsWith("/pages/admin/editGame.html")) {
     const form = document.getElementById("editGameForm");
     const mvpDropdown = document.getElementById("mvpDropdown");
     const params = new URLSearchParams(window.location.search);
@@ -1056,22 +1056,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (isAdmin()) {
       menu.innerHTML = `<ul class="menu">
         <li>
-          <button><a href="/Pages/admin/listTeams.html">Equipas</a></button>
+          <button><a href="/pages/admin/listTeams.html">Equipas</a></button>
         </li>
         <li>
-          <button><a href="/Pages/admin/listPlayers.html">Jogadores</a></button>
+          <button><a href="/pages/admin/listPlayers.html">Jogadores</a></button>
         </li>
         <li>
-          <button><a href="/Pages/admin/listGames.html">Jogos</a></button>
+          <button><a href="/pages/admin/listGames.html">Jogos</a></button>
         </li>
         <li>
-          <button><a href="/Pages/admin/listEvents.html">Eventos</a></button>
+          <button><a href="/pages/admin/listEvents.html">Eventos</a></button>
         </li>
       </ul>`;
     } else {
       menu.innerHTML = `<ul class="menu">
         <li>
-          <button><a href="/Pages/admin/gameMaster.html">Game Master</a></button>
+          <button><a href="/pages/admin/gameMaster.html">Game Master</a></button>
         </li>
       </ul>`;
     }
@@ -1105,7 +1105,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         await eventAPI.update(eventId, updatedEvent);
         alert("Evento atualizado com sucesso!");
-        window.location.href = "/Pages/admin/listEvents.html";
+        window.location.href = "/pages/admin/listEvents.html";
       } catch (err) {
         console.error(err);
         alert("Falha ao atualizar evento.");
@@ -1131,7 +1131,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     playersList.addEventListener("click", async (e) => {
       const editBtn = e.target.closest(".editPlayerBtn");
       if (editBtn) {
-        window.location.href = `/Pages/admin/editPlayer.html?player=${editBtn.dataset.playerid}`;
+        window.location.href = `/pages/admin/editPlayer.html?player=${editBtn.dataset.playerid}`;
         return;
       }
 
@@ -1156,7 +1156,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     teamsList.addEventListener("click", async (e) => {
       const editBtn = e.target.closest(".editTeamBtn");
       if (editBtn) {
-        window.location.href = `/Pages/admin/editTeam.html?team=${editBtn.dataset.teamid}`;
+        window.location.href = `/pages/admin/editTeam.html?team=${editBtn.dataset.teamid}`;
         return;
       }
 
@@ -1181,7 +1181,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     gamesList.addEventListener("click", async (e) => {
       const editBtn = e.target.closest(".editGameBtn");
       if (editBtn) {
-        window.location.href = `/Pages/admin/editGame.html?game=${editBtn.dataset.gameid}`;
+        window.location.href = `/pages/admin/editGame.html?game=${editBtn.dataset.gameid}`;
         return;
       }
 
@@ -1206,7 +1206,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     eventsList.addEventListener("click", async (e) => {
       const editBtn = e.target.closest(".editEventBtn");
       if (editBtn) {
-        window.location.href = `/Pages/admin/editEvent.html?event=${editBtn.dataset.eventid}`;
+        window.location.href = `/pages/admin/editEvent.html?event=${editBtn.dataset.eventid}`;
         return;
       }
 
@@ -1224,22 +1224,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // Page-specific initial loads
-  if (path.endsWith("/Pages/admin/editPlayer.html")) {
+  if (path.endsWith("/pages/admin/editPlayer.html")) {
     const playerId = new URLSearchParams(window.location.search).get("player");
     if (playerId) await loadPlayerForEdit(playerId);
   }
 
-  if (path.endsWith("/Pages/admin/editTeam.html")) {
+  if (path.endsWith("/pages/admin/editTeam.html")) {
     const teamId = new URLSearchParams(window.location.search).get("team");
     if (teamId) await loadTeamForEdit(teamId);
   }
 
-  if (path.endsWith("/Pages/admin/addPlayer.html")) {
+  if (path.endsWith("/pages/admin/addPlayer.html")) {
     const teamDropdown = document.getElementById("teamsDropdown");
     if (teamDropdown) await loadTeamsDropdown(teamDropdown);
   }
 
-  if (path.endsWith("/Pages/admin/gameMaster.html")) {
+  if (path.endsWith("/pages/admin/gameMaster.html")) {
     const gameId = new URLSearchParams(window.location.search).get("game");
     if (gameId) await loadGameForEdit(gameId);
 
@@ -1334,22 +1334,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Redirect to login for admin pages
 const adminPages = [
-  "/Pages/admin/editPlayer.html",
-  "/Pages/admin/editTeam.html",
-  "/Pages/admin/listPlayers.html",
-  "/Pages/admin/listTeams.html",
-  "/Pages/admin/addPlayer.html",
-  "/Pages/admin/addGame.html",
-  "/Pages/admin/addTeam.html",
-  "/Pages/admin/listEvents.html",
-  "/Pages/admin/listGames.html",
-  "/Pages/admin/addEvent.html",
-  "/Pages/admin/editEvent.html",
-  "/Pages/admin/editGame.html",
+  "/pages/admin/editPlayer.html",
+  "/pages/admin/editTeam.html",
+  "/pages/admin/listPlayers.html",
+  "/pages/admin/listTeams.html",
+  "/pages/admin/addPlayer.html",
+  "/pages/admin/addGame.html",
+  "/pages/admin/addTeam.html",
+  "/pages/admin/listEvents.html",
+  "/pages/admin/listGames.html",
+  "/pages/admin/addEvent.html",
+  "/pages/admin/editEvent.html",
+  "/pages/admin/editGame.html",
 ];
+const staffPages = ["/pages/admin/home.html", "/pages/admin/gameMaster.html"];
+if (staffPages.some((page) => path.endsWith(page))) {
+  protectPage();
+}
 if (adminPages.some((page) => path.endsWith(page))) {
   protectPagesAdmin();
-}
-if (path.endsWith("/Pages/admin/gameMaster.html")) {
-  protectPage();
 }

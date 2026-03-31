@@ -18,12 +18,10 @@ const normalizeId = (value) => {
 const formatEventType = (type) => {
   if (!type) return "";
   const map = {
-    golo: "Golo",
-    autogolo: "Auto-golo",
-    "cartao amarelo": "Cartão amarelo",
-    "cartao vermelho": "Cartão vermelho",
-    falta: "Falta",
-    penalty: "Penalty",
+    golo: "⚽",
+    autogolo: "🥅",
+    "cartao amarelo": "🟨",
+    "cartao vermelho": "🟥",
   };
   const key = type.toString().toLowerCase();
   return (
@@ -32,25 +30,43 @@ const formatEventType = (type) => {
   );
 };
 
-const getPlayerName = (player) => {
-  if (!player) return "";
-  if (typeof player === "object") return player.name || "";
-  return player.toString();
+const getPlayerName = async (player) => {
+  try {
+    const playerData = await playerAPI.getById(player);
+    return playerData?.name || "";
+  } catch {
+    return "";
+  }
 };
 
-document.addEventListener("DOMContentLoaded", async () => {
-  if (window.location.pathname.endsWith("/jogos.html")) {
-    const data = await gameAPI.getAll();
-    const games = data?.games ?? [];
-    const html = games
-      .map((game) => {
-        return `<div class="fixture expandable" onclick="toggleFixture(this)">
+const renderMatchEvents = async (events, team) => {
+  const eventStrings = await Promise.all(
+    (events || [])
+      .filter((e) => normalizeId(e.team) === normalizeId(team))
+      .map(async (e) => {
+        const playerName = await getPlayerName(e.player);
+        return `${formatEventType(e.type)}-${playerName}-${e.time || ""}'`.trim();
+      }),
+  );
+
+  const filtered = eventStrings.filter(Boolean);
+  return filtered.length ? filtered.join(", ") : "Nenhum evento";
+};
+
+const buildFixtureHtml = async (game) => {
+  const team0Events = await renderMatchEvents(game.events, game.teams[0]);
+  const team1Events = await renderMatchEvents(game.events, game.teams[1]);
+
+  return `<div class="fixture expandable" onclick="toggleFixture(this)">
                 <div class="fixture-main">
-                    <span class="teamresult-left">${game.teams[0]?.name || "TBD"}</span>
+                    <span class="teamresult-left">${game.teams[0]?.name || "A definir"}</span>
                     <img src="${game.teams[0]?.image || ""}" class="teamresult-logo">
-                    <span class="timeresult">${game.result.homeScore} <strong>-</strong> ${game.result.awayScore}</span>
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                      <span class="timeresult">${game.result.homeScore} <strong>-</strong> ${game.result.awayScore}</span>
+                      <span style="" >${formatTime(game.date)}</span>
+                    </div>
                     <img src="${game.teams[1]?.image || ""}" class="teamresult-logo">
-                    <span class="teamresult-right">${game.teams[1]?.name || "TBD"}</span> <span class="expand-hint">Clique para ver
+                    <span class="teamresult-right">${game.teams[1]?.name || "A definir"}</span> <span class="expand-hint">Clique para ver
                         detalhes</span>
                 </div>
 
@@ -58,34 +74,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <div class="fixture-details">
                     <div class="goals">
                         <h4>⚽Eventos</h4>
-                        <p><strong>${game.teams[0]?.name || "TBD"}:</strong> ${
-                          (game.events || [])
-                            .filter(
-                              (e) =>
-                                normalizeId(e.team) ===
-                                normalizeId(game.teams[0]),
-                            )
-                            .map((e) =>
-                              `${formatEventType(e.type)} ${e.time || ""}min ${getPlayerName(e.player)}`.trim(),
-                            )
-                            .filter(Boolean)
-                            .join(", ") || "Nenhum evento"
-                        }
-                            </p>
-                        <p><strong>${game.teams[1]?.name || "TBD"}:</strong> ${
-                          (game.events || [])
-                            .filter(
-                              (e) =>
-                                normalizeId(e.team) ===
-                                normalizeId(game.teams[1]),
-                            )
-                            .map((e) =>
-                              `${formatEventType(e.type)} ${e.time || ""}min ${getPlayerName(e.player)}`.trim(),
-                            )
-                            .filter(Boolean)
-                            .join(", ") || "Nenhum evento"
-                        }
-                            </p>
+                        <p><strong>${game.teams[0]?.name || "A definir"}:</strong> ${team0Events}</p>
+                        <p><strong>${game.teams[1]?.name || "A definir"}:</strong> ${team1Events}</p>
                     </div>
 
                     <div class="motm">
@@ -96,77 +86,123 @@ document.addEventListener("DOMContentLoaded", async () => {
                     </div>
                 </div>
             </div>`;
-      })
-      .join("");
-    document.getElementById("dia1").innerHTML = html;
+};
+
+const renderFixturesByDate = async (games, dateString) => {
+  const fixtures = await Promise.all(
+    games
+      .filter(
+        (game) =>
+          new Date(game.date).toDateString() ===
+          new Date(dateString).toDateString(),
+      )
+      .map(async (game) => await buildFixtureHtml(game)),
+  );
+  return fixtures.join("");
+};
+
+const formatDateTime = (date) => {
+  if (!date) return "";
+  const d = new Date(date);
+  return d.toLocaleString("pt-PT", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "4-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+const formatTime = (date) => {
+  if (!date) return "";
+  const d = new Date(date);
+  return d.toLocaleString("pt-PT", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+document.addEventListener("DOMContentLoaded", async () => {
+  if (window.location.pathname.endsWith("/jogos.html")) {
+    const data = await gameAPI.getAll();
+    const games = data?.games ?? [];
+    const htmlDia1 = await renderFixturesByDate(games, "02-04-2026");
+    const htmlDia2 = await renderFixturesByDate(games, "03-04-2026");
+    const htmlDia3 = await renderFixturesByDate(games, "04-04-2026");
+    document.getElementById("dia1").innerHTML = htmlDia1;
+    document.getElementById("dia2").innerHTML = htmlDia2;
+    document.getElementById("dia3").innerHTML = htmlDia3;
   }
   if (window.location.pathname.endsWith("/classif.html")) {
     const data = await standingsAPI.getAll();
+    const dataGroups = await standingsAPI.getByGroup();
     let pos = 1;
 
-    const htmlGroups = `
-            <h2>Group A</h2>
+    const htmlGroups = Object.entries(dataGroups || {})
+      .sort()
+      .map(([groupName, teams]) => {
+        const groupHtml = `
+        <div id="groupStandings" class="group">
+            <h2>Group ${groupName}</h2>
                     <table class="group-table">
                         <thead>
                             <tr>
+                                <th>#</th>
                                 <th>Team</th>
                                 <th>GP</th>
                                 <th>W</th>
                                 <th>D</th>
                                 <th>L</th>
+                                <th>GF</th>
+                                <th>GA</th>
                                 <th>GD</th>
+                                <th>YC</th>
+                                <th>RC</th>
                                 <th>PTS</th>
                             </tr>
                         </thead>
                         <tbody>
+                        ${teams
+                          .map((team) => {
+                            return `
                             <tr>
-                                <td class="team"><img src="logo1.png" alt="Team A"> Team A</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                            </tr>
-                            <tr>
-                                <td class="team"><img src="logo2.png" alt="Team B"> Team B</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                            </tr>
-                            <tr>
-                                <td class="team"><img src="logo3.png" alt="Team C"> Team C</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                            </tr>
-                            <tr>
-                                <td class="team"><img src="logo4.png" alt="Team D"> Team D</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                            </tr>
+                                <td>${pos++}</td>
+                                <td class="teamtable"><img src="${team.logo}" alt="${team.team}">${team.team}</td>
+                                <td>${team.played}</td>
+                                <td>${team.wins}</td>
+                                <td>${team.draws}</td>
+                                <td>${team.losses}</td>
+                                <td>${team.goalsFor}</td>
+                                <td>${team.goalsAgainst}</td>
+                                <td>${team.goalDifference}</td>
+                                <td>${team.yellowCards}</td>
+                                <td>${team.redCards}</td>
+                                <td>${team.points}</td>
+                            </tr>`;
+                          })
+                          .join("")}
                         </tbody>
-                    </table>`;
+                    </table>
+                    </div>`;
+        return groupHtml;
+      })
+      .join("");
+    document.getElementById("group").innerHTML = htmlGroups;
+    pos = 1;
     const html = data
       .map((classif) => {
         return `<tr>
                         <td>${pos++}</td>
-                        <td class="teamtable"><img src="" alt="${classif.team}">${classif.team}</td>
+                        <td class="teamtable"><img src="${classif.logo}" alt="${classif.team}">${classif.team}</td>
                         <td>${classif.played}</td>
                         <td>${classif.wins}</td>
                         <td>${classif.draws}</td>
                         <td>${classif.losses}</td>
+                        <td>${classif.goalsFor}</td>
+                        <td>${classif.goalsAgainst}</td>
                         <td>${classif.goalDifference}</td>
+                        <td>${classif.yellowCards}</td>
+                        <td>${classif.redCards}</td>
                         <td>${classif.points}</td>
                     </tr>`;
       })
@@ -180,8 +216,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const finalHtml = finalGames
       .map((game) => {
-        const homeName = game.teams[0]?.name || "TBD";
-        const awayName = game.teams[1]?.name || "TBD";
+        const homeName = game.teams[0]?.name || "A definir";
+        const awayName = game.teams[1]?.name || "A definir";
         const homeScore = game.result?.homeScore ?? "";
         const awayScore = game.result?.awayScore ?? "";
         return `<div class="final-game">
@@ -195,5 +231,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById("finalStageList").innerHTML =
       finalHtml || "<p>Nenhum jogo de fase final encontrado.</p>";
+  }
+  const currentPath = window.location.pathname;
+  if (
+    currentPath === "/" ||
+    currentPath.endsWith("/index.html") ||
+    currentPath.endsWith("index.html")
+  ) {
+    const data = await teamAPI.getAll();
+    const teams = data?.teams ?? [];
+    const htmlTeams = teams
+      .map((team) => {
+        return `
+    <div class="hover-container">
+      <a href="https://www.fcfamalicao.pt">
+        <img src="${team.image}" alt="Image" class="container-image">
+        <span class="container-text">${team.name}</span>
+        <i class="fa fa-arrow-right"></i>
+      </a>
+    </div>
+  `;
+      })
+      .join("");
+
+    document.getElementById("teamsMainPage").innerHTML = htmlTeams;
   }
 });

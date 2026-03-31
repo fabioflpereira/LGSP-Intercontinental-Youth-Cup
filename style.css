@@ -2222,7 +2222,10 @@ width: auto;
 
 }
 
-
+#heroinfo{
+ display: flex;
+  height: 100px;
+}
 
 
 }

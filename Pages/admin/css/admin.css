@@ -1,52 +1,238 @@
-*{
+* {
     margin: 0;
     padding: 0;
-    list-style: none;
-    text-decoration: none;
     box-sizing: border-box;
-    justify-items: center;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-    text-align: center;
 }
-main{
+
+html {
+    font-size: 16px;
+}
+
+body {
+    min-height: 100vh;
+    width: 100%;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.5;
+    color: #1b1b1b;
+    background: #f5f7fb;
+}
+
+main {
+    width: min(100%, 480px);
+    margin: 0 auto;
+    padding: 20px;
     display: flex;
     flex-direction: column;
+    gap: 18px;
 }
 
-body{
-    height: 100vh;
-    width: 100vw;
+header,
+footer {
+    width: 100%;
 }
 
-.form{
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 700;
+    color: #111827;
+    text-align: left;
+}
+
+h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.6rem;
+}
+
+p,
+label,
+small {
+    font-size: 0.95rem;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    width: 100%;
+    min-height: 48px;
+    border: none;
+    border-radius: 14px;
+    background: #0A1D3D;
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+button:hover {
+    background: #0A1D3D;
+}
+
+button a {
+    display: inline-block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+button[type="reset"] {
+    background: #6c757d;
+}
+
+button[type="reset"]:hover {
+    background: #5c636a;
+}
+
+.form,
+section,
+.menu,
+ul {
+    width: 100%;
+}
+
+.form {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 1vh;
+    gap: 14px;
+    padding: 18px;
+    border-radius: 24px;
+    background: #ffffff;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
 }
 
-h1{
-    size: 2000px;
-    margin-bottom: 10%;
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #4b5563;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 14px;
+    background: #f8fafc;
+    color: #111827;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #0A1D3D;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+}
+
+select {
+    appearance: none;
 }
 
 img {
-    width: 100px;
-    height: 100px;
-    object-fit:contain;
-    padding: 2%;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
 }
 
-.menu{
-    display: flex;
-    flex-direction: column;
-    row-gap: 1vh;
+.listTeams img,
+.listGames li img,
+.team img,
+#imgTeam,
+#imgTeamA,
+#imgTeamB {
+    max-width: 72px;
+    max-height: 72px;
+    width: auto;
+    height: auto;
+    margin: 0 auto 12px;
 }
 
+.editMenu {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 
-li{
+.editMenu button {
+    width: auto;
+    flex: 1;
+    min-width: 140px;
+}
+
+.menu,
+li,
+section {
     display: flex;
     flex-direction: column;
+    gap: 12px;
+}
+
+section {
+    padding: 16px;
+    border-radius: 22px;
+    background: #ffffff;
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06);
+}
+
+.game-controls,
+.teams,
+.events,
+.mvp-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.team {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 20px;
+    background: #f8fafc;
+}
+
+#status,
+#scoreTeamA,
+#scoreTeamB {
+    font-weight: 700;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+a {
+    color: #0A1D3D;
+}
+
+@media (max-width: 420px) {
+    html {
+        font-size: 15px;
+    }
+
+    main {
+        padding: 16px;
+    }
+
+    .form,
+    section {
+        padding: 14px;
+    }
+
+    button {
+        min-height: 44px;
+    }
 }

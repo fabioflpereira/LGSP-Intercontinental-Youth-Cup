@@ -141,6 +141,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const htmlGroups = Object.entries(dataGroups || {})
       .sort()
       .map(([groupName, teams]) => {
+        pos = 1;
         const groupHtml = `
         <div id="groupStandings" class="group">
             <h2>Group ${groupName}</h2>

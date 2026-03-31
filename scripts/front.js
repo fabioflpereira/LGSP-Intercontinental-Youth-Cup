@@ -232,14 +232,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("finalStageList").innerHTML =
       finalHtml || "<p>Nenhum jogo de fase final encontrado.</p>";
   }
-  const currentPath = window.location.pathname;
-  if (
-    currentPath === "/" ||
-    currentPath.endsWith("/index.html") ||
-    currentPath.endsWith("index.html")
-  ) {
-    const data = await teamAPI.getAll();
-    const teams = data?.teams ?? [];
+  if (window.location.pathname.endsWith("/index.html")) {
+    const dataGames = await gameAPI.getAll();
+    const games = dataGames?.games ?? [];
+    const dataTeams = await teamAPI.getAll();
+    const teams = dataTeams?.teams ?? [];
+    const htmlResults = games
+      .map((game) => {
+        return `
+        `;
+      })
+      .join("");
+
     const htmlTeams = teams
       .map((team) => {
         return `
@@ -255,5 +259,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       .join("");
 
     document.getElementById("teamsMainPage").innerHTML = htmlTeams;
+    document.getElementById("teamsMainPage").innerHTML = htmlResults;
   }
 });

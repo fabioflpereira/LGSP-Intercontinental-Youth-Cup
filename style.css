@@ -1203,6 +1203,13 @@ button:hover {
 }
 
 
+.contact-info {
+    font-size: small;
+    color: #777;
+    margin-top: 10px;
+align-items: flex-start;
+}
+
 /* FOOTER */
 footer {
   

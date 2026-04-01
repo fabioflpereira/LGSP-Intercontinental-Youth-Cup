@@ -720,7 +720,7 @@ h3 {
 
 .group-table th, .group-table td {
   padding: 8px;
-  text-align: center;
+  text-align: left;
 
 }
 
@@ -757,7 +757,7 @@ margin-right: 30px;
 
 .standings-table th, .standings-table td {
   padding: 8px;
-  text-align: center;
+  text-align: left;
 
 }
 
@@ -775,8 +775,7 @@ margin-right: 30px;
   display: flex;
   align-items: center;
   gap: 6px;
-  justify-content: center;
-  width: 20vw;
+  justify-content: left;
 }
 
 .teamtable img {
@@ -1321,6 +1320,11 @@ line-height:1.35;
 
 /* Small laptops */
 @media (max-width: 1199px) {
+
+.group{
+  font-size: 10px;
+  padding:0;
+}
 
 
 .containerfixture {

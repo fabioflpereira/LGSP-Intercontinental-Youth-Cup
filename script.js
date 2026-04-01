@@ -80,20 +80,24 @@ menu9.addEventListener("click", () => {
     next.disabled = index >= maxIndex;
   }
 
-  next.addEventListener("click", () => {
-    const maxIndex = Math.max(0, items.length - itemsPerView());
-    if (index < maxIndex) {
-      index += 1;
-      update();
-    }
-  });
+  if (next) {
+    next.addEventListener("click", () => {
+      const maxIndex = Math.max(0, items.length - itemsPerView());
+      if (index < maxIndex) {
+        index += 1;
+        update();
+      }
+    });
+  }
 
-  prev.addEventListener("click", () => {
-    if (index > 0) {
-      index -= 1;
-      update();
-    }
-  });
+  if (prev) {
+    prev.addEventListener("click", () => {
+      if (index > 0) {
+        index -= 1;
+        update();
+      }
+    });
+  }
 
   // Recompute on resize to keep containment
   window.addEventListener("resize", update);
@@ -118,8 +122,8 @@ function openTab(tabId) {
     button.classList.remove("active");
   });
 
-  document.getElementById(tabId).classList.add("active");
-  event.target.classList.add("active");
+  document.querySelectorAll(tabId).classList.add("active");
+  tabId.target.classList.add("active");
 }
 
 // Muda as tabs dos videos

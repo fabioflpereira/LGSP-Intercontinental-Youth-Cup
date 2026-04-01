@@ -29,130 +29,292 @@
 </head>
 
 <body>
+<!-- Nav Bar Principal -->
+    <nav id="mainav">
+        <!-- Logo -->
+        <a href="/index_en.html"><img class="mainimg" src="/images/Logo horizontal branco.png"
+                alt="LGSP Intercontinental Youth Cup Logo"></a>
+
+
+        <!-- Main Navigation -->
+        <ul id="main-nav-list">
+            <li><a id="subMenu1">Tournament</a>
+                <ul id="subMenu2">
+                    <li><a href="/pages/info_en.html">What is LGSPIYC</a></li>
+                    <li><a id="subMenu3">Organization</a>
+                        <ul id="subMenu4">
+                            <li><a href="/pages/lgspsports_en.html">LGSP Sports</a></li>
+                            <li><a href="/pages/ift_en.html">IFT</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/pages/form_en.html">How to Participate</a></li>
+                </ul>
+            </li>
+
+            <!-- Tab dos servicos -->
+            <li><a id="subMenu11">Services</a>
+                <ul id="subMenu12">
+                    <li><a href="/pages/corporateleague_en.html">Corporate League</a></li>
+                    <li><a href="https://lcc-lgspsportsandevents.com/" target="_blank">Book Your Trip With Us</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li><a id="subMenu7">Games</a>
+                <ul id="subMenu8">
+                    <li><a href="#">Competitive Table</a></li>
+                    <li><a href="#">Classification</a></li>
+                </ul>
+            </li>
+            <li><a id="subMenu9">Multimedia</a>
+                <ul id="subMenu10">
+                    <li><a href="/pages/videos_en.html">Videos</a></li>
+
+                </ul>
+            </li>
+            <li><a href="/pages/contactos_en.html">Contacts</a></li>
+        </ul>
+
+
+        <!-- Corporate league -->
+
+        <a href="https://lgspportocorporateleague.com/Index.html"><img class="corporateleague"
+                src="/images/corporateleague.png" alt="Corporate League Logo">
 
 
 
-    <!-- Main Navigation -->
-    <ul id="main-nav-list">
-        <li><a id="subMenu1">Tournament</a>
-            <ul id="subMenu2">
-                <li><a href="/pages/info_en.html">What is LGSPIYC</a></li>
-                <li><a id="subMenu3">Organization</a>
-                    <ul id="subMenu4">
-                        <li><a href="/pages/lgspsports_en.html">LGSP Sports</a></li>
-                        <li><a href="/pages/ift_en.html">IFT</a></li>
-                    </ul>
-                </li>
-                <li><a href="/pages/form_en.html">How to Participate</a></li>
-            </ul>
-        </li>
-
-        <!-- Tab dos servicos -->
-        <li><a id="subMenu11">Services</a>
-            <ul id="subMenu12">
-                <li><a href="/pages/corporateleague_en.html">Corporate League</a></li>
-                <li><a href="https://lcc-lgspsportsandevents.com/" target="_blank">Book Your Trip With Us</a>
-                </li>
-            </ul>
-        </li>
-
-        <li><a id="subMenu7">Games</a>
-            <ul id="subMenu8">
-                <li><a href="#">Competitive Table</a></li>
-                <li><a href="#">Classification</a></li>
-            </ul>
-        </li>
-        <li><a id="subMenu9">Multimedia</a>
-            <ul id="subMenu10">
-                <li><a href="/pages/videos_en.html">Videos</a></li>
-
-            </ul>
-        </li>
-        <li><a href="/pages/contactos_en.html">Contacts</a></li>
-    </ul>
-
-
-    <!-- Corporate league -->
-
-    <a href="https://lgspportocorporateleague.com/Index.html"><img class="corporateleague"
-            src="/images/corporateleague.png" alt="Corporate League Logo">
-
-
-
-        <!-- Language Selector -->
-        <div class="lang-selector">
-            <button class="lang-btn">EN ▾</button>
-            <div class="lang-dropdown">
-                <a href="index.html">PT</a>
-                <a href="index_en.html">EN</a>
+            <!-- Language Selector -->
+            <div class="lang-selector">
+                <button class="lang-btn">EN ▾</button>
+                <div class="lang-dropdown">
+                    <a href="/pages/classif.html">PT</a>
+                    <a href="/pages/classif_en.html">EN</a>
+                </div>
             </div>
-        </div>
 
 
 
-        <!-- Hamburger Menu -->
-        <div class="hamburger-menu" id="hamburger-menu">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </div>
+            <!-- Hamburger Menu -->
+            <div class="hamburger-menu" id="hamburger-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
 
-        </nav>
+    </nav>
+
 
         <section id="heroinfo">
 
             <img src="/images/hero_sections/hero sections_classif_pt.jpg" alt="LGSP Intercontinental Youth Cup Logo">
         </section>
         <section class="containermain">
-            <div class="tabs">
-                <button class="tab-button active" onclick="openTab('group')">FASE DE GRUPOS</button>
-                <button class="tab-button" onclick="openTab('standing-stable')">CLASSIFICAÇÃO FINAL</button>
-            </div>
+      <div class="tabs">
+        <button class="tab-button active" onclick="openTab('group-grid')">
+            GROUP STAGE
+        </button>
+        <button class="tab-button" onclick="openTab('standing-stable')">
+            FINAL CLASSIFICATION
+        </button>
+      </div>
 
+      <div id="group-grid" class="tab-content active">
+        <div id="group" class="groups-grid"></div>
+      </div>
 
-            <div id="group" class="tab-content active">
-
-                <div id="group-classif" class="groups-grid">
-
-                    <!-- GROUP A -->
-                    <div id="groupStandings" class="group">
-
-                    </div>
-
-
-                </div>
-            </div>
-
-
-
-            <div id="standing-stable" class="tab-content">
-                <table class="standings-table">
-
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Team</th>
-                            <th>GP</th>
-                            <th>W</th>
-                            <th>D</th>
-                            <th>L</th>
-                            <th>GD</th>
-                            <th>PTS</th>
-                        </tr>
-                    </thead>
-                    <tbody id="standingList">
-
-
-                    </tbody>
-                </table>
-
-                <div id="finalStage" class="final-stage">
-                    <h3>Fase Final</h3>
-                    <div id="finalStageList" class="final-stage-list">
-                        <p>Carregando jogos...</p>
-                    </div>
-                </div>
-            </div>
+      <div id="standing-stable" class="tab-content">
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th>Pos</th>
+              <th>Team</th>
+            </tr>
+          </thead>
+          <tbody id="standingList">
+            <tr>
+              <td>1</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883158_e0e8871e20.png"
+                  alt="FC Famalicão"
+                />FC Famalicão
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883188_088dec72b5.png"
+                  alt="FC Porto"
+                />FC Porto
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883233_7a63ffb12a.png"
+                  alt="FC Twente"
+                />FC Twente
+              </td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883353_25f3e4dfa6.png"
+                  alt="FC Vizela"
+                />FC Vizela
+              </td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883398_4acf053fd5.png"
+                  alt="Gondomar SC"
+                />Gondomar SC
+              </td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883468_a923fae415.png"
+                  alt="Hong Kong FC"
+                />Hong Kong FC
+              </td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883502_dfc7406555.png"
+                  alt="Kalamata FC"
+                />Kalamata FC
+              </td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883537_ce0c1b2f51.png"
+                  alt="Lion City Sailors FC"
+                />Lion City Sailors FC
+              </td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883559_2502eb9f0c.png"
+                  alt="Liverpool FC"
+                />Liverpool FC
+              </td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883595_e2a930969a.png"
+                  alt="RC Deportivo La Coruña"
+                />RC Deportivo La Coruña
+              </td>
+            </tr>
+            <tr>
+              <td>11</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883635_327edd99f5.png"
+                  alt="SC Beira-Mar"
+                />SC Beira-Mar
+              </td>
+            </tr>
+            <tr>
+              <td>12</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883657_bd76883991.png"
+                  alt="SC Braga"
+                />SC Braga
+              </td>
+            </tr>
+            <tr>
+              <td>13</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883676_de8bf3fb5e.png"
+                  alt="SC Rio Tinto"
+                />SC Rio Tinto
+              </td>
+            </tr>
+            <tr>
+              <td>14</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883696_ddefb5170a.png"
+                  alt="Sporting CP"
+                />Sporting CP
+              </td>
+            </tr>
+            <tr>
+              <td>15</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883717_dfd21be6f4.png"
+                  alt="SC Salgueiros"
+                />SC Salgueiros
+              </td>
+            </tr>
+            <tr>
+              <td>16</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883738_7d71622035.png"
+                  alt="SL Benfica"
+                />SL Benfica
+              </td>
+            </tr>
+            <tr>
+              <td>17</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883760_1b3cc7c7be.png"
+                  alt="Stoke City FC"
+                />Stoke City FC
+              </td>
+            </tr>
+            <tr>
+              <td>18</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883789_44617c6d52.png"
+                  alt="UMS Pontaul-Combault"
+                />UMS Pontaul-Combault
+              </td>
+            </tr>
+            <tr>
+              <td>19</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883815_df21ff40af.png"
+                  alt="Varzim SC"
+                />Varzim SC
+              </td>
+            </tr>
+            <tr>
+              <td>20</td>
+              <td class="teamtable">
+                <img
+                  src="https://lgspintercontinentalyouthcup.com/images/Equipas/2026/1774883840_6c916e05d6.png"
+                  alt="Vitória SC"
+                />Vitória SC
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
             <!-- Footer -->
             <footer>
                 <div class="footer-section">
@@ -197,7 +359,7 @@
                     <p>&copy; 2026 LGSP Intercontinental Youth Cup. All Rights Reserved.</p>
                 </div>
             </footer>
-            <script type="module" src="scripts/api.js" defer></script>
+    <script type="module" src="/scripts/front.js"></script>
 </body>
 
 </html>

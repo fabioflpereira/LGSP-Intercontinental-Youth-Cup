@@ -155,6 +155,8 @@ export const playerAPI = {
   create: (data) => fetchAPI("/players", "POST", data),
   update: (id, data) => fetchAPI(`/players/${id}`, "PUT", data),
   delete: (id) => fetchAPI(`/players/${id}`, "DELETE"),
+  getScorer: () => fetchAPI(`/players/topScorer`, "GET"),
+  getMVP: () => fetchAPI(`/players/topMVP`, "GET"),
 };
 
 // Standings API
@@ -163,6 +165,7 @@ export const standingsAPI = {
   getByGroup: () => fetchAPI(`/standings/byGroup`, "GET"),
   getLive: () => fetchAPI(`/standings/live`, "GET"),
   getByGroupLive: () => fetchAPI(`/standings/byGroupLive`, "GET"),
+  getFinal: () => fetchAPI(`/standings/final`, "GET"),
 };
 
 // Team API
@@ -309,7 +312,7 @@ async function loadMvpDropdown(gameId, mvpSelect) {
       const mappedPlayers = players.map(
         (player) => `
           <option value="${player._id}">
-            ${player.name}
+            ${player.name} - ${team.name}
           </option>
         `,
       );
@@ -343,8 +346,7 @@ async function loadPlayers(teamId, playersListElement) {
             </div>`
           : "";
         return `<div id="${player._id}" class="playerCard">
-        <img src="${player.image}" alt="Imagem não disponível" style="width: 100px; height: auto;"/>
-        <p style="text-align:center"><strong>Nome: </strong>${player.name} | <strong>Número: </strong>${player.number}</p>
+        <p style="text-align:center">${player.number} - ${player.name}</p>
                       ${adminButtons}
                       </div>`;
       })
@@ -1287,7 +1289,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!game) return alert("Escolha um jogo!");
         try {
           await gameAPI.update(game._id, { status: "in_progress" });
-          gamesDropdown.dispatchEvent(new Event("change"));
+          statusEl.textContent = "Em progresso";
           alert("Jogo iniciado!");
         } catch (err) {
           console.error("Erro ao iniciar jogo:", err);
@@ -1296,9 +1298,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       endGameBtn.addEventListener("click", async () => {
         if (!game) return alert("Escolha um jogo!");
+        if (!mvpDropdown.value) return alert("Tem de ter um MPV selecionado!");
         try {
           await gameAPI.update(game._id, { status: "completed" });
-          gamesDropdown.dispatchEvent(new Event("change"));
+          statusEl.textContent = "Finalizado";
           alert("Jogo finalizado!");
         } catch (err) {
           console.error("Erro ao finalizar jogo:", err);

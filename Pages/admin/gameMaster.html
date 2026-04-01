@@ -24,7 +24,10 @@
         <button id="endGameBtn">Finalizar Jogo</button>
       </section>
 
-      <section class="teams">
+      <section
+        class="teams"
+        style="display: grid; grid-template-columns: 1fr 1fr"
+      >
         <div class="team">
           <img src="" id="imgTeamA" alt="Logo Clube" />
           <h3 id="teamAname" style="text-align: center"></h3>
@@ -68,18 +71,17 @@
           <button type="reset">Reset</button>
         </form>
       </section>
+      <section class="mvp-section">
+        <h3>MVP do Jogo</h3>
+
+        <label for="mvpDropdown">Selecionar MVP:</label>
+        <select id="mvpDropdown">
+          <option value="">Seleciona jogador</option>
+        </select>
+
+        <button id="saveMvpBtn">Guardar MVP</button>
+      </section>
     </main>
-    <!-- MVP -->
-    <section class="mvp-section">
-      <h3>MVP do Jogo</h3>
-
-      <label for="mvpDropdown">Selecionar MVP:</label>
-      <select id="mvpDropdown">
-        <option value="">Seleciona jogador</option>
-      </select>
-
-      <button id="saveMvpBtn">Guardar MVP</button>
-    </section>
     <script type="module" src="/scripts/api.js"></script>
   </body>
 </html>

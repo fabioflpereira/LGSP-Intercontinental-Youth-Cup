@@ -114,86 +114,20 @@
 
     <section class="containermain">
         <div class="tabs">
-            <button class="tab-button active" onclick="openTab('dia1')">2 DE ABRIL</button>
-            <button class="tab-button" onclick="openTab('dia2')">3 DE ABRIL</button>
-            <button class="tab-button" onclick="openTab('dia3')">4 DE ABRIL</button>
+            <button class="tab-button active" onclick="openTab('dia1')">ABRIL 2ND</button>
+            <button class="tab-button" onclick="openTab('dia2')">ABRIL 3RD</button>
+            <button class="tab-button" onclick="openTab('dia3')">ABRIL 4TH</button>
         </div>
 
-        <div id="dia1" class="tab-content active">
+        <div id="dia1" class="tab-content active"></div>
 
+      <!-- Dia 2 -->
 
+      <div id="dia2" class="tab-content"></div>
 
-        </div>
+      <!-- Dia 3 -->
 
-        <!-- Dia 2 -->
-
-        <div id="dia2" class="tab-content">
-
-
-            <div class="fixture expandable" onclick="toggleFixture(this)">
-                <div class="fixture-main">
-                    <span class="teamresult-left">SC Beira-Mar</span>
-                    <img src="/images/logos_equipas/beira-mar-seeklogo.png" class="teamresult-logo">
-                    <span class="timeresult">08:00</span>
-                    <img src="/images/logos_equipas/benfica.png" class="teamresult-logo">
-                    <span class="teamresult-right">SL Benfica</span> <span class="expand-hint">Clique para ver
-                        detalhes</span>
-                </div>
-
-                <!-- Hidden expandable content -->
-                <div class="fixture-details">
-                    <div class="goals">
-                        <h4>⚽ Goals</h4>
-                        <p><strong>Groundlink:</strong> Winston Zarate (46')</p>
-                        <p><strong>HF Hotels:</strong> Gonçalo Rocha (0:46', 8', 19' ,28' , 30'), Miguel Almeida
-                            (1',26'),
-                            Gustavo
-                            Gouveia (40'), Jorge Maia (45')</p>
-                    </div>
-
-                    <div class="motm">
-                        <h4>🏆 Man of the Match</h4>
-                        <img src="/images/MVP - Bruno Carvalho (KPMG)(1).jpg" alt="Man of the Match">
-                        <p>Gonçalo Rocha</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Dia 3 -->
-
-        <div id="dia3" class="tab-content">
-
-
-            <div class="fixture expandable" onclick="toggleFixture(this)">
-                <div class="fixture-main">
-                    <span class="teamresult-left">SC Beira-Mar</span>
-                    <img src="/images/logos_equipas/beira-mar-seeklogo.png" class="teamresult-logo">
-                    <span class="timeresult">08:00</span>
-                    <img src="/images/logos_equipas/benfica.png" class="teamresult-logo">
-                    <span class="teamresult-right">SL Benfica</span> <span class="expand-hint">Clique para ver
-                        detalhes</span>
-                </div>
-
-                <!-- Hidden expandable content -->
-                <div class="fixture-details">
-                    <div class="goals">
-                        <h4>⚽ Goals</h4>
-                        <p><strong>Groundlink:</strong> Winston Zarate (46')</p>
-                        <p><strong>HF Hotels:</strong> Gonçalo Rocha (0:46', 8', 19' ,28' , 30'), Miguel Almeida
-                            (1',26'),
-                            Gustavo
-                            Gouveia (40'), Jorge Maia (45')</p>
-                    </div>
-
-                    <div class="motm">
-                        <h4>🏆 Man of the Match</h4>
-                        <img src="/images/MVP - Bruno Carvalho (KPMG)(1).jpg" alt="Man of the Match">
-                        <p>Gonçalo Rocha</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <div id="dia3" class="tab-content"></div>
     </section>
 
     <!-- Footer -->
@@ -240,7 +174,10 @@
             <p>&copy; 2026 LGSP Intercontinental Youth Cup. All Rights Reserved.</p>
         </div>
     </footer>
-    <script type="module" src="scripts/api.js" defer></script>
+        <script src="/script.js"></script>
+
+    <script type="module" src="/scripts/front.js"></script>
+
 </body>
 
 </html>

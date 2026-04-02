@@ -430,6 +430,10 @@ async function loadAndRenderTeams(teamsListElement) {
   }
 }
 
+const formatTime = (dateStr) => {
+  return dateStr.substring(0, 16).replace("T", " ");
+};
+
 async function loadAndRenderGames(gamesListElement) {
   try {
     const data = await gameAPI.getAll();
@@ -454,7 +458,7 @@ async function loadAndRenderGames(gamesListElement) {
             <h3>Jogo J${game.n_jogo}</h3>
             ${adminButtons}
             <p>
-                  <strong>Data:</strong> ${new Date(game.date).toLocaleString("pt-PT")} | <strong>Estado:</strong> ${game.status}
+                  <strong>Data:</strong> ${formatTime(game.date)} | <strong>Estado:</strong> ${game.status}
                 </p>
                 <p>
                   <strong>Resultado:</strong> ${game.result ? `${game.result.homeScore} - ${game.result.awayScore}` : "N/A"} | <strong>MVP:</strong> ${game.mvp ? game.mvp.name : "N/A"} | <strong>Campo:</strong> ${game.field || "N/A"}
@@ -616,7 +620,7 @@ async function loadGameForEdit(gameId) {
     const n_jogoEl = document.getElementById("n_jogo");
     if (n_jogoEl) n_jogoEl.value = game.n_jogo;
     const dateEl = document.getElementById("date");
-    if (dateEl) dateEl.value = new Date(game.date).toLocaleString("pt-PT");
+    if (dateEl) dateEl.value = formatTime(game.date);
     const fieldEl = document.getElementById("field");
     if (fieldEl) fieldEl.value = game.field;
     if (mvpDropdown) await loadMvpDropdown(game._id, mvpDropdown);
@@ -823,11 +827,13 @@ document.addEventListener("DOMContentLoaded", async () => {
           return alert("As equipas têm de ser diferentes!");
         }
 
+        const clean = e.target.date.value + "Z";
+
         const gameData = {
           teams: [e.target.teamA.value, e.target.teamB.value],
           n_jogo: e.target.n_jogo.value,
           status: e.target.status.value,
-          date: new Date(e.target.date.value),
+          date: clean,
           field: e.target.field.value,
         };
 
@@ -970,13 +976,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         return alert("As equipas têm de ser diferentes!");
       }
 
+      const clean = document.getElementById("date")?.value + "Z";
+
       try {
         const updatedGame = {
           teams: [teamA.value, teamB.value],
           status: document.getElementById("status")?.value || "",
           field: document.getElementById("field")?.value || "",
           n_jogo: document.getElementById("n_jogo")?.value || "",
-          date: new Date(document.getElementById("date")?.value),
+          date: clean,
         };
 
         await gameAPI.update(gameId, updatedGame);

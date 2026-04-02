@@ -106,7 +106,7 @@ const buildFixtureHtml = async (game, idioma) => {
 
                     <div class="motm">
                         <h4>🏆 Homem do Jogo</h4>
-                        <img src="${game.mvp?.image || ""}" alt="Homem do Jogo">
+                        <img src="${game.mvp?.team.image || ""}" alt="Homem do Jogo">
                         <p>${game.mvp?.name || ""}</p>
                         <p>${game.mvp?.team.name || ""}</p>
                     </div>
@@ -136,7 +136,7 @@ const buildFixtureHtml = async (game, idioma) => {
 
                     <div class="motm">
                         <h4>🏆 Man of the Match</h4>
-                        <img src="${game.mvp?.image || ""}" alt="Man of the Match">
+                        <img src="${game.mvp?.team.image || ""}" alt="Man of the Match">
                         <p>${game.mvp?.name || ""}</p>
                         <p>${game.mvp?.team.name || ""}</p>
                     </div>
@@ -154,18 +154,6 @@ const renderFixturesByDate = async (games, dateString, idioma) => {
   );
 
   return fixtures.join("");
-};
-
-const formatDateTime = (date) => {
-  if (!date) return "";
-  const d = new Date(date);
-  return d.toLocaleString("pt-PT", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "4-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 };
 
 const formatTime = (dateStr) => {
@@ -377,7 +365,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const finalStageEl = document.getElementById("finalStageList");
     if (finalStageEl) finalStageEl.innerHTML = finalHtml;
   }
-  if (window.location.pathname.endsWith("/index.html")) {
+  if (
+    window.location.pathname.endsWith("/index.html") ||
+    window.location.pathname.endsWith("/")
+  ) {
     const dataGames = await gameAPI.getAll();
     const games = dataGames?.games ?? [];
     const dataTeams = await teamAPI.getAll();
@@ -505,7 +496,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const standingListEl = document.getElementById("standingList");
     if (standingListEl) standingListEl.innerHTML = htmlFinal; */
   }
-  if (window.location.pathname.endsWith("/index_en.html")) {
+  if (
+    window.location.pathname.endsWith("/index_en.html") ||
+    window.location.pathname.endsWith("/en")
+  ) {
     const dataGames = await gameAPI.getAll();
     const games = dataGames?.games ?? [];
     const dataTeams = await teamAPI.getAll();

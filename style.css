@@ -5,7 +5,6 @@ body {
   padding: 0;
   overflow-x: hidden;
   color: #05164d;
-
 }
 
 h3 {
@@ -14,17 +13,14 @@ h3 {
   font-weight: light;
 }
 
-
-
 /* Nav Bar principal */
-#mainav {
+.mainav {
   background-color: #05164d;
   display: flex;
   align-items: center;
   padding: 0 15px;
   z-index: 998;
   gap: 15px;
-  
 }
 
 .mainimg {
@@ -32,31 +28,28 @@ h3 {
   width: auto;
 }
 
-
-
-
 /* ========== Base Navigation ========== */
-#mainav ul {
+.mainav ul {
   display: flex;
   flex-wrap: wrap;
-  flex-grow: 1;            /* Pushes the nav items to the right */
+  flex-grow: 1; /* Pushes the nav items to the right */
   margin: 0;
   padding: 0;
   text-transform: uppercase;
 }
 
-#mainav li {
+.mainav li {
   position: relative;
   display: inline-block;
   margin: 0 15px 0 0;
   padding: 0;
 }
 
-#mainav li:last-child {
+.mainav li:last-child {
   margin-right: 0;
 }
 
-#mainav li > a {
+.mainav li > a {
   display: block;
   padding: 20px 0;
   text-align: center;
@@ -66,7 +59,7 @@ h3 {
 }
 
 /* ========== Dropdowns ========== */
-#mainav ul ul {
+.mainav ul ul {
   position: absolute;
   top: 100%;
   left: 0;
@@ -85,33 +78,37 @@ h3 {
   /* Hidden by default */
   visibility: hidden;
   opacity: 0;
-  transition: opacity 0.3s ease-in-out, visibility 0.3s;
+  transition:
+    opacity 0.3s ease-in-out,
+    visibility 0.3s;
   z-index: 9999;
 }
 
 /* Third-level submenu positioning */
-#mainav ul ul ul {
+.mainav ul ul ul {
   top: 0;
   left: 180px;
 }
 
 /* Dropdown items */
-#mainav ul ul li {
+.mainav ul ul li {
   width: 100%;
   margin: 0;
   text-align: left;
 }
 
-#mainav ul ul li > a {
+.mainav ul ul li > a {
   display: block;
   padding: 10px 15px;
   text-align: left;
   text-decoration: none;
   color: #05164d;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
-#mainav ul ul li > a:hover {
+.mainav ul ul li > a:hover {
   background-color: #e0e0e0;
   color: #05164d;
 }
@@ -119,44 +116,42 @@ h3 {
 /* ========== Interactions ========== */
 /* Hover Effect - Parent Menu */
 
-
 /* Base: ensure only top-level items are targeted */
-#mainav > ul > li > a {
-  position: relative;              /* needed for ::after positioning */
-  text-decoration: none;           /* we’ll draw our own underline */
+.mainav > ul > li > a {
+  position: relative; /* needed for ::after positioning */
+  text-decoration: none; /* we’ll draw our own underline */
 }
 
 /* The animated underline */
-#mainav > ul > li > a::after {
+.mainav > ul > li > a::after {
   content: "";
   position: absolute;
   left: 0;
-  right: 0;                        /* allows easy centering if needed */
-  bottom: 20px;                    /* adjust to sit nicely under your text */
-  height: 1px;                     /* underline thickness */
-  background-color: currentColor;  /* matches the link color */
-  transform: scaleX(0);            /* start hidden (collapsed) */
-  transform-origin: left center;   /* grow from left to right */
-  transition: transform 220ms ease;/* smooth animation */
+  right: 0; /* allows easy centering if needed */
+  bottom: 20px; /* adjust to sit nicely under your text */
+  height: 1px; /* underline thickness */
+  background-color: currentColor; /* matches the link color */
+  transform: scaleX(0); /* start hidden (collapsed) */
+  transform-origin: left center; /* grow from left to right */
+  transition: transform 220ms ease; /* smooth animation */
 }
 
 /* Hover/focus shows the underline */
-#mainav > ul > li:hover > a::after,
-#mainav > ul > li > a:focus-visible::after {
+.mainav > ul > li:hover > a::after,
+.mainav > ul > li > a:focus-visible::after {
   transform: scaleX(1);
 }
 
 /* Reveal direct child dropdown on hover */
-#mainav ul li:hover > ul {
+.mainav ul li:hover > ul {
   visibility: visible;
   opacity: 1;
 }
 
 /* ========== Exceptions ========== */
-#mainav .social li a::after {
+.mainav .social li a::after {
   content: none !important;
 }
-
 
 /* Hamburger Menu Styles */
 .hamburger-menu {
@@ -174,25 +169,20 @@ h3 {
   z-index: 9999;
 }
 
-.show-menu2{
+.show-menu2 {
   visibility: visible;
 }
-
 
 /* Corporate league */
 .corporateleague {
   height: 50px;
   width: auto;
-  
 }
-
 
 .corporateleague:hover {
   transform: scale(1.05);
   transition: transform 0.3s ease;
 }
-
-
 
 /* Language selector */
 .lang-selector {
@@ -243,32 +233,30 @@ h3 {
   display: block;
 }
 
-
-
 /* =========================
    HERO BASE
 ========================= */
 
-.lp-hero{
+.lp-hero {
   position: relative;
   background: #001941;
   color: #fff;
   overflow: hidden;
 }
 /* esconde os botões mas mantem funcional */
-.lp-hero input[type="radio"]{
+.lp-hero input[type="radio"] {
   position: absolute;
   opacity: 0;
 }
 
 /* Slides container */
-.lp-hero__slides{
+.lp-hero__slides {
   position: relative;
   height: clamp(70vh, 88vh, 90vh);
 }
 
 /* Slide */
-.lp-hero__slide{
+.lp-hero__slide {
   position: absolute;
   inset: 0;
   display: grid;
@@ -277,74 +265,79 @@ h3 {
   background-image: var(--bg);
   transform: translateX(100%);
   opacity: 0;
-  transition: transform .6s ease, opacity .6s ease;
+  transition:
+    transform 0.6s ease,
+    opacity 0.6s ease;
 }
 
 /* Overlay */
-.lp-hero__overlay{
+.lp-hero__overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(0,25,65,.35),
-    rgba(0,25,65,.75)
+    rgba(0, 25, 65, 0.35),
+    rgba(0, 25, 65, 0.75)
   );
 }
 
 /* Content */
-.lp-hero__content{
+.lp-hero__content {
   position: relative;
   z-index: 1;
   padding: 0px 15px 0px 15px;
   margin-bottom: 70px;
 }
 
-.lp-hero__eyebrow{
+.lp-hero__eyebrow {
   text-transform: uppercase;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
   font-weight: 700;
   color: #cfe3ff;
-  margin-block-end: .5rem;
+  margin-block-end: 0.5rem;
 }
 
-.lp-hero__title{
+.lp-hero__title {
   margin-left: 0;
   font-size: clamp(1.6rem, 4.8vw, 3.5rem);
   max-width: 100%;
-  margin-block: 0;           
+  margin-block: 0;
   margin-block-end: 1.75rem;
-
 }
 
-
-
 /* Actions */
-.lp-hero__actions{
+.lp-hero__actions {
   display: flex;
-  gap: .75rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
 }
 
-.btn{ display: inline-flex; 
-  align-items: center; 
-  justify-content: center; 
-  height: 2.75rem; 
-  padding-inline: 1rem; 
-  border-radius: .5rem; 
-  font-weight: 700; 
-  text-decoration: none; 
-  transition: transform .15s ease, 
-  box-shadow .15s ease;
-  margin-block-end: 4.5rem; } 
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.75rem;
+  padding-inline: 1rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  margin-block-end: 4.5rem;
+}
 
-  .btn--primary{ 
-    background:white; 
-    color: #001941; 
-    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25); } 
+.btn--primary {
+  background: white;
+  color: #001941;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25);
+}
 
-    .btn--ghost{ background: transparent; 
-      color: var(--lp-text); 
-      border: 2px solid rgba(255,255,255,.35); }
+.btn--ghost {
+  background: transparent;
+  color: var(--lp-text);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+}
 
 /* =========================
    SLIDER STATE (CRITICAL)
@@ -352,7 +345,7 @@ h3 {
 
 #lp-slide-1:checked ~ .lp-hero__slides .lp-hero__slide:nth-child(1),
 #lp-slide-2:checked ~ .lp-hero__slides .lp-hero__slide:nth-child(2),
-#lp-slide-3:checked ~ .lp-hero__slides .lp-hero__slide:nth-child(3){
+#lp-slide-3:checked ~ .lp-hero__slides .lp-hero__slide:nth-child(3) {
   transform: translateX(0);
   opacity: 1;
   z-index: 1;
@@ -362,7 +355,7 @@ h3 {
    LIGA-STYLE SELECTOR
 ========================= */
 
-.lp-hero__selector{
+.lp-hero__selector {
   position: absolute;
   left: 50%;
   bottom: clamp(1rem, 4vw, 2.5rem);
@@ -370,65 +363,65 @@ h3 {
   display: grid;
   grid-auto-flow: column;
   gap: 1rem;
-  padding: .75rem 1rem;
-  background: rgba(0,25,65,.65);
+  padding: 0.75rem 1rem;
+  background: rgba(0, 25, 65, 0.65);
   backdrop-filter: blur(6px);
-  border-radius: .75rem;
+  border-radius: 0.75rem;
   z-index: 2;
 }
 
-.lp-hero__selector-item{
+.lp-hero__selector-item {
   cursor: pointer;
   display: grid;
-  gap: .25rem;
+  gap: 0.25rem;
   min-width: 140px;
-  padding: .5rem .75rem;
+  padding: 0.5rem 0.75rem;
   border-left: 3px solid transparent;
   color: #cfe3ff;
-  transition: background .2s ease, border-color .2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
-.lp-hero__selector-item .eyebrow{
-  font-size: .65rem;
+.lp-hero__selector-item .eyebrow {
+  font-size: 0.65rem;
   text-transform: uppercase;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
 }
 
-.lp-hero__selector-item .title{
-  font-size: .9rem;
+.lp-hero__selector-item .title {
+  font-size: 0.9rem;
   font-weight: 700;
 }
 
 /* Active selector */
 #lp-slide-1:checked ~ .lp-hero__selector label:nth-child(1),
 #lp-slide-2:checked ~ .lp-hero__selector label:nth-child(2),
-#lp-slide-3:checked ~ .lp-hero__selector label:nth-child(3){
-  background: rgba(255,255,255,.08);
-  border-left-color: #89D4FE;
+#lp-slide-3:checked ~ .lp-hero__selector label:nth-child(3) {
+  background: rgba(255, 255, 255, 0.08);
+  border-left-color: #89d4fe;
   color: #fff;
 }
 
-
 /* Containers para manter do tamanho certo */
 
-.containermain  {
-  max-width: 80%; 
+.containermain {
+  max-width: 80%;
   margin: 0 auto;
   padding: 0;
   box-sizing: border-box;
   overflow: hidden;
-} 
+}
 
 .subcontainer {
   display: flex;
   flex-direction: row;
   width: 100%;
-  gap : 30px; 
+  gap: 30px;
   margin-bottom: 50px;
   padding: 0;
   box-sizing: border-box;
-} 
-
+}
 
 /* Partners */
 .partners-rail {
@@ -441,10 +434,8 @@ h3 {
   background-color: #f4f8ff;
   margin: 20px auto;
   box-sizing: border-box;
-  overflow: hidden;        /* ensures nothing bleeds outside */
-
+  overflow: hidden; /* ensures nothing bleeds outside */
 }
-
 
 #sponsor_title {
   color: #05164d;
@@ -455,19 +446,28 @@ h3 {
 .partners-rail #partnersimg {
   height: 100px;
   width: auto;
-  object-fit: contain;     /* keeps the logo inside */
+  object-fit: contain; /* keeps the logo inside */
   left: 0;
 }
 
 /* Buttons */
 .rail-btn {
-  width: 40px; height: 40px;
-  display: grid; place-items: center;
-  background: #ffffff; border: 1px solid #ddd; border-radius: 999px;
-  font-size: 24px; line-height: 1; color: #222;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  font-size: 24px;
+  line-height: 1;
+  color: #222;
   cursor: pointer;
 }
-.rail-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.rail-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 
 /* Viewport always matches container’s height */
 .rail-viewport {
@@ -480,23 +480,23 @@ h3 {
   align-items: center;
   transition: transform 300ms ease;
   padding: 0px;
-
 }
 
 /* Items are fixed-height and auto-width */
 .rail-item {
   flex: 0 0 auto;
   height: 100%;
-  display: flex;           /* center the card vertically */
+  display: flex; /* center the card vertically */
   align-items: center;
 }
 
 /* Card fills the item’s height */
 .partner-card {
-  display: grid; place-items: center;
-  background: #f4f8ff; 
-  height: 80px;            /* inner card smaller than 100px rail */
-  width: 150px;            /* you can adjust card width */
+  display: grid;
+  place-items: center;
+  background: #f4f8ff;
+  height: 80px; /* inner card smaller than 100px rail */
+  width: 150px; /* you can adjust card width */
   box-sizing: border-box;
 }
 
@@ -506,8 +506,6 @@ h3 {
   max-height: 80px;
   object-fit: contain;
 }
-
-
 
 .teamtext {
   font-size: 5rem;
@@ -520,15 +518,14 @@ h3 {
   /* Ensures the element spans across the page for centering */
 }
 
-
 /* =========================
    Página about us
 ========================= */
-#heroinfo{
- display: flex;
+#heroinfo {
+  display: flex;
   height: 300px;
 }
-#heroinfo img{
+#heroinfo img {
   width: 100%;
   height: auto;
   object-fit: cover;
@@ -544,7 +541,6 @@ h3 {
   gap: 10px;
 }
 
-
 /* Hoverable container with background image */
 .clubcontainer {
   width: 70%;
@@ -559,7 +555,7 @@ h3 {
   height: 120px;
   border-radius: 10px;
   background-color: #f4f8ff;
-  background-image: url('/images/Equipas/2025/botao.png');
+  background-image: url("/images/Equipas/2025/botao.png");
   /* New background image */
   background-size: cover;
   /* Ensure the image covers the container */
@@ -568,9 +564,10 @@ h3 {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
-
 
 .hover-container .fa-arrow-right {
   position: absolute;
@@ -582,7 +579,9 @@ h3 {
   /* Adjust the size of the arrow */
   color: #333;
   /* Arrow color */
-  transition: transform 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
 }
 
 .hover-container:hover .fa-arrow-right {
@@ -592,7 +591,6 @@ h3 {
   /* Optional: Change color on hover */
 }
 
-
 .hover-container:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
@@ -600,7 +598,7 @@ h3 {
 
 /* Adding a colored line on hover */
 .hover-container::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -627,8 +625,6 @@ h3 {
   border-radius: 5px;
 }
 
-
-
 /* Text at the bottom of the container */
 .container-text {
   position: absolute;
@@ -639,17 +635,6 @@ h3 {
   color: #05164d;
   font-weight: bold;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 /* ========== Classificação ========== */
 /* Tabs da classificação*/
@@ -696,7 +681,6 @@ h3 {
   grid-template-columns: repeat(2, minmax(300px, 1fr));
   gap: 20px;
   margin-bottom: 20px;
-
 }
 
 /* Optional: style for each group box */
@@ -704,7 +688,7 @@ h3 {
   background-color: #f4f8ff;
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .group h2 {
@@ -718,10 +702,10 @@ h3 {
   border-collapse: collapse;
 }
 
-.group-table th, .group-table td {
+.group-table th,
+.group-table td {
   padding: 8px;
   text-align: left;
-
 }
 
 /* Zebra striping */
@@ -747,18 +731,18 @@ h3 {
   background-color: #f4f8ff;
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   width: 90%;
   border-collapse: collapse;
   margin-bottom: 20px;
   min-width: 300px;
-margin-right: 30px;
+  margin-right: 30px;
 }
 
-.standings-table th, .standings-table td {
+.standings-table th,
+.standings-table td {
   padding: 8px;
   text-align: left;
-
 }
 
 .standings-table tbody tr:nth-child(odd) {
@@ -768,7 +752,6 @@ margin-right: 30px;
 .standings-table tbody tr:nth-child(even) {
   background-color: #f4f8ff;
 }
-
 
 /* Team column with logo */
 .teamtable {
@@ -784,7 +767,6 @@ margin-right: 30px;
   object-fit: contain;
 }
 
-
 /* Fixtures */
 .containerfixture {
   width: 30%;
@@ -796,17 +778,14 @@ margin-right: 30px;
   margin: 50px 0 0 0;
 }
 
-
 .containerfixture :nth-child(5) {
   text-align: right;
   font-weight: bold;
-
 }
 
 .containerfixture :first-child {
   text-align: left;
   font-weight: bold;
-
 }
 #titles {
   height: 50px;
@@ -816,8 +795,6 @@ margin-right: 30px;
   justify-content: flex-start;
   margin-bottom: 20px;
   margin-top: 20px;
-
-  
 }
 
 .fixture {
@@ -833,10 +810,6 @@ margin-right: 30px;
   border-bottom: 1px solid #f0f0f0;
   /* Linha de separação logo no início */
 }
-
-
-
-
 
 .fixture img {
   width: 30px;
@@ -857,7 +830,7 @@ margin-right: 30px;
 
 .time {
   font-size: 12px;
-  background:#05164d;
+  background: #05164d;
   min-width: fit-content;
   color: #ffffff;
   padding: 3px 15px;
@@ -870,12 +843,9 @@ margin-right: 30px;
   margin: 0;
 }
 
-
-
 .fixture:hover {
-  background-color:#cfe3ff;
+  background-color: #cfe3ff;
 }
-
 
 /* =========================
    Melhores marcadores
@@ -891,7 +861,6 @@ margin-right: 30px;
   gap: 50px;
 }
 
-
 /* MELHORES MARCADORES*/
 .golos-card {
   width: 250px;
@@ -900,7 +869,7 @@ margin-right: 30px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-.golos-card:hover{
+.golos-card:hover {
   transform: scale(1.1);
   transition: transform 0.3s ease;
 }
@@ -938,7 +907,6 @@ margin-right: 30px;
   max-height: 160px;
   z-index: 2;
   position: relative;
-  
 }
 
 .golos-number {
@@ -948,7 +916,7 @@ margin-right: 30px;
   font-size: 80px;
   color: rgb(255, 255, 255);
   font-weight: bold;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* List */
@@ -979,13 +947,9 @@ margin-right: 30px;
 }
 
 .golos-score {
- font-size: 12px;
+  font-size: 12px;
   color: gray;
 }
-
-
-
-
 
 /* CONTEÚDO */
 .content {
@@ -1034,56 +998,50 @@ margin-right: 30px;
    Página teams
 ========================= */
 .containermainclub {
-  max-width: 50%; 
+  max-width: 50%;
   margin: 0 auto;
   margin-top: 50px;
   margin-bottom: 50px;
-
-} 
-
-
-/* Formulário */
-* 
-
-
-.form-wrapper {
-    max-width: 500px;
-    margin: 50px auto;
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
+/* Formulário */
+* .form-wrapper {
+  max-width: 500px;
+  margin: 50px auto;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
 label {
-    display: block;
-    font-weight: bold;
+  display: block;
+  font-weight: bold;
 }
 
 input,
 select,
 textarea {
-    width: 100%;
-    margin-top: 6px;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 button {
-    width: 100%;
-    background: #05164d;
-    color: white;
-    border: none;
-    font-size: 16px;
-    border-radius: 4px;
-    cursor: pointer;
+  width: 100%;
+  background: #05164d;
+  color: white;
+  border: none;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 button:hover {
-    background: #084298;
+  background: #084298;
 }
 
 /* Resultados */
@@ -1103,26 +1061,21 @@ button:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-    
 }
-
 
 .fixture-main {
   display: grid;
-  grid-template-columns: 
-    minmax(80px, 1fr)  /* Team A name */
-    80px               /* Logo A */
-    100px              /* Result */
-    80px               /* Logo B */
-    minmax(80px, 1fr);/* Team B name */
+  grid-template-columns:
+    minmax(80px, 1fr) /* Team A name */
+    80px /* Logo A */
+    100px /* Result */
+    80px /* Logo B */
+    minmax(80px, 1fr); /* Team B name */
   align-items: center;
   justify-items: center;
   padding: 12px 0;
   border-bottom: 1px solid #f0f0f0;
-
 }
-
-
 
 .fixture-main :nth-child(5) {
   justify-self: left;
@@ -1137,7 +1090,7 @@ button:hover {
 .timeresult {
   display: flex;
   font-size: 20px;
-  background:#05164d;
+  background: #05164d;
   color: #ffffff;
   border-radius: 5px;
   font-weight: bold;
@@ -1158,73 +1111,62 @@ button:hover {
   text-decoration: underline;
 }
 
-
-
 /* Hide when open */
 .expandable.open .expand-hint {
   display: none;
 }
 
-
-
 /* Hidden by default */
 .fixture-details {
   display: none;
   max-width: 90%;
-  text-align:justify;
+  text-align: justify;
   font-size: small;
 }
 
-
 /* Show when open */
 .expandable.open .fixture-details {
-    display: flex;
-    justify-content: space-between;
-    gap: 30px;
-    
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
 }
 
 /* Goals */
 .goals p {
-    margin: 5px 0;
+  margin: 5px 0;
 }
 
 /* Man of the Match */
 .motm {
-    text-align: center;
+  text-align: center;
 }
 
 .motm img {
-    width: auto;
-    height: 100px;
-    object-fit: contain;
-    margin-bottom: 5px;
+  width: auto;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 5px;
 }
 
-
 .contact-info {
-    font-size: small;
-    color: #777;
-    margin-top: 10px;
-align-items: flex-start;
+  font-size: small;
+  color: #777;
+  margin-top: 10px;
+  align-items: flex-start;
 }
 
 /* FOOTER */
 footer {
-  
   background-color: #05164d;
   color: #fff;
   padding: 20px 10%;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
- 
 }
 
 footer .footer-section {
   flex: 1 1 30%;
-  
-
 }
 
 footer .footer-section h4 {
@@ -1264,297 +1206,267 @@ footer .social-media a {
   transition: color 0.3s;
 }
 
-
 /* Página videos*/
 
-.ytvault-grid-zone{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-gap:28px;
-padding:30px;
-background-color: #f4f8ff;
+.ytvault-grid-zone {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 28px;
+  padding: 30px;
+  background-color: #f4f8ff;
 }
 
-.ytvault-card-unit{
-background:#f4f8ff;
-border-radius:10px;
-overflow:hidden;
-text-decoration:none;
-color:#05164d;
-
+.ytvault-card-unit {
+  background: #f4f8ff;
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none;
+  color: #05164d;
 }
 
-.ytvault-card-unit:hover{
-background-color:#cfe3ff;
+.ytvault-card-unit:hover {
+  background-color: #cfe3ff;
 }
 
-.ytvault-thumb-box{
-height:300px;
-overflow:hidden;
+.ytvault-thumb-box {
+  height: 300px;
+  overflow: hidden;
 }
 
-.ytvault-thumb-box img{
-width:100%;
-height:100%;
-object-fit:cover;
+.ytvault-thumb-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.ytvault-text-box{
-padding:14px;
+.ytvault-text-box {
+  padding: 14px;
 }
 
-.ytvault-date-tag{
-font-size:13px;
-color:#777;
-margin-bottom:6px;
+.ytvault-date-tag {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 6px;
 }
 
-.ytvault-title-tag{
-font-size:16px;
-font-weight:600;
-line-height:1.35;
+.ytvault-title-tag {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
 }
-
-
-
 
 /* Small laptops */
 @media (max-width: 1199px) {
+  .group {
+    font-size: 10px;
+    padding: 0;
+  }
 
-.group{
-  font-size: 10px;
-  padding:0;
-}
+  .containerfixture {
+    width: 30%;
+  }
 
+  .fixture {
+    background-color: #f4f8ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-.containerfixture {
-  width: 30%;
-}
+    padding: 5px 5px;
+    /* Aumentar o padding para mais espaçamento */
+    gap: 2vw;
+    /* Aumentar o gap entre os elementos */
+    border-bottom: 1px solid #f0f0f0;
+    /* Linha de separação logo no início */
+  }
 
+  .fixture img {
+    width: 20px;
+    /* Aumentei o tamanho das logos para 30px */
+    height: 20px;
+    /* Garantir que a altura das logos seja consistente */
+    margin: 0;
+    object-fit: contain;
+    /* Garantir que as logos sejam dimensionadas corretamente */
+  }
 
-.fixture {
-  background-color: #f4f8ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  /* Nome das equipes com a margem */
+  .team {
+    font-size: 10px;
+    padding: 0;
+    width: 150px;
+  }
 
-  padding: 5px 5px;
-  /* Aumentar o padding para mais espaçamento */
-  gap: 2vw;
-  /* Aumentar o gap entre os elementos */
-  border-bottom: 1px solid #f0f0f0;
-  /* Linha de separação logo no início */
-}
+  .time {
+    font-size: 12px;
+    background: #05164d;
+    min-width: fit-content;
+    color: #ffffff;
+    padding: 3px 15px;
+    /* Aumentar padding para mais espaçamento */
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    margin: 0;
+  }
 
+  /* === Container clubes responsivo === */
 
+  .clubcontainer {
+    width: 100%;
+    padding: 0;
+    border-radius: 8px;
+    text-align: left;
+    margin: 50px 0 0 0;
+  }
 
+  /* Grid for 2 containers per row */
+  .container-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px; /* space between containers */
+  }
 
+  /* Each container */
+  .hover-container {
+    position: relative;
+    width: 100%;
+    height: 70px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
 
-.fixture img {
-  width: 20px;
-  /* Aumentei o tamanho das logos para 30px */
-  height: 20px;
-  /* Garantir que a altura das logos seja consistente */
-  margin: 0;
-  object-fit: contain;
-  /* Garantir que as logos sejam dimensionadas corretamente */
-}
+  /* Image inside the container */
+  .container-image {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    margin-right: 10px;
+  }
 
-/* Nome das equipes com a margem */
-.team {
-  font-size: 10px;
-  padding: 0;
-  width: 150px;
-}
+  /* Text */
+  .container-text {
+    font-size: 12px;
+    line-height: 1.2;
+  }
 
-.time {
-  font-size: 12px;
-  background:#05164d;
-  min-width: fit-content;
-  color: #ffffff;
-  padding: 3px 15px;
-  /* Aumentar padding para mais espaçamento */
-  border-radius: 5px;
-  font-weight: bold;
-  text-align: center;
-  display: inline-flex;
-  justify-content: center;
-  margin: 0;
-}
+  /* Text at the bottom of the container */
+  .container-text {
+    font-size: smaller;
+  }
 
+  /* MOTM */
+  .successcases {
+    margin: 10px 0 0 0;
+  }
+  .casesgallery {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+  #heroinfo {
+    display: flex;
+    height: 200px;
+  }
 
-/* === Container clubes responsivo === */
+  .expandable {
+    width: 90%;
+    margin: 10px auto;
+    background: #ffffff;
+  }
+  .fixture-main {
+    grid-template-columns:
+      minmax(60px, 1fr) /* Team A name */
+      60px /* Logo A */
+      70px /* Result */
+      60px /* Logo B */
+      minmax(60px, 1fr); /* Team B name */
+  }
 
-.clubcontainer {
-  width: 100%;
-  padding: 0;
-  border-radius: 8px;
-  text-align: left;
-  margin: 50px 0 0 0;
-}
+  .fixture-main :nth-child(5) {
+    justify-self: left;
+    font-weight: bold;
+    font-size: smaller;
+  }
 
-/* Grid for 2 containers per row */
-.container-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px; /* space between containers */
-}
+  .fixture-main :first-child {
+    justify-self: right;
+    font-weight: bold;
+    font-size: smaller;
+  }
 
-/* Each container */
-.hover-container {
-  position: relative;
-  width: 100%;
-  height: 70px;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  border-radius: 8px;
-  box-sizing: border-box;
-}
+  .timeresult {
+    font-size: 18px;
+    border-radius: 6px;
+    padding: 4px 5px;
+  }
 
-/* Image inside the container */
-.container-image {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
-  margin-right: 10px;
-}
+  .expand-hint {
+    display: flex;
+    font-size: 0.6rem;
+    color: #777;
+    white-space: nowrap;
+  }
 
-/* Text */
-.container-text {
-  font-size: 12px;
-  line-height: 1.2;
-}
+  /* Hide when open */
+  .expandable.open .expand-hint {
+    display: none;
+  }
 
+  /* Hidden by default */
+  .fixture-details {
+    display: none;
+    max-width: 90%;
+    text-align: justify;
+    font-size: smaller;
+  }
 
-/* Text at the bottom of the container */
-.container-text {
-  font-size: smaller;
-
-}
-
-/* MOTM */
-.successcases {
-  margin: 10px 0 0 0;
-  
-}
-.casesgallery {
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-}
-#heroinfo{
- display: flex;
-  height: 200px;
-}
-
-
-.expandable {
-  width: 90%;
-  margin: 10px auto;
-  background: #ffffff;
-
-}
-.fixture-main {
-  grid-template-columns: 
-    minmax(60px, 1fr)  /* Team A name */
-    60px               /* Logo A */
-    70px              /* Result */
-    60px               /* Logo B */
-    minmax(60px, 1fr);/* Team B name */
-
-}
-
-
-
-.fixture-main :nth-child(5) {
-  justify-self: left;
-  font-weight: bold;
-  font-size: smaller;
-}
-
-.fixture-main :first-child {
-  justify-self: right;
-  font-weight: bold;
-  font-size: smaller;
-}
-
-.timeresult {
-  font-size: 18px;
-  border-radius: 6px;
-  padding: 4px 5px;
-
-}
-
-.expand-hint {
-  display: flex;
-  font-size: 0.6rem;
-  color: #777;
-  white-space: nowrap;
-
-}
-
-
-
-/* Hide when open */
-.expandable.open .expand-hint {
-  display: none;
-}
-
-
-
-/* Hidden by default */
-.fixture-details {
-  display: none;
-  max-width: 90%;
-  text-align:justify;
-  font-size: smaller;
-}
-
-
-/* Show when open */
-.expandable.open .fixture-details {
+  /* Show when open */
+  .expandable.open .fixture-details {
     display: flex;
     justify-content: space-between;
     gap: 30px;
-    
-}
+  }
 
-/* Goals */
-.goals p {
+  /* Goals */
+  .goals p {
     margin: 6px 0;
     font-size: smaller;
-}
+  }
 
-/* Man of the Match */
-.motm {
+  /* Man of the Match */
+  .motm {
     text-align: center;
     font-size: smaller;
-}
+  }
 
-.motm img {
+  .motm img {
     width: auto;
     height: 80px;
     object-fit: contain;
     margin-bottom: 3px;
-}
+  }
 }
 
 /* Phones */
-@media (max-width: 767px) {  
-  
+@media (max-width: 767px) {
   /* ======== Menu Responsivo ========= */
-  #mainav {
+  .mainav {
     justify-content: space-around;
     height: 5rem;
   }
 
-   .hamburger-menu {
-    display:flex;
+  .hamburger-menu {
+    display: flex;
     z-index: 999;
   }
 
-  #mainav #main-nav-list {
+  .mainav #main-nav-list {
     display: none;
     position: absolute;
     top: 0;
@@ -1567,90 +1479,83 @@ line-height:1.35;
     overflow: hidden;
   }
 
-  #mainav #main-nav-list li{
+  .mainav #main-nav-list li {
     left: 70px;
   }
 
-  #mainav #main-nav-list li li{
+  .mainav #main-nav-list li li {
     left: 0px;
   }
 
-  #mainav #main-nav-list li a {
+  .mainav #main-nav-list li a {
     width: max-content;
   }
 
-
-  #mainav #main-nav-list.show-menu {
+  .mainav #main-nav-list.show-menu {
     display: flex;
   }
 
- 
-  #mainav li {
+  .mainav li {
     font-size: 1rem;
     /* Further reduce font size for mobile screens */
   }
 
-  #mainav ul ul {
-  position: absolute; 
-  top: 70%;
-  width: 150px;
-}
+  .mainav ul ul {
+    position: absolute;
+    top: 70%;
+    width: 150px;
+  }
 
-#mainav ul ul ul {
-  top: 0;
-  left: 150px;
-}
+  .mainav ul ul ul {
+    top: 0;
+    left: 150px;
+  }
 
-  #mainav ul li {
-  font-size: small;
-}
+  .mainav ul li {
+    font-size: small;
+  }
 
+  .corporateleague {
+    display: none;
+  }
 
-.corporateleague {
-  display: none;
-}
+  /* ============================= */
 
-/* ============================= */
-
-
-/* ==== Hero Section Responsivo === */
- .lp-hero__slide{
-  padding-bottom: 1.5rem; /* reserve space for selector */
-  
-}
-.lp-hero__content{
+  /* ==== Hero Section Responsivo === */
+  .lp-hero__slide {
+    padding-bottom: 1.5rem; /* reserve space for selector */
+  }
+  .lp-hero__content {
     padding-bottom: 6.5rem; /* extra breathing room */
     margin-bottom: 20px;
     margin-left: 30px; /* alinha com o menu debaixo */
   }
-.lp-hero__selector{
+  .lp-hero__selector {
     overflow-x: auto;
     max-width: 92vw;
   }
- 
 
-  .btn{
+  .btn {
     margin-block-end: 0rem;
     max-width: 50vw;
   }
 
   /* Hero selector */
-.lp-hero__selector-item{
+  .lp-hero__selector-item {
+    min-width: 80px;
+  }
+  .lp-hero__selector-item .eyebrow {
+    font-size: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
 
-  min-width: 80px;
-}
-  .lp-hero__selector-item .eyebrow{
-  font-size: .50rem;
-  text-transform: uppercase;
-  letter-spacing: .07em;
-}
+  .lp-hero__selector-item .title {
+    font-size: 0.8rem;
+    font-weight: 650;
+  }
 
-.lp-hero__selector-item .title{
-  font-size: .8rem;
-  font-weight: 650;
-}
-
- .with-image,
+  .with-image,
   .with-image.reverse {
     flex-direction: column;
   }
@@ -1663,225 +1568,208 @@ line-height:1.35;
     font-size: 2rem;
   }
 
-/* ============================= */
+  /* ============================= */
 
-/* === Sponsors Responsivos === */
-  .partners-rail { width: 100%; height: 80px; }
-  .partner-card { width: 60px; height: auto; }
+  /* === Sponsors Responsivos === */
+  .partners-rail {
+    width: 100%;
+    height: 80px;
+  }
+  .partner-card {
+    width: 60px;
+    height: auto;
+  }
   .partners-rail #partnersimg {
-  height: 40px;
-  width: 20px;
-  object-fit: contain;     /* keeps the logo inside */
-  left: 0;
-}
+    height: 40px;
+    width: 20px;
+    object-fit: contain; /* keeps the logo inside */
+    left: 0;
+  }
 
+  /* Buttons */
+  .rail-btn {
+    width: 20px;
+    height: 20px;
+  }
 
+  /* ============================= */
 
-/* Buttons */
-.rail-btn {
-  width: 20px; height: 20px;
+  /* Container passa a column */
+  .subcontainer {
+    display: flex;
+    flex-direction: column;
+  }
+  .containerfixture {
+    width: 100%;
+  }
 
-}
+  /* === Container clubes responsivo === */
 
-/* ============================= */
+  .clubcontainer {
+    width: 100%;
+    padding: 0;
+    border-radius: 8px;
+    text-align: left;
+    margin: 50px 0 0 0;
+  }
 
+  /* Grid for 2 containers per row */
+  .container-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px; /* space between containers */
+  }
 
-/* Container passa a column */
-.subcontainer {
-  display: flex;
-  flex-direction: column;
-} 
-.containerfixture {
-  width: 100%;
-}
+  /* Each container */
+  .hover-container {
+    position: relative;
+    width: 100%;
+    height: 70px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
 
-/* === Container clubes responsivo === */
+  /* Image inside the container */
+  .container-image {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    margin-right: 10px;
+  }
 
-.clubcontainer {
-  width: 100%;
-  padding: 0;
-  border-radius: 8px;
-  text-align: left;
-  margin: 50px 0 0 0;
-}
+  /* Text */
+  .container-text {
+    font-size: 12px;
+    line-height: 1.2;
+  }
 
-/* Grid for 2 containers per row */
-.container-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px; /* space between containers */
-}
+  /* Text at the bottom of the container */
+  .container-text {
+    font-size: smaller;
+  }
 
-/* Each container */
-.hover-container {
-  position: relative;
-  width: 100%;
-  height: 70px;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  border-radius: 8px;
-  box-sizing: border-box;
-}
+  /* MOTM */
+  .successcases {
+    margin: 10px 0 0 0;
+  }
+  .casesgallery {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+  #heroinfo {
+    display: flex;
+    height: 200px;
+  }
 
-/* Image inside the container */
-.container-image {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
-  margin-right: 10px;
-}
-
-/* Text */
-.container-text {
-  font-size: 12px;
-  line-height: 1.2;
-}
-
-
-/* Text at the bottom of the container */
-.container-text {
-  font-size: smaller;
-
-}
-
-/* MOTM */
-.successcases {
-  margin: 10px 0 0 0;
-  
-}
-.casesgallery {
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-}
-#heroinfo{
- display: flex;
-  height: 200px;
-}
-
-/* =========================
+  /* =========================
    EXPANDABLE FIXTURE (NEW)
    ========================= */
 
-.expandable {
-  width: 90%;
-  margin: 10px auto;
-  background: #ffffff;
+  .expandable {
+    width: 90%;
+    margin: 10px auto;
+    background: #ffffff;
+  }
 
-}
+  .fixture-main {
+    grid-template-columns:
+      minmax(60px, 1fr) /* Team A name */
+      60px /* Logo A */
+      70px /* Result */
+      60px /* Logo B */
+      minmax(60px, 1fr); /* Team B name */
+  }
 
+  .fixture-main :nth-child(5) {
+    justify-self: left;
+    font-weight: bold;
+    font-size: smaller;
+  }
 
-.fixture-main {
-  grid-template-columns: 
-    minmax(60px, 1fr)  /* Team A name */
-    60px               /* Logo A */
-    70px              /* Result */
-    60px               /* Logo B */
-    minmax(60px, 1fr);/* Team B name */
+  .fixture-main :first-child {
+    justify-self: right;
+    font-weight: bold;
+    font-size: smaller;
+  }
 
-}
+  .timeresult {
+    font-size: 18px;
+    border-radius: 6px;
+    padding: 4px 5px;
+  }
 
+  .expand-hint {
+    display: flex;
+    font-size: 0.6rem;
+    color: #777;
+    white-space: nowrap;
+  }
 
+  /* Hide when open */
+  .expandable.open .expand-hint {
+    display: none;
+  }
 
-.fixture-main :nth-child(5) {
-  justify-self: left;
-  font-weight: bold;
-  font-size: smaller;
-}
+  /* Hidden by default */
+  .fixture-details {
+    display: none;
+    max-width: 90%;
+    text-align: justify;
+    font-size: smaller;
+  }
 
-.fixture-main :first-child {
-  justify-self: right;
-  font-weight: bold;
-  font-size: smaller;
-}
-
-.timeresult {
-  font-size: 18px;
-  border-radius: 6px;
-  padding: 4px 5px;
-
-}
-
-.expand-hint {
-  display: flex;
-  font-size: 0.6rem;
-  color: #777;
-  white-space: nowrap;
-
-}
-
-
-
-/* Hide when open */
-.expandable.open .expand-hint {
-  display: none;
-}
-
-
-
-/* Hidden by default */
-.fixture-details {
-  display: none;
-  max-width: 90%;
-  text-align:justify;
-  font-size: smaller;
-}
-
-
-/* Show when open */
-.expandable.open .fixture-details {
+  /* Show when open */
+  .expandable.open .fixture-details {
     display: flex;
     justify-content: space-between;
     gap: 30px;
-    
-}
+  }
 
-/* Goals */
-.goals p {
+  /* Goals */
+  .goals p {
     margin: 6px 0;
     font-size: smaller;
-}
+  }
 
-/* Man of the Match */
-.motm {
+  /* Man of the Match */
+  .motm {
     text-align: center;
     font-size: smaller;
-}
+  }
 
-.motm img {
+  .motm img {
     width: auto;
     height: 80px;
     object-fit: contain;
     margin-bottom: 3px;
+  }
+  /* CSS da fase de grupos*/
+  /* Grid for 2 groups per row */
+  .groups-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+  }
 }
-/* CSS da fase de grupos*/
-/* Grid for 2 groups per row */
-.groups-grid {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(300px, 1fr));
-  gap: 20px;
-  margin-bottom: 20px;
 
-}
-}
-
-
-
-
-@media (max-width: 480px) { 
+@media (max-width: 480px) {
   /* ======== Menu Responsivo ========= */
-  #mainav {
+  .mainav {
     justify-content: space-around;
     height: 5rem;
   }
 
-   .hamburger-menu {
-    display:flex;
+  .hamburger-menu {
+    display: flex;
     z-index: 999;
   }
 
-  #mainav #main-nav-list {
+  .mainav #main-nav-list {
     display: none;
     position: absolute;
     top: 0;
@@ -1894,90 +1782,83 @@ line-height:1.35;
     overflow: hidden;
   }
 
-  #mainav #main-nav-list li{
+  .mainav #main-nav-list li {
     left: 70px;
   }
 
-  #mainav #main-nav-list li li{
+  .mainav #main-nav-list li li {
     left: 0px;
   }
 
-  #mainav #main-nav-list li a {
+  .mainav #main-nav-list li a {
     width: max-content;
   }
 
-
-  #mainav #main-nav-list.show-menu {
+  .mainav #main-nav-list.show-menu {
     display: flex;
   }
 
- 
-  #mainav li {
+  .mainav li {
     font-size: 1rem;
     /* Further reduce font size for mobile screens */
   }
 
-  #mainav ul ul {
-  position: absolute; 
-  top: 70%;
-  width: 150px;
-}
+  .mainav ul ul {
+    position: absolute;
+    top: 70%;
+    width: 150px;
+  }
 
-#mainav ul ul ul {
-  top: 0;
-  left: 150px;
-}
+  .mainav ul ul ul {
+    top: 0;
+    left: 150px;
+  }
 
-  #mainav ul li {
-  font-size: small;
-}
+  .mainav ul li {
+    font-size: small;
+  }
 
+  .corporateleague {
+    display: none;
+  }
 
-.corporateleague {
-  display: none;
-}
+  /* ============================= */
 
-/* ============================= */
-
-
-/* ==== Hero Section Responsivo === */
- .lp-hero__slide{
-  padding-bottom: 1.5rem; /* reserve space for selector */
-  
-}
-.lp-hero__content{
+  /* ==== Hero Section Responsivo === */
+  .lp-hero__slide {
+    padding-bottom: 1.5rem; /* reserve space for selector */
+  }
+  .lp-hero__content {
     padding-bottom: 6.5rem; /* extra breathing room */
     margin-bottom: 0px;
     margin-left: 0px; /* alinha com o menu debaixo */
   }
-.lp-hero__selector{
+  .lp-hero__selector {
     overflow-x: auto;
     max-width: 92vw;
   }
- 
 
-  .btn{
+  .btn {
     margin-block-end: 0rem;
     max-width: 50vw;
   }
 
   /* Hero selector */
-.lp-hero__selector-item{
+  .lp-hero__selector-item {
+    min-width: 80px;
+  }
+  .lp-hero__selector-item .eyebrow {
+    font-size: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
 
-  min-width: 80px;
-}
-  .lp-hero__selector-item .eyebrow{
-  font-size: .50rem;
-  text-transform: uppercase;
-  letter-spacing: .07em;
-}
+  .lp-hero__selector-item .title {
+    font-size: 0.8rem;
+    font-weight: 650;
+  }
 
-.lp-hero__selector-item .title{
-  font-size: .8rem;
-  font-weight: 650;
-}
-
- .with-image,
+  .with-image,
   .with-image.reverse {
     flex-direction: column;
   }
@@ -1990,266 +1871,230 @@ line-height:1.35;
     font-size: 2rem;
   }
 
-/* ============================= */
+  /* ============================= */
 
-/* === Sponsors Responsivos === */
-  .partners-rail { width: 100%; height: 60px; }
-  .partner-card { width: 80px; height: 50px; }
+  /* === Sponsors Responsivos === */
+  .partners-rail {
+    width: 100%;
+    height: 60px;
+  }
+  .partner-card {
+    width: 80px;
+    height: 50px;
+  }
   .partners-rail #partnersimg {
-  height: 60px;
-  width: auto;
-  object-fit: contain;     /* keeps the logo inside */
-  left: 0;
-}
+    height: 60px;
+    width: auto;
+    object-fit: contain; /* keeps the logo inside */
+    left: 0;
+  }
 
+  .partners-rail img {
+    height: 40px;
+    width: 40px;
+    object-fit: contain; /* keeps the logo inside */
+    left: 0;
+  }
 
-.partners-rail img {
-  height: 40px;
-  width: 40px;
-  object-fit: contain;     /* keeps the logo inside */
-  left: 0;
-}
+  /* Buttons */
+  .rail-btn {
+    width: 20px;
+    height: 20px;
+    font-size: small;
+  }
 
-/* Buttons */
-.rail-btn {
-  width: 20px; height: 20px;
-font-size: small;
-}
+  /* ============================= */
 
+  /* Container passa a column */
+  .subcontainer {
+    display: flex;
+    flex-direction: column;
+  }
+  .containerfixture {
+    width: 100%;
+  }
 
+  /* === Container clubes responsivo === */
 
-/* ============================= */
+  .clubcontainer {
+    width: 100%;
+    padding: 0;
+    border-radius: 8px;
+    text-align: left;
+    margin: 50px 0 0 0;
+  }
 
+  /* Grid for 2 containers per row */
+  .container-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px; /* space between containers */
+  }
 
-/* Container passa a column */
-.subcontainer {
-  display: flex;
-  flex-direction: column;
-} 
-.containerfixture {
-  width: 100%;
-}
+  /* Each container */
+  .hover-container {
+    position: relative;
+    width: 100%;
+    height: 70px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
 
-/* === Container clubes responsivo === */
+  /* Image inside the container */
+  .container-image {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    margin-right: 10px;
+  }
 
-.clubcontainer {
-  width: 100%;
-  padding: 0;
-  border-radius: 8px;
-  text-align: left;
-  margin: 50px 0 0 0;
-}
+  /* Text */
+  .container-text {
+    font-size: 12px;
+    line-height: 1.2;
+  }
 
-/* Grid for 2 containers per row */
-.container-row {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px; /* space between containers */
-}
+  /* Text at the bottom of the container */
+  .container-text {
+    font-size: smaller;
+  }
 
-/* Each container */
-.hover-container {
-  position: relative;
-  width: 100%;
-  height: 70px;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  border-radius: 8px;
-  box-sizing: border-box;
-}
-
-/* Image inside the container */
-.container-image {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
-  margin-right: 10px;
-}
-
-/* Text */
-.container-text {
-  font-size: 12px;
-  line-height: 1.2;
-}
-
-
-/* Text at the bottom of the container */
-.container-text {
-  font-size: smaller;
-
-}
-
-/* =========================
+  /* =========================
    Melhores marcadores
 ========================= */
-/* =========================
+  /* =========================
    Melhores marcadores
 ========================= */
-.successcases {
-  font-size: small;
-  color: #777;
-  margin-top: 10px;
-  justify-content: center;
-}
+  .successcases {
+    font-size: small;
+    color: #777;
+    margin-top: 10px;
+    justify-content: center;
+  }
 
-.casesgallery {
-  grid-template-columns: repeat(1, minmax(150px, 1fr));
-  gap: 20px;
-  justify-items: center;
-}
+  .casesgallery {
+    grid-template-columns: repeat(1, minmax(150px, 1fr));
+    gap: 20px;
+    justify-items: center;
+  }
 
+  /* MELHORES MARCADORES*/
+  .golos-card {
+    width: 50vw;
+    height: auto;
+  }
 
-/* MELHORES MARCADORES*/
-.golos-card {
-  width: 50vw;
-  height: auto;
-}
-
-
-
-
-
-/* =========================
+  /* =========================
    EXPANDABLE FIXTURE (NEW)
    ========================= */
 
-.expandable {
-  width: 90%;
-  margin: 10px auto;
-  background: #ffffff;
+  .expandable {
+    width: 90%;
+    margin: 10px auto;
+    background: #ffffff;
+  }
 
-}
+  .fixture-main {
+    grid-template-columns:
+      minmax(40px, 1fr) /* Team A name */
+      40px /* Logo A */
+      50px /* Result */
+      40px /* Logo B */
+      minmax(40px, 1fr); /* Team B name */
+  }
 
+  .fixture-main :nth-child(5) {
+    justify-self: left;
+    font-weight: bold;
+    font-size: smaller;
+  }
 
-.fixture-main {
-  grid-template-columns: 
-    minmax(40px, 1fr)  /* Team A name */
-    40px               /* Logo A */
-    50px              /* Result */
-    40px               /* Logo B */
-    minmax(40px, 1fr);/* Team B name */
+  .fixture-main :first-child {
+    justify-self: right;
+    font-weight: bold;
+    font-size: smaller;
+  }
 
-}
+  .timeresult {
+    font-size: 15px;
+    border-radius: 5px;
+    padding: 4px 5px;
+  }
 
+  .expand-hint {
+    display: flex;
+    font-size: 0.4rem;
+    color: #777;
+    white-space: nowrap;
+  }
 
+  /* Hide when open */
+  .expandable.open .expand-hint {
+    display: none;
+  }
 
-.fixture-main :nth-child(5) {
-  justify-self: left;
-  font-weight: bold;
-  font-size: smaller;
-}
+  /* Hidden by default */
+  .fixture-details {
+    display: none;
+    max-width: 90%;
+    text-align: justify;
+    font-size: smaller;
+  }
 
-.fixture-main :first-child {
-  justify-self: right;
-  font-weight: bold;
-  font-size: smaller;
-}
-
-.timeresult {
-  font-size: 15px;
-  border-radius: 5px;
-  padding: 4px 5px;
-
-}
-
-.expand-hint {
-  display: flex;
-  font-size: 0.4rem;
-  color: #777;
-  white-space: nowrap;
-
-}
-
-
-
-/* Hide when open */
-.expandable.open .expand-hint {
-  display: none;
-}
-
-
-
-/* Hidden by default */
-.fixture-details {
-  display: none;
-  max-width: 90%;
-  text-align:justify;
-  font-size: smaller;
-}
-
-
-/* Show when open */
-.expandable.open .fixture-details {
+  /* Show when open */
+  .expandable.open .fixture-details {
     display: flex;
     justify-content: space-between;
     gap: 30px;
-    
-}
+  }
 
-/* Goals */
-.goals p {
+  /* Goals */
+  .goals p {
     margin: 5px 0;
     font-size: smaller;
-}
+  }
 
-/* Man of the Match */
-.motm {
+  /* Man of the Match */
+  .motm {
     text-align: center;
     font-size: smaller;
-}
+  }
 
-.motm img {
+  .motm img {
     width: auto;
     height: 50px;
     object-fit: contain;
     margin-bottom: 2px;
+  }
+
+  /* CSS da fase de grupos*/
+  /* Grid for 2 groups per row */
+  .groups-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  /* Videos*/
+  .ytvault-grid-zone {
+    gap: 18px;
+    padding: 10px;
+  }
+
+  .ytvault-card-unit {
+    border-radius: 10px;
+  }
+
+  .ytvault-thumb-box {
+    height: 200px;
+    width: auto;
+  }
+
+  #heroinfo {
+    display: flex;
+    height: 100px;
+  }
 }
-
-/* CSS da fase de grupos*/
-/* Grid for 2 groups per row */
-.groups-grid {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(300px, 1fr));
-  gap: 20px;
-  margin-bottom: 20px;
-
-}
-/* Videos*/
-.ytvault-grid-zone{
-gap:18px;
-padding:10px;
-}
-
-.ytvault-card-unit{
-border-radius:10px;
-
-
-}
-
-.ytvault-thumb-box{
-height:200px;
-width: auto;
-
-}
-
-#heroinfo{
- display: flex;
-  height: 100px;
-}
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-

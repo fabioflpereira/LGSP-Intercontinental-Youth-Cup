@@ -1293,7 +1293,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       startGameBtn.addEventListener("click", async () => {
         if (!game) return alert("Escolha um jogo!");
-        if (game.status == "completed")
+        if (game.status === "completed")
           return alert(
             "Jogo finalizado não pode ser revertido para em andamento!",
           );

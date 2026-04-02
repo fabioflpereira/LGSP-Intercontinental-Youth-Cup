@@ -1294,9 +1294,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       startGameBtn.addEventListener("click", async () => {
         if (!game) return alert("Escolha um jogo!");
         if (game.status === "completed")
-          return alert(
-            "Jogo finalizado não pode ser revertido para em andamento!",
-          );
+          return alert("Jogo finalizado não pode ser reiniciado!");
         try {
           await gameAPI.update(game._id, { status: "in_progress" });
           statusEl.textContent = "Em progresso";

@@ -71,6 +71,7 @@ const renderMatchEvents = async (events, team, idioma) => {
 };
 
 const buildFixtureHtml = async (game, idioma) => {
+  const teamMVPdata = game.mvp?.team ? await getTeamData(game.mvp?.team) : [];
   const team0Events = await renderMatchEvents(
     game.events,
     game.teams[0],
@@ -106,9 +107,9 @@ const buildFixtureHtml = async (game, idioma) => {
  
                     <div class="motm">
                         <h4>🏆 Homem do Jogo</h4>
-                        <img src="${game.mvp?.team.image || ""}" alt="Homem do Jogo">
+                        <img src="${teamMVPdata.image || ""}" alt="Homem do Jogo">
                         <p>${game.mvp?.name || ""}</p>
-                        <p>${game.mvp?.team.name || ""}</p>
+                        <p>${teamMVPdata.name || ""}</p>
                     </div>
                 </div>
             </div>`;
@@ -137,7 +138,7 @@ const buildFixtureHtml = async (game, idioma) => {
                     <div class="motm">
                         <h4>🏆 Man of the Match</h4>
                         <img src="${game.mvp?.team.image || ""}" alt="Man of the Match">
-                        <p>${game.mvp?.name || ""}</p>
+                        <p><strong>${game.mvp?.name || ""}</strong></p>
                         <p>${game.mvp?.team.name || ""}</p>
                     </div>
                 </div>

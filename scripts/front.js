@@ -103,10 +103,9 @@ const buildFixtureHtml = async (game, idioma) => {
                         <p><strong>${game.teams[0]?.name || "A definir"}:</strong> ${team0Events}</p>
                         <p><strong>${game.teams[1]?.name || "A definir"}:</strong> ${team1Events}</p>
                     </div>
-
+ 
                     <div class="motm">
                         <h4>🏆 Homem do Jogo</h4>
-                        <img src="${game.mvp?.image || ""}" alt="Homem do Jogo">
                         <p>${game.mvp?.name || ""}</p>
                         <p>${game.mvp?.team.name || ""}</p>
                     </div>
@@ -136,7 +135,6 @@ const buildFixtureHtml = async (game, idioma) => {
 
                     <div class="motm">
                         <h4>🏆 Man of the Match</h4>
-                       <img src="${game.mvp?.team.logo || ""}" >
                         <p>${game.mvp?.name || ""}</p>
                         <p>${game.mvp?.team.name || ""}</p>
                     </div>

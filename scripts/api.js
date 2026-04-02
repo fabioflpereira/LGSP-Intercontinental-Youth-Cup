@@ -616,7 +616,7 @@ async function loadGameForEdit(gameId) {
     const n_jogoEl = document.getElementById("n_jogo");
     if (n_jogoEl) n_jogoEl.value = game.n_jogo;
     const dateEl = document.getElementById("date");
-    if (dateEl) dateEl.value = new Date(game.date).toISOString().slice(0, 16);
+    if (dateEl) dateEl.value = new Date(game.date).toLocaleString("pt-PT");
     const fieldEl = document.getElementById("field");
     if (fieldEl) fieldEl.value = game.field;
     if (mvpDropdown) await loadMvpDropdown(game._id, mvpDropdown);
@@ -827,7 +827,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           teams: [e.target.teamA.value, e.target.teamB.value],
           n_jogo: e.target.n_jogo.value,
           status: e.target.status.value,
-          date: new Date(e.target.date.value).toLocaleString("pt-PT"),
+          date: new Date(e.target.date.value),
           field: e.target.field.value,
         };
 
@@ -976,9 +976,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           status: document.getElementById("status")?.value || "",
           field: document.getElementById("field")?.value || "",
           n_jogo: document.getElementById("n_jogo")?.value || "",
-          date: new Date(document.getElementById("date")?.value).toLocaleString(
-            "pt-PT",
-          ),
+          date: new Date(document.getElementById("date")?.value),
         };
 
         await gameAPI.update(gameId, updatedGame);

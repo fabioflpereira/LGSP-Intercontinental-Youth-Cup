@@ -48,6 +48,11 @@ const getTeamData = async (team) => {
   }
 };
 
+const normalizeDate = (d) => {
+  const [day, month, year] = d.split("-");
+  return `${year}-${month}-${day}`;
+};
+
 const renderMatchEvents = async (events, team, idioma) => {
   const eventStrings = await Promise.all(
     (events || [])
@@ -140,15 +145,14 @@ const buildFixtureHtml = async (game, idioma) => {
 };
 
 const renderFixturesByDate = async (games, dateString, idioma) => {
+  const target = new Date(normalizeDate(dateString)).toDateString();
+
   const fixtures = await Promise.all(
     games
-      .filter(
-        (game) =>
-          new Date(game.date).toDateString() ===
-          new Date(dateString).toDateString(),
-      )
+      .filter((game) => new Date(game.date).toDateString() === target)
       .map(async (game) => await buildFixtureHtml(game, idioma)),
   );
+
   return fixtures.join("");
 };
 
@@ -164,13 +168,8 @@ const formatDateTime = (date) => {
   });
 };
 
-const formatTime = (date) => {
-  if (!date) return "";
-  const d = new Date(date);
-  return d.toLocaleString("pt-PT", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+const formatTime = (dateStr) => {
+  return dateStr.substring(11, 16);
 };
 
 const linkEquipas = [

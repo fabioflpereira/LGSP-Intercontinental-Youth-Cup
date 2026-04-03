@@ -448,6 +448,7 @@ async function loadAndRenderGames(gamesListElement) {
     }
 
     const html = games
+      .sort((a, b) => a.n_jogo - b.n_jogo)
       .map((game) => {
         const adminButtons = userIsAdmin
           ? `<div class="editMenu">

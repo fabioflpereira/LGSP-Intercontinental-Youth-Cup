@@ -284,7 +284,8 @@ async function loadPlayersForTeam(teamId, playerSelect) {
       `<option value="">Selecione um jogador</option>` +
       teamPlayers
         .map(
-          (player) => `<option value="${player._id}">${player.name}</option>`,
+          (player) =>
+            `<option value="${player._id}">${player.number} - ${player.name}</option>`,
         )
         .join("");
   } catch (err) {
@@ -312,7 +313,7 @@ async function loadMvpDropdown(gameId, mvpSelect) {
       const mappedPlayers = players.map(
         (player) => `
           <option value="${player._id}">
-            ${player.name} - ${team.name}
+            ${player.number} - ${player.name} - ${team.name}
           </option>
         `,
       );
@@ -1110,10 +1111,9 @@ document.addEventListener("DOMContentLoaded", async () => {
           !eventData.team
         )
           return alert("Preencha todos os campos obrigatórios.");
-
-        await eventAPI.update(eventId, updatedEvent);
+        await eventAPI.update(eventId, eventData);
         alert("Evento atualizado com sucesso!");
-        window.location.href = "/pages/admin/listEvents.html";
+        window.location.reload();
       } catch (err) {
         console.error(err);
         alert("Falha ao atualizar evento.");

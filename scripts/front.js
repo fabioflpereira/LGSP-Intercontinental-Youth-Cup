@@ -32,6 +32,22 @@ const formatEventType = (type) => {
   );
 };
 
+const formatField = (field, idioma) => {
+  if (!field) return "";
+  const mapPT = {
+    campo1: "Campo 1",
+    campo2: "Campo 2",
+    campo3: "Campo 3",
+  };
+  const mapEN = {
+    campo1: "Field 1",
+    campo2: "Field 2",
+    campo3: "Field 3",
+  };
+  if (idioma === "PT") return mapPT[field];
+  if (idioma === "EN") return mapEN[field];
+};
+
 const getPlayerName = async (player) => {
   try {
     const playerData = await playerAPI.getById(player);
@@ -72,6 +88,18 @@ const renderMatchEvents = async (events, team, idioma) => {
   return filtered.length ? filtered.join(", ") : text;
 };
 
+function getTitulo(n, idioma) {
+  if (idioma === "PT") {
+    if (n === 70) return "Final";
+    if ([55, 56].includes(n)) return "Meia‑Final";
+    return "";
+  } else if (idioma === "EN") {
+    if (n === 70) return "Final";
+    if ([55, 56].includes(n)) return "Semi‑Final";
+    return "";
+  }
+}
+
 const buildFixtureHtml = async (game, idioma) => {
   const teamMVPdata = game.mvp?.team ? await getTeamData(game.mvp?.team) : [];
   const team0Events = await renderMatchEvents(
@@ -102,12 +130,14 @@ const buildFixtureHtml = async (game, idioma) => {
                 <!-- Hidden expandable content -->
                 <div class="fixture-details">
                     <div class="goals">
+                        <h4>${formatField(game.field, idioma)}</h4>
                         <h4>Eventos</h4>
                         <p><strong>${game.teams[0]?.name || "A definir"}:</strong> ${team0Events}</p>
                         <p><strong>${game.teams[1]?.name || "A definir"}:</strong> ${team1Events}</p>
                     </div>
  
                     <div class="motm">
+                        <h4>${getTitulo(game.n_jogo, idioma)}</h4>
                         <h4>🏆 Homem do Jogo</h4>
                         <img src="${teamMVPdata.image || ""}" alt="Homem do Jogo">
                         <p>${game.mvp?.name || ""}</p>
@@ -132,12 +162,14 @@ const buildFixtureHtml = async (game, idioma) => {
                 <!-- Hidden expandable content -->
                 <div class="fixture-details">
                     <div class="goals">
+                        <h4>${formatField(game.field, idioma)}</h4>
                         <h4>Events</h4>
                         <p><strong>${game.teams[0]?.name || "To Be Defined"}:</strong> ${team0Events}</p>
                         <p><strong>${game.teams[1]?.name || "To Be Defined"}:</strong> ${team1Events}</p>
                     </div>
 
                     <div class="motm">
+                        <h4>${getTitulo(game.n_jogo, idioma)}</h4>
                         <h4>🏆 Man of the Match</h4>
                         <img src="${game.mvp?.team.image || ""}" alt="Man of the Match">
                         <p><strong>${game.mvp?.name || ""}</strong></p>

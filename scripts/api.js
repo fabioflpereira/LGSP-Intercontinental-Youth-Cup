@@ -236,6 +236,7 @@ async function loadGamesDropdown(selectElement, includeEmpty = true) {
     selectElement.innerHTML =
       (includeEmpty ? `<option value="">Selecione um jogo</option>` : "") +
       games
+        .sort((a, b) => a.n_jogo - b.n_jogo)
         .map(
           (game) =>
             `<option value="${game._id}">J${game.n_jogo} | ${game.teams[0]?.name} vs ${game.teams[1]?.name}</option>`,

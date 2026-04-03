@@ -22,6 +22,8 @@ const formatEventType = (type) => {
     autogolo: "🥅",
     "cartao amarelo": "🟨",
     "cartao vermelho": "🟥",
+    penalty: "✅",
+    "penalty falhado": "🚫",
   };
   const key = type.toString().toLowerCase();
   return (
